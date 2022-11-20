@@ -9,7 +9,7 @@ import TokenRatio4 from "../../../pages/TokenRatio4";
 import { limitActions } from "../../store/limit-slice";
 import { useDispatch, useSelector } from "react-redux";
 
-const OrderBox = () => {
+const OrderBoxSwap = () => {
   const dispatch = useDispatch();
   const limitStore = useSelector((state) => state.limit);
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
@@ -184,18 +184,6 @@ const OrderBox = () => {
     amount1Input.resetInput();
   };
 
-  const amountUserInput0Handler = (event) => {
-    amount0Input.inputChangeHandler(event);
-    const currentInput = amount0Input.enteredInput;
-    console.log("amount0Input.enteredInput");
-    console.log(amount0Input.enteredInput);
-    const token0Ratio = limitStore.token0Ratio;
-
-    setTokenAmount1(currentInput * token0Ratio);
-  };
-  console.log("amount0Input.enteredInput2");
-  console.log(amount0Input.enteredInput);
-
   //compute tokenAmount1
   useEffect(() => {
     const currentInput = amount0Input.enteredInput;
@@ -238,7 +226,7 @@ const OrderBox = () => {
         onSubmit={onSubmitHandler}
         className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10"
       >
-        <div className="text-center font-bold text-lg mb-14">Limit Orders</div>
+        <div className="text-center font-bold text-lg mb-14">Swap</div>
         <div className="flex flex-col">
           <div
             className={`${amount0InputClasses} flex flex-row justify-between gap-x-12 `}
@@ -324,4 +312,4 @@ const OrderBox = () => {
   );
 };
 
-export default OrderBox;
+export default OrderBoxSwap;

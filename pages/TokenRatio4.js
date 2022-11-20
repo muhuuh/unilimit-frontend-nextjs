@@ -76,7 +76,7 @@ const TokenRatio = () => {
       const ratio0 = route.midPrice.toSignificant(6);
       const ratio1 = route.midPrice.invert().toSignificant(6);
       const newRatio = { token0: ratio0, token1: ratio1 };
-      setTokenRatio([ratio0, ratio1]);
+      setTokenRatio(newRatio);
       console.log("newRatio");
       console.log(newRatio);
       dispatch(limitActions.updateRatio(newRatio));
@@ -84,10 +84,14 @@ const TokenRatio = () => {
   }, [pair]);
 
   return (
-    <div>
-      <button onClick={onRefreshHandler}>Refresh</button>
-      <div>{tokenRatio[0]}</div>
-      <div>{tokenRatio[1]}</div>
+    <div className="mt-2">
+      <div className="mb-2">{`${tokenRatio.token0}`}</div>
+      <button
+        onClick={onRefreshHandler}
+        className="border-2 rounded-lg text-sm py-1 px-4"
+      >
+        Refresh Price
+      </button>
     </div>
   );
 };

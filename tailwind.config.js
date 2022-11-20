@@ -32,6 +32,7 @@ module.exports = {
         lightBlack: "hsl(219, 5%, 15%)",
         lila: "#40005d",
         lightLila: "#a892ee",
+        buyGreen: "RGB(17,147,50)",
       },
     },
   },
