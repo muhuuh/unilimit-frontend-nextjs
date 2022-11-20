@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import OpenOrders from "./OpenOrders/OpenOrders";
 import OrderBoxLimit from "./Ordering/OrderBoxLimit";
 //import ReactTradingviewWidget from "react-tradingview-widget";
 import OrderBoxSwap from "./Ordering/OrderBoxSwap";
@@ -12,10 +13,12 @@ const Connected = () => {
         <button onClick={() => setShowLimit(true)}>Limit</button>
         <button onClick={() => setShowLimit(false)}>Swap</button>
       </div>
-      <div className="flex  justify-center">
+      <div className="flex  justify-center mb-12">
         {showLimit ? <OrderBoxLimit /> : <OrderBoxSwap />}
       </div>
-      <div className="mt-12"></div>
+      <div className="">
+        <OpenOrders />
+      </div>
     </div>
   );
 };

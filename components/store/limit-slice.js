@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const defaultState = {
+  wallet: "",
   token0Ticker: "WETH",
   token0Name: "Ethereum",
   token0Ratio: 0,

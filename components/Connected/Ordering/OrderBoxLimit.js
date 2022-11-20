@@ -14,8 +14,6 @@ const OrderBoxLimit = () => {
   const limitStore = useSelector((state) => state.limit);
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
   const chainId = parseInt(chainIdHex).toString();
-  const contractAddress =
-    chainId in contractAddresses ? contractAddresses[chainId][0] : null;
 
   const [tokenTicker0, setTokenTicker0] = useState("WETH");
   const [tokenTicker1, setTokenTicker1] = useState("DAI");
@@ -45,6 +43,23 @@ const OrderBoxLimit = () => {
   useEffect(() => {
     const newTickers = { token0: tokenTicker0, token1: tokenTicker1 };
     dispatch(limitActions.updateTicker(newTickers));
+
+    //get the new contract for the new token pair
+    const pairKeys = Object.keys(contractAddresses);
+    let pairKey;
+    let contractAddress;
+
+    pairKeys.map((key) => {
+      if (key.includes(tokenTicker0) && key.includes(tokenTicker1)) {
+        pairKey = key;
+      }
+    });
+
+    if (chainId && pairKey) {
+      contractAddress = contractAddresses[pairKey][chainId][0];
+    }
+    contractAddress = contractAddresses[pairKey][chainId][0];
+    setContractAddressPool(contractAddress);
   }, [tokenTicker0, tokenTicker1]);
 
   //prepare the input fields/checks, etc
@@ -91,14 +106,9 @@ const OrderBoxLimit = () => {
     }
   }, [isWeb3Enabled]);
 
-  //TODO function to get the correct pool/SC contract based on the token pair
-  const getcontractAddress = () => {
-    setContractAddressPool("");
-  };
-
   const { runContractFunction: enterRaffle } = useWeb3Contract({
     abi: abi,
-    contractAddress: contractAddress,
+    contractAddress: contractAddressPool,
     functionName: "enterRaffle",
     params: {},
     msgValue: 1000,
@@ -106,7 +116,7 @@ const OrderBoxLimit = () => {
 
   const { runContractFunction: getEntranceFee } = useWeb3Contract({
     abi: abi,
-    contractAddress: contractAddress,
+    contractAddress: contractAddressPool,
     functionName: "getEntranceFee",
     params: {},
   });
@@ -135,8 +145,8 @@ const OrderBoxLimit = () => {
       return;
     }
 
-    //TODO check which pool the token pair is to call the correct contract
     //TODO call SC functions with enteredInput
+    //TODO pass the srqtPricex96
 
     const createOrderArgs = {
       side: limitStore.side,

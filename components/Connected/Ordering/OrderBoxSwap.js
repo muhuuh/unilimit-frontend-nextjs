@@ -19,8 +19,6 @@ const OrderBoxSwap = () => {
 
   const [tokenTicker0, setTokenTicker0] = useState("WETH");
   const [tokenTicker1, setTokenTicker1] = useState("DAI");
-  const [minBid, setMinBid] = useState(0);
-  const [maxBid, setMaxBid] = useState(0);
   const [tokenAmount0, setTokenAmount0] = useState();
   const [tokenAmount1, setTokenAmount1] = useState();
   const [lastAmountInput, setLastAmountInput] = useState();
