@@ -1,0 +1,172 @@
+[
+  {
+    "type": "constructor",
+    "payable": false,
+    "inputs": [
+      { "type": "address", "name": "vrfCoordinatorV2" },
+      { "type": "uint256", "name": "entranceFee" },
+      { "type": "bytes32", "name": "gasLane" },
+      { "type": "uint64", "name": "subscriptionId" },
+      { "type": "uint32", "name": "callbackGasLimit" },
+      { "type": "uint256", "name": "interval" }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "OnlyCoordinatorCanFulfill",
+    "inputs": [
+      { "type": "address", "name": "have" },
+      { "type": "address", "name": "want" }
+    ]
+  },
+  { "type": "error", "name": "Raffle__LotteryNotOpen", "inputs": [] },
+  { "type": "error", "name": "Raffle__NotEnoughFund", "inputs": [] },
+  {
+    "type": "error",
+    "name": "Raffle__UpkeepNotNeeded",
+    "inputs": [
+      { "type": "uint256", "name": "currentBalance" },
+      { "type": "uint256", "name": "numberPlayers" },
+      { "type": "uint256", "name": "raffleState" }
+    ]
+  },
+  { "type": "error", "name": "Raffle__transferFailed", "inputs": [] },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "RaffleEnter",
+    "inputs": [{ "type": "address", "name": "playerAddress", "indexed": true }]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "RequestRaffleEnter",
+    "inputs": [{ "type": "uint256", "name": "requestId", "indexed": true }]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "WinnerPicked",
+    "inputs": [{ "type": "address", "name": "currentWinner", "indexed": true }]
+  },
+  {
+    "type": "function",
+    "name": "checkUpkeep",
+    "constant": false,
+    "payable": false,
+    "gas": 29000000,
+    "inputs": [{ "type": "bytes" }],
+    "outputs": [{ "type": "bool", "name": "upkeepNeeded" }, { "type": "bytes" }]
+  },
+  {
+    "type": "function",
+    "name": "enterRaffle",
+    "constant": false,
+    "stateMutability": "payable",
+    "payable": true,
+    "gas": 29000000,
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "getEntranceFee",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "gas": 29000000,
+    "inputs": [],
+    "outputs": [{ "type": "uint256" }]
+  },
+  {
+    "type": "function",
+    "name": "getInterval",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "gas": 29000000,
+    "inputs": [],
+    "outputs": [{ "type": "uint256" }]
+  },
+  {
+    "type": "function",
+    "name": "getLatestTimestamp",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "gas": 29000000,
+    "inputs": [],
+    "outputs": [{ "type": "uint256" }]
+  },
+  {
+    "type": "function",
+    "name": "getNumPlayers",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "gas": 29000000,
+    "inputs": [],
+    "outputs": [{ "type": "uint256" }]
+  },
+  {
+    "type": "function",
+    "name": "getRaffleState",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "gas": 29000000,
+    "inputs": [],
+    "outputs": [{ "type": "uint8" }]
+  },
+  {
+    "type": "function",
+    "name": "getRecentWinner",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "gas": 29000000,
+    "inputs": [],
+    "outputs": [{ "type": "address" }]
+  },
+  {
+    "type": "function",
+    "name": "getRequestConfirmation",
+    "constant": true,
+    "stateMutability": "pure",
+    "payable": false,
+    "gas": 29000000,
+    "inputs": [],
+    "outputs": [{ "type": "uint256" }]
+  },
+  {
+    "type": "function",
+    "name": "getplayer",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "gas": 29000000,
+    "inputs": [{ "type": "uint256", "name": "index" }],
+    "outputs": [{ "type": "address" }]
+  },
+  {
+    "type": "function",
+    "name": "performUpkeep",
+    "constant": false,
+    "payable": false,
+    "gas": 29000000,
+    "inputs": [{ "type": "bytes" }],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "rawFulfillRandomWords",
+    "constant": false,
+    "payable": false,
+    "gas": 29000000,
+    "inputs": [
+      { "type": "uint256", "name": "requestId" },
+      { "type": "uint256[]", "name": "randomWords" }
+    ],
+    "outputs": []
+  }
+]
