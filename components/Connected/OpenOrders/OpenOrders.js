@@ -53,7 +53,7 @@ const OpenOrders = () => {
   console.log(openOrdersItem);
 
   return (
-    <div>
+    <div className="mb-20">
       <div className="font-bold text-lg mb-10">Open Orders Overview</div>
       <div className="flex flex-col items-center">
         <div className="flex flex-row justify-between w-2/3 border-b-4">

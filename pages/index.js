@@ -5,7 +5,7 @@ import Header from "./Header";
 
 export default function Home() {
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container}`}>
       <Head>
         <title>UniLimit</title>
         <link rel="icon" href="/favicon.ico" />
