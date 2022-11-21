@@ -12,6 +12,7 @@ const SelectToken0 = (props) => {
   const tokenList = tokensArray.map((token) => (
     <TokenRow
       ticker={token}
+      name={tokens[token].name}
       onSelect={props.onSelect}
       onClose={props.onClose}
     />

@@ -88,7 +88,7 @@ const TokenRatio = () => {
       <div className="mb-2">{`${tokenRatio.token0}`}</div>
       <button
         onClick={onRefreshHandler}
-        className="border-2 rounded-lg text-sm py-1 px-4"
+        className="border-2 rounded-lg shadow text-sm py-1 px-4 hover:scale-110"
       >
         Refresh Price
       </button>

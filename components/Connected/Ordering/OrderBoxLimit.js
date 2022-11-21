@@ -8,6 +8,7 @@ import { useMoralis, useWeb3Contract } from "react-moralis";
 import TokenRatio4 from "../../../pages/TokenRatio4";
 import { limitActions } from "../../store/limit-slice";
 import { useDispatch, useSelector } from "react-redux";
+import DropdownIcon from "../../UI/Icons/DropdownIcon";
 
 const OrderBoxLimit = () => {
   const dispatch = useDispatch();
@@ -176,9 +177,10 @@ const OrderBoxLimit = () => {
             <div className="flex flex-row justify-around mb-6">
               <button
                 onClick={onVisibleHandlerToken0}
-                className="border-2 rounded-lg hover:scale-110 py-1 px-4"
+                className="flex flex-row justify-center items-center border-2 rounded-lg shadow hover:scale-110 py-1 w-24 "
               >
                 {tokenTicker0 != "" ? tokenTicker0 : "Select Token"}
+                <DropdownIcon />
               </button>
               {isVisibleToken0 && (
                 <SelectToken0
@@ -188,9 +190,10 @@ const OrderBoxLimit = () => {
               )}
               <button
                 onClick={onVisibleHandlerToken1}
-                className="border-2 rounded-lg hover:scale-110 py-1 px-4"
+                className="flex flex-row justify-center items-center border-2 rounded-lg shadow hover:scale-110 py-1 w-24"
               >
                 {tokenTicker1 != "" ? tokenTicker1 : "Select Token"}
+                <DropdownIcon />
               </button>
               {isVisibleToken1 && (
                 <SelectToken1
@@ -235,7 +238,7 @@ const OrderBoxLimit = () => {
               className={` text-white ${
                 !formIsValid
                   ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-buyGreen hover:font-bold hover:scale-110 "
+                  : "bg-buyGreen shadow hover:font-bold hover:scale-110 "
               } border-2 rounded-l-lg border-white w-20 py-1 px-2 `}
               disabled={!formIsValid}
             >
@@ -249,7 +252,7 @@ const OrderBoxLimit = () => {
               className={`text-white ${
                 !formIsValid
                   ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-darkRed hover:font-bold hover:scale-110"
+                  : "bg-darkRed shadow hover:font-bold hover:scale-110"
               } border-2 rounded-r-lg border-white w-20 py-1 px-2 `}
               disabled={!formIsValid}
             >

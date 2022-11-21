@@ -13,30 +13,6 @@ const OpenOrders = () => {
   const pairKeys = Object.keys(contractAddresses);
 
   //update open Orders on UI with matched keys from the contract/pool
-  /*
-  useEffect(() => {
-    let pairKey = [];
-    const keyPairsObject = {};
-    pairKeys.map((key) => {
-      let tempAddress;
-      openOrdersStore.openOrders.map((order) => {
-        let index;
-        tempAddress = order.contractAddress;
-        if (contractAddresses[key][chainId][0] === tempAddress) {
-          console.log("key found");
-          console.log(key);
-          pairKey.push(key);
-        }
-        index = pairKey.length - 1;
-        keyPairsObject[index] = key;
-      });
-    });
-    console.log("keyPairsObject");
-    console.log(keyPairsObject);
-    //dispatch(openOrdersActions.updatepairKey(pairKey));
-  }, [openOrdersStore]);
-  */
-  //do the opposite logic from above
 
   useEffect(() => {
     let pairKey = [];
@@ -78,15 +54,17 @@ const OpenOrders = () => {
 
   return (
     <div>
-      <div>Open Orders Overview</div>
-      <div className="flex flex-col justify-center">
-        <div className="flex flex-row justify-between w-2/3">
+      <div className="font-bold text-lg mb-10">Open Orders Overview</div>
+      <div className="flex flex-col items-center">
+        <div className="flex flex-row justify-between w-2/3 border-b-4">
           <div>ID</div>
           <div>Status</div>
           <div>Pair</div>
           <div>Side</div>
           <div>Quantity</div>
           <div>Target Price</div>
+          <div>Adjust size</div>
+          <div>Close</div>
         </div>
         {openOrdersItem}
       </div>

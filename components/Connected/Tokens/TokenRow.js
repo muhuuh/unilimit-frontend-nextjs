@@ -11,9 +11,9 @@ const TokenRow = (props) => {
       className="flex flex-row justify-around cursor-pointer border-b-2 rounded-lg "
     >
       <div>Image</div>
-      <div>
+      <div className="text-center">
         <div className="text-lg">{props.ticker}</div>
-        <div className="italic">Name</div>
+        <div className="italic">{props.name}</div>
       </div>
     </div>
   );
