@@ -8,43 +8,50 @@ import contractAddress from "./constants/contractAddress.json" assert { type: "j
 import * as dotenv from "dotenv";
 dotenv.config();
 
-async function main() {
-  const iface = new ethers.utils.Interface(abiUSDT);
-  console.log("keys");
-  console.log(process.env.INFURA_API_KEY);
-  //const provider = ethers.getDefaultProvider("mainnet", {alchemy: process.env.ALCHEMY_API_KEY ?? "",});
+//https://medium.com/linum-labs/everything-you-ever-wanted-to-know-about-events-and-logs-on-ethereum-fec84ea7d0a5
 
+async function main() {
   const provider = new ethers.providers.AlchemyProvider(
     "homestead",
     process.env.ALCHEMY_API_KEY
   );
   const currentBlock = await provider.getBlock("latest");
-  console.log("----------------------------------");
   console.log(currentBlock);
   console.log("----------------------------------");
 
+  const iface = new ethers.utils.Interface(abiWBTC);
+  const events = iface.events;
+  console.log("events");
+  console.log(events);
+  const transfer = events["Transfer(address,address,uint256)"];
+  console.log("transfer");
+  console.log(transfer);
+  const eventTopic = transfer.topic;
   const logs = await provider.getLogs({
+    fromBlock: "0xF4AE5C",
+    toBlock: "latest",
     address: contractAddress.WBTC,
     //fromBlock: ethers.utils.hexlify(currentBlock - 2),
-    fromBlock: "0xF4ADA8",
-    toBlock: "latest",
+    topics: [
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+    ],
   });
+  const decodedEvents = logs.map((log) => iface.parseLog(log));
 
-  console.log(logs);
-  console.log("----------------------------------");
-  /*
-  const decodedEvents = logs.map((log) => {
-    iface.decodeEventLog("Transfer", log.data);
-  });
-  console.log("decodedEvents");
-  console.log(decodedEvents);
-  console.log("----------------------------------");
-  const toAddresses = decodedEvents.map((event) => event["values"]["to"]);
-  const fromAddresses = decodedEvents.map((event) => event["values"]["from"]);
-  const amounts = decodedEvents.map((event) => event["values"]["value"]);
+  const toAddresses = decodedEvents.map((event) => event["args"]["to"]);
+  const fromAddresses = decodedEvents.map((event) => event["args"]["from"]);
+  const amounts = decodedEvents.map((event) =>
+    event["args"]["value"].toString()
+  );
+  const signature = decodedEvents.map((event) => event["signature"]);
   console.log("toAddresses");
   console.log(toAddresses);
-  */
+  console.log("fromAddresses");
+  console.log(fromAddresses);
+  console.log("amounts");
+  console.log(amounts);
+  console.log("signature");
+  console.log(signature);
 }
 
 main().catch((err) => {

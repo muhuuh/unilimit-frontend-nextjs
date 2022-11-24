@@ -7,6 +7,7 @@ export default async function eventFilter(
 ) {
   //TODO install ethers
 
+  console.log("orderscraping");
   const iface = new ethers.utils.Interface(erc20abi.abi);
   //TODO look if we can make it more precise here (filter also by indexed user wallet)
   const logs = await _provider.getLogs({

@@ -4,6 +4,7 @@ import OpenOrderIdRow from "./OpenOrderIdRow";
 import { contractAddresses } from "../../../constants";
 import { useMoralis } from "react-moralis";
 import { openOrdersActions } from "../../store/openOrders-slice";
+import ChangeAmountPopup from "../Popup/ChangeAmountPopup";
 
 const OpenOrders = () => {
   const openOrdersStore = useSelector((state) => state.openOrders);
@@ -68,6 +69,7 @@ const OpenOrders = () => {
         </div>
         {openOrdersItem}
       </div>
+      <ChangeAmountPopup />
     </div>
   );
 };
