@@ -9,13 +9,14 @@ import TokenRatio4 from "../../../pages/TokenRatio4";
 import { limitActions } from "../../store/limit-slice";
 import { useDispatch, useSelector } from "react-redux";
 import DropdownIcon from "../../UI/Icons/DropdownIcon";
+import { openOrdersActions } from "../../store/openOrders-slice";
 
 const OrderBoxLimit = () => {
   const dispatch = useDispatch();
   const limitStore = useSelector((state) => state.limit);
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
+  //TODO import the loading feature from moralis and put the loadingspinenr when refreshin price
   const chainId = parseInt(chainIdHex).toString();
-
   const [tokenTicker0, setTokenTicker0] = useState("WETH");
   const [tokenTicker1, setTokenTicker1] = useState("DAI");
   const [setSell, setSetSell] = useState(false);
@@ -160,6 +161,20 @@ const OrderBoxLimit = () => {
     const outputFee = (await getEntranceFee()).toString();
     console.log("outputFee");
     console.log(outputFee);
+
+    //TODO If creating  through SC successful, then update openorder store with dispatch function addNewOpenOrder
+    const newOpenOrder = {
+      id: Math.random(),
+      wallet: "getMoralisWallet",
+      contractAddress: contractAddressPool,
+      pairKey: tokenTicker0 + "/" + tokenTicker0,
+      status: "active",
+      side: setSell,
+      quantity: quantityLimInput.enteredInput,
+      priceTarget: priceLimInput.enteredInput,
+    };
+
+    dispatch(openOrdersActions.addNewOpenOrder(newOpenOrder));
 
     quantityLimInput.resetInput();
     priceLimInput.resetInput();

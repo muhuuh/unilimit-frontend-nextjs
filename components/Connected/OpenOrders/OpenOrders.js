@@ -69,7 +69,6 @@ const OpenOrders = () => {
         </div>
         {openOrdersItem}
       </div>
-      <ChangeAmountPopup />
     </div>
   );
 };

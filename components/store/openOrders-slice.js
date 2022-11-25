@@ -10,7 +10,6 @@ const DUMMY_OPEN_ORDERS = [
     side: "buy",
     quantity: 100,
     priceTarget: 1200,
-    ticks: "",
   },
   {
     id: 1,
@@ -21,7 +20,6 @@ const DUMMY_OPEN_ORDERS = [
     side: "sell",
     quantity: 500,
     priceTarget: 730,
-    ticks: "",
   },
   {
     id: 2,
@@ -32,7 +30,6 @@ const DUMMY_OPEN_ORDERS = [
     side: "buy",
     quantity: 70,
     priceTarget: 1550,
-    ticks: "",
   },
   {
     id: 3,
@@ -43,7 +40,6 @@ const DUMMY_OPEN_ORDERS = [
     side: "buy",
     quantity: 40,
     priceTarget: 1330,
-    ticks: "",
   },
 ];
 
@@ -66,6 +62,29 @@ const openOrdersSlice = createSlice({
       for (let i = 0; i < currentOpenOrders.length; i++) {
         currentOpenOrders[i].pairKey = keyPairs[i];
       }
+    },
+    updateQuantity(state, action) {
+      const newQuantity = action.payload;
+
+      const openOrderStore = state.openOrders;
+      const currentOrderIndex = newQuantity.id;
+      const newOrderQuantity = newQuantity.quantity;
+      openOrderStore[currentOrderIndex].quantity = newOrderQuantity;
+    },
+    closeOpenOrder(state, action) {
+      const closeOrderId = action.payload;
+
+      const openOrderStore = state.openOrders;
+      const filteredOpenOrders = openOrderStore.filter(
+        (order) => order.id != closeOrderId
+      );
+      state.openOrders = filteredOpenOrders;
+    },
+    addNewOpenOrder(action, state) {
+      const newOpenOrder = action.payload;
+
+      const openOrderStore = state.openOrders;
+      openOrderStore.push(newOpenOrder);
     },
   },
 });

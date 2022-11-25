@@ -1,90 +1,78 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import useInput from "../../../hooks/use-input";
+import { openOrdersActions } from "../../store/openOrders-slice";
+import Modal from "../../UI/Modal";
 
-const ChangeAmountPopup = () => {
+const ChangeAmountPopup = (props) => {
+  const dispatch = useDispatch();
   //some entries might stay empty (just getting the current values if emtpy hence now validity check)
-  const checkValidity = () => {
-    return true;
+  const checkValidity = (input) => {
+    return input.trim() !== "";
   };
 
   const newAmountInput = useInput(checkValidity);
-  const newPriceInput = useInput(checkValidity);
 
-  const onSubmitHandler = () => {
-    //TODO submit the new entries to store to udate the view and call the SC function
+  const newAmountInputClasses = newAmountInput.hasError
+    ? "form-control invalid"
+    : "form-control";
+
+  let formIsValid = false;
+  if (newAmountInput.enteredInputisValid && newAmountInput.enteredInput > 0) {
+    formIsValid = true;
+  }
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+    console.log("submit");
+
     //TODO put the input value as the current values
+    if (!formIsValid) {
+      return;
+    }
 
-    let newAmount;
-    if (newAmountInput.enteredInput) {
-      newAmount = newAmountInput.enteredInput;
-    } else {
-      ("previous store value");
-    }
-    let newPrice;
-    if (newPriceInput.enteredInput) {
-      newAmount = newPriceInput.enteredInput;
-    } else {
-      ("previous store value");
-    }
-    const modifiedOrder = {
-      amount: newAmount,
-      price: newPrice,
+    const newOrderQuantity = {
+      id: props.id,
+      quantity: newAmountInput.enteredInput,
     };
+    //TODO call SC function to change order quantity with newOrderQuantity
+    //TODO add if successful check, then update store with below function
+    dispatch(openOrdersActions.updateQuantity(newOrderQuantity));
+
+    props.onClose();
   };
 
   return (
-    <div>
-      <form
-        onSubmit={onSubmitHandler}
-        className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10"
-      >
-        <div className="text-center font-bold text-lg mb-14">
-          Modify Open Order
-        </div>
-        <div className="flex flex-col">
-          <div className={`flex flex-row justify-between gap-x-12 `}>
-            <label>New order quantity</label>
+    <Modal onClose={props.onClose}>
+      <form onSubmit={onSubmitHandler} className="">
+        <div className="flex justify-center items-center text-center">
+          <div className={` ${newAmountInputClasses}`}>
+            <label className="text-lg mt-8">Modify order quantity</label>
             <input
               type="number"
               onChange={newAmountInput.inputChangeHandler}
               onBlur={newAmountInput.inputBlurHandler}
-              className="border-2 rounded-lg shadow-sm h-8 w-48"
-            />
-          </div>
-          <div className={` flex flex-row justify-between  gap-x-12`}>
-            <label>New target price </label>
-            <input
-              type="number"
-              onChange={newPriceInput.inputChangeHandler}
-              onBlur={newPriceInput.inputBlurHandler}
-              className="border-2 rounded-lg shadow-sm h-8 w-48"
+              className="border-2 rounded-lg shadow-sm mt-8 h-8 w-48"
             />
           </div>
         </div>
         <div className="flex justify-around mt-8">
           <div>
             <button
-              onClick={() => {
-                setSetSell(false);
-                dispatch(limitActions.updateSide(false));
-              }}
-              className={` text-white bg-buyGreen shadow hover:font-bold hover:scale-110 border-2 rounded-l-lg border-white w-20 py-1 px-2 `}
+              type="submit"
+              className={`text-white ${
+                !formIsValid
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-buyGreen shadow hover:font-bold hover:scale-110"
+              } border-2 rounded-lg border-white w-20 py-1 px-2 `}
+              disabled={!formIsValid}
             >
-              Buy
-            </button>
-            <button
-              onClick={() => {
-                setSetSell(true);
-                dispatch(limitActions.updateSide(true));
-              }}
-              className={` text-white bg-darkRed shadow hover:font-bold hover:scale-110 border-2 rounded-r-lg border-white w-20 py-1 px-2 `}
-            >
-              Sell
+              Change
             </button>
           </div>
         </div>
       </form>
-    </div>
+    </Modal>
   );
 };
 

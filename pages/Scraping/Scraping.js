@@ -20,13 +20,6 @@ async function main() {
   console.log("----------------------------------");
 
   const iface = new ethers.utils.Interface(abiWBTC);
-  const events = iface.events;
-  console.log("events");
-  console.log(events);
-  const transfer = events["Transfer(address,address,uint256)"];
-  console.log("transfer");
-  console.log(transfer);
-  const eventTopic = transfer.topic;
   const logs = await provider.getLogs({
     fromBlock: "0xF4AE5C",
     toBlock: "latest",
