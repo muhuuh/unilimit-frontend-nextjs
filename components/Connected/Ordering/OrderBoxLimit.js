@@ -10,6 +10,7 @@ import { limitActions } from "../../store/limit-slice";
 import { useDispatch, useSelector } from "react-redux";
 import DropdownIcon from "../../UI/Icons/DropdownIcon";
 import { openOrdersActions } from "../../store/openOrders-slice";
+import { ethers } from "ethers";
 
 const OrderBoxLimit = () => {
   const dispatch = useDispatch();
@@ -108,19 +109,31 @@ const OrderBoxLimit = () => {
     }
   }, [isWeb3Enabled]);
 
-  const { runContractFunction: enterRaffle } = useWeb3Contract({
-    abi: abi,
-    contractAddress: contractAddressPool,
-    functionName: "enterRaffle",
-    params: {},
-    msgValue: 1000,
+  const sqrtPriceX96 = Math.sqrt(limitStore.price) * 2 ** 96;
+  const sqrtPriceX96String = sqrtPriceX96.toLocaleString("fullwide", {
+    useGrouping: false,
   });
 
-  const { runContractFunction: getEntranceFee } = useWeb3Contract({
+  const sqrtPriceX96BigNumber = ethers.BigNumber.from(sqrtPriceX96String);
+  const quantityParseUnits10 = ethers.utils.parseUnits(
+    limitStore.quantity.toString(),
+    10
+  );
+  const quantiyBigNumber = ethers.BigNumber.from(quantityParseUnits10);
+
+  const createOrderArgs = {
+    side: limitStore.side,
+    sqrtPriceX96: sqrtPriceX96BigNumber,
+    quantity: quantiyBigNumber,
+  };
+  console.log("createOrderArgs");
+  console.log(createOrderArgs);
+
+  const { runContractFunction: createOrder } = useWeb3Contract({
     abi: abi,
     contractAddress: contractAddressPool,
-    functionName: "getEntranceFee",
-    params: {},
+    functionName: "createOrder",
+    params: createOrderArgs,
   });
 
   const onHandleSuccess = async (tx) => {
@@ -150,31 +163,26 @@ const OrderBoxLimit = () => {
     //TODO call SC functions with enteredInput
     //TODO pass the srqtPricex96
 
-    const createOrderArgs = {
-      side: limitStore.side,
-      quantity: limitStore.quantity,
-      price: limitStore.price,
-    };
-    console.log("createOrderArgs");
-    console.log(createOrderArgs);
-
-    const outputFee = (await getEntranceFee()).toString();
-    console.log("outputFee");
-    console.log(outputFee);
+    /*
+    const functionReturn = await createOrder();
+    console.log("positionId");
+    console.log(functionReturn);
+    */
 
     //TODO If creating  through SC successful, then update openorder store with dispatch function addNewOpenOrder
+
     const newOpenOrder = {
-      id: Math.random(),
+      id: Math.round(Math.random() * 100),
       wallet: "getMoralisWallet",
       contractAddress: contractAddressPool,
-      pairKey: tokenTicker0 + "/" + tokenTicker0,
+      pairKey: tokenTicker0 + "/" + tokenTicker1,
       status: "active",
       side: setSell,
       quantity: quantityLimInput.enteredInput,
       priceTarget: priceLimInput.enteredInput,
     };
 
-    dispatch(openOrdersActions.addNewOpenOrder(newOpenOrder));
+    dispatch(openOrdersActions.addOpenOrder(newOpenOrder));
 
     quantityLimInput.resetInput();
     priceLimInput.resetInput();
@@ -246,8 +254,15 @@ const OrderBoxLimit = () => {
           </div>
           <div>
             <button
-              onClick={() => {
+              onClick={async () => {
                 setSetSell(false);
+                await createOrder({
+                  onSuccess: onHandleSuccess,
+                  onError: (error) => {
+                    console.log("error createorder");
+                    console.log(error);
+                  },
+                });
                 dispatch(limitActions.updateSide(false));
               }}
               className={` text-white ${
@@ -260,8 +275,15 @@ const OrderBoxLimit = () => {
               Buy
             </button>
             <button
-              onClick={() => {
+              onClick={async () => {
                 setSetSell(true);
+                await createOrder({
+                  onSuccess: onHandleSuccess,
+                  onError: (error) => {
+                    console.log("error createorder");
+                    console.log(error);
+                  },
+                });
                 dispatch(limitActions.updateSide(true));
               }}
               className={`text-white ${

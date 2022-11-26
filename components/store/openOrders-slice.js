@@ -80,11 +80,11 @@ const openOrdersSlice = createSlice({
       );
       state.openOrders = filteredOpenOrders;
     },
-    addNewOpenOrder(action, state) {
-      const newOpenOrder = action.payload;
+    addOpenOrder(state, action) {
+      const newOrder = action.payload;
 
       const openOrderStore = state.openOrders;
-      openOrderStore.push(newOpenOrder);
+      openOrderStore.push(newOrder);
     },
   },
 });

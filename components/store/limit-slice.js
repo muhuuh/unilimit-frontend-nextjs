@@ -8,7 +8,7 @@ const defaultState = {
   token1Ticker: "DAI",
   token1Name: "DAI",
   token1Ratio: 0,
-  quantity: "",
+  quantity: 0,
   price: "",
   side: false,
 };

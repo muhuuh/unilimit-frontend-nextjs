@@ -1,172 +1,596 @@
 [
   {
-    "type": "constructor",
-    "payable": false,
-    "inputs": [
-      { "type": "address", "name": "vrfCoordinatorV2" },
-      { "type": "uint256", "name": "entranceFee" },
-      { "type": "bytes32", "name": "gasLane" },
-      { "type": "uint64", "name": "subscriptionId" },
-      { "type": "uint32", "name": "callbackGasLimit" },
-      { "type": "uint256", "name": "interval" }
-    ]
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
-    "type": "error",
-    "name": "OnlyCoordinatorCanFulfill",
-    "inputs": [
-      { "type": "address", "name": "have" },
-      { "type": "address", "name": "want" }
-    ]
-  },
-  { "type": "error", "name": "Raffle__LotteryNotOpen", "inputs": [] },
-  { "type": "error", "name": "Raffle__NotEnoughFund", "inputs": [] },
-  {
-    "type": "error",
-    "name": "Raffle__UpkeepNotNeeded",
-    "inputs": [
-      { "type": "uint256", "name": "currentBalance" },
-      { "type": "uint256", "name": "numberPlayers" },
-      { "type": "uint256", "name": "raffleState" }
-    ]
-  },
-  { "type": "error", "name": "Raffle__transferFailed", "inputs": [] },
-  {
-    "type": "event",
     "anonymous": false,
-    "name": "RaffleEnter",
-    "inputs": [{ "type": "address", "name": "playerAddress", "indexed": true }]
+    "inputs": [],
+    "name": "Close",
+    "type": "event"
   },
   {
-    "type": "event",
     "anonymous": false,
-    "name": "RequestRaffleEnter",
-    "inputs": [{ "type": "uint256", "name": "requestId", "indexed": true }]
+    "inputs": [],
+    "name": "Decrease",
+    "type": "event"
   },
   {
-    "type": "event",
     "anonymous": false,
-    "name": "WinnerPicked",
-    "inputs": [{ "type": "address", "name": "currentWinner", "indexed": true }]
-  },
-  {
-    "type": "function",
-    "name": "checkUpkeep",
-    "constant": false,
-    "payable": false,
-    "gas": 29000000,
-    "inputs": [{ "type": "bytes" }],
-    "outputs": [{ "type": "bool", "name": "upkeepNeeded" }, { "type": "bytes" }]
-  },
-  {
-    "type": "function",
-    "name": "enterRaffle",
-    "constant": false,
-    "stateMutability": "payable",
-    "payable": true,
-    "gas": 29000000,
     "inputs": [],
-    "outputs": []
+    "name": "Increase",
+    "type": "event"
   },
   {
-    "type": "function",
-    "name": "getEntranceFee",
-    "constant": true,
-    "stateMutability": "view",
-    "payable": false,
-    "gas": 29000000,
+    "anonymous": false,
     "inputs": [],
-    "outputs": [{ "type": "uint256" }]
+    "name": "Open",
+    "type": "event"
   },
   {
-    "type": "function",
-    "name": "getInterval",
-    "constant": true,
-    "stateMutability": "view",
-    "payable": false,
-    "gas": 29000000,
-    "inputs": [],
-    "outputs": [{ "type": "uint256" }]
-  },
-  {
-    "type": "function",
-    "name": "getLatestTimestamp",
-    "constant": true,
-    "stateMutability": "view",
-    "payable": false,
-    "gas": 29000000,
-    "inputs": [],
-    "outputs": [{ "type": "uint256" }]
-  },
-  {
-    "type": "function",
-    "name": "getNumPlayers",
-    "constant": true,
-    "stateMutability": "view",
-    "payable": false,
-    "gas": 29000000,
-    "inputs": [],
-    "outputs": [{ "type": "uint256" }]
-  },
-  {
-    "type": "function",
-    "name": "getRaffleState",
-    "constant": true,
-    "stateMutability": "view",
-    "payable": false,
-    "gas": 29000000,
-    "inputs": [],
-    "outputs": [{ "type": "uint8" }]
-  },
-  {
-    "type": "function",
-    "name": "getRecentWinner",
-    "constant": true,
-    "stateMutability": "view",
-    "payable": false,
-    "gas": 29000000,
-    "inputs": [],
-    "outputs": [{ "type": "address" }]
-  },
-  {
-    "type": "function",
-    "name": "getRequestConfirmation",
-    "constant": true,
-    "stateMutability": "pure",
-    "payable": false,
-    "gas": 29000000,
-    "inputs": [],
-    "outputs": [{ "type": "uint256" }]
-  },
-  {
-    "type": "function",
-    "name": "getplayer",
-    "constant": true,
-    "stateMutability": "view",
-    "payable": false,
-    "gas": 29000000,
-    "inputs": [{ "type": "uint256", "name": "index" }],
-    "outputs": [{ "type": "address" }]
-  },
-  {
-    "type": "function",
-    "name": "performUpkeep",
-    "constant": false,
-    "payable": false,
-    "gas": 29000000,
-    "inputs": [{ "type": "bytes" }],
-    "outputs": []
-  },
-  {
-    "type": "function",
-    "name": "rawFulfillRandomWords",
-    "constant": false,
-    "payable": false,
-    "gas": 29000000,
+    "anonymous": false,
     "inputs": [
-      { "type": "uint256", "name": "requestId" },
-      { "type": "uint256[]", "name": "randomWords" }
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "side",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "trader",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "executionPrice",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      }
     ],
-    "outputs": []
+    "name": "Settled",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "FEE",
+    "outputs": [
+      {
+        "internalType": "uint24",
+        "name": "",
+        "type": "uint24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nftManager",
+    "outputs": [
+      {
+        "internalType": "contract INonfungiblePositionManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pairName",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pool",
+    "outputs": [
+      {
+        "internalType": "contract IUniswapV3Pool",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "poolToken0",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "poolToken1",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "protocolFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "settlerFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "settlerInit",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "treasury",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "onERC721Received",
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "side",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint160",
+        "name": "sqrtPriceX96",
+        "type": "uint160"
+      },
+      {
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      }
+    ],
+    "name": "createOrder",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      }
+    ],
+    "name": "increaseSize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      }
+    ],
+    "name": "decreaseSize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "closePositionOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "settleOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "userAmount0",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "userAmount1",
+        "type": "uint256"
+      }
+    ],
+    "name": "getExecutionPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTicks",
+    "outputs": [
+      {
+        "internalType": "int24",
+        "name": "tickLower",
+        "type": "int24"
+      },
+      {
+        "internalType": "int24",
+        "name": "tickUpper",
+        "type": "int24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "side",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint160",
+        "name": "sqrtPriceX96",
+        "type": "uint160"
+      }
+    ],
+    "name": "getTicksFromPrice",
+    "outputs": [
+      {
+        "internalType": "int24",
+        "name": "tickLower",
+        "type": "int24"
+      },
+      {
+        "internalType": "int24",
+        "name": "tickUpper",
+        "type": "int24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int24",
+        "name": "tick",
+        "type": "int24"
+      }
+    ],
+    "name": "getPriceFromTick",
+    "outputs": [
+      {
+        "internalType": "uint160",
+        "name": "",
+        "type": "uint160"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCurrentPoolTick",
+    "outputs": [
+      {
+        "internalType": "int24",
+        "name": "tick",
+        "type": "int24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPositionLiquidity",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "liquidity",
+        "type": "uint128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPoolPrice",
+    "outputs": [
+      {
+        "internalType": "uint160",
+        "name": "price",
+        "type": "uint160"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getSide",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "side",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTickLower",
+    "outputs": [
+      {
+        "internalType": "int24",
+        "name": "tickLower",
+        "type": "int24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTickUpper",
+    "outputs": [
+      {
+        "internalType": "int24",
+        "name": "tickUpper",
+        "type": "int24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getQuantity",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getActivityStatus",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "active",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   }
 ]
