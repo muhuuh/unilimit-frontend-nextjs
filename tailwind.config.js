@@ -33,6 +33,7 @@ module.exports = {
         lila: "#40005d",
         lightLila: "#a892ee",
         buyGreen: "RGB(17,147,50)",
+        lightGreen: "RGB(107,223,137)",
       },
     },
   },

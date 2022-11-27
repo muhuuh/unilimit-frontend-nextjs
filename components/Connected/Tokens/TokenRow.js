@@ -13,7 +13,6 @@ const TokenRow = (props) => {
       <div>Image</div>
       <div className="text-center">
         <div className="text-lg">{props.ticker}</div>
-        <div className="italic">{props.name}</div>
       </div>
     </div>
   );

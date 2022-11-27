@@ -1,9 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import limitSlice from "./limit-slice";
+import limitPairSlice from "./limitPair-slice";
 import openOrdersSlice from "./openOrders-slice";
 
 const store = configureStore({
-  reducer: { limit: limitSlice.reducer, openOrders: openOrdersSlice.reducer },
+  reducer: {
+    limit: limitPairSlice.reducer,
+    openOrders: openOrdersSlice.reducer,
+  },
 });
 
 export default store;

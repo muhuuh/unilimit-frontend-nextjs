@@ -2,30 +2,36 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const defaultState = {
   wallet: "",
-  token0Ticker: "WETH",
-  token0Name: "Ethereum",
-  token0Ratio: 0,
-  token1Ticker: "USDC",
-  token1Name: "USDC",
-  token1Ratio: 0,
+  pairInfo: {
+    selectedPair: "USDC/WETH",
+    token0: {
+      ticker: "USDC",
+      decimals: 6,
+    },
+    token1: {
+      ticker: "WETH",
+      decimals: 18,
+    },
+  },
   quantity: 0,
   price: 0,
   side: false,
 };
 
-const limitSlice = createSlice({
+const limitPairSlice = createSlice({
   name: "limit",
   initialState: defaultState,
   reducers: {
+    updateTicker(state, action) {
+      const newPairInfo = action.payload;
+      console.log("newPairInfo");
+      console.log(newPairInfo);
+      state.pairInfo = newPairInfo;
+    },
     updateRatio(state, action) {
       const newRatio = action.payload;
       state.token0Ratio = newRatio.token0;
       state.token1Ratio = newRatio.token1;
-    },
-    updateTicker(state, action) {
-      const newTickers = action.payload;
-      state.token0Ticker = newTickers.token0;
-      state.token1Ticker = newTickers.token1;
     },
     updatePriQua(state, action) {
       const newLimitOrderPriQua = action.payload;
@@ -39,5 +45,5 @@ const limitSlice = createSlice({
   },
 });
 
-export const limitActions = limitSlice.actions;
-export default limitSlice;
+export const limitPairActions = limitPairSlice.actions;
+export default limitPairSlice;

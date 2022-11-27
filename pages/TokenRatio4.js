@@ -1,7 +1,7 @@
 import { ChainId, Token, WETH, Fetcher, Route } from "@uniswap/sdk";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { limitActions } from "../components/store/limit-slice";
+import { limitPairActions } from "../components/store/limitPair-slice";
 import { tokens } from "../constants";
 
 //https://nextjs.org/docs/basic-features/data-fetching/client-side
@@ -13,57 +13,55 @@ const TokenRatio = () => {
   const limitStore = useSelector((state) => state.limit);
   const [tokenRatio, setTokenRatio] = useState({});
   const [pair, setPair] = useState("");
-
-  //get the current pair of token
-  const currentPair = [limitStore.token0Ticker, limitStore.token1Ticker];
-  console.log("currentPair");
-  console.log(currentPair);
-  const totalTokens = tokens;
-  console.log("totalTokens pair 0");
-  console.log(totalTokens[currentPair[0]].address);
-  console.log("totalTokens pair 1");
-  console.log(totalTokens[currentPair[1]].address);
-
-  const uniToken0 = new Token(
-    ChainId.MAINNET,
-    totalTokens[currentPair[0]].address,
-    totalTokens[currentPair[0]].decimals
-  );
-  console.log("uniToken0");
-  console.log(uniToken0);
-  const uniToken1 = new Token(
-    ChainId.MAINNET,
-    totalTokens[currentPair[1]].address,
-    totalTokens[currentPair[1]].decimals
-  );
-  console.log("uniToken1");
-  console.log(uniToken1);
-  //TODO make sure we fetch the price correctly for different unisawp token pairs
-
   const [refresh, setRefresh] = useState(0);
+  const [tokenUni0, setTokenUni0] = useState();
+  const [tokenUni1, setTokenUni1] = useState();
   const onRefreshHandler = () => {
     //TODOreset input value to ""
     setRefresh(refresh + 1);
   };
 
-  const DAI = new Token(
+  //get the current pair of token
+  //const currentPair = [limitStore.token0Ticker, limitStore.token1Ticker];
+
+  const currentPair = [
+    limitStore.pairInfo.token0.ticker,
+    limitStore.pairInfo.token1.ticker,
+  ];
+  console.log("currentPair");
+  console.log(currentPair);
+  const totalTokens = tokens;
+  console.log("tokens");
+  console.log(tokens[currentPair[0]]);
+
+  /*
+  const uniToken0 = new Token(
     ChainId.MAINNET,
-    "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-    18
+    totalTokens[currentPair[0]].token_address,
+    totalTokens[currentPair[0]].decimals
   );
+
+  const uniToken1 = new Token(
+    ChainId.MAINNET,
+    totalTokens[currentPair[1]].token_address,
+    totalTokens[currentPair[1]].decimals
+  );
+  */
 
   useEffect(() => {
     const uniToken0 = new Token(
       ChainId.MAINNET,
-      totalTokens[currentPair[0]].address,
+      totalTokens[currentPair[0]].token_address,
       totalTokens[currentPair[0]].decimals
     );
+    setTokenUni0(uniToken0);
     const uniToken1 = new Token(
       ChainId.MAINNET,
-      totalTokens[currentPair[1]].address,
+      totalTokens[currentPair[1]].token_address,
       totalTokens[currentPair[1]].decimals
     );
-    console.log("fetch new pair");
+    setTokenUni1(uniToken1);
+
     Fetcher.fetchPairData(uniToken0, uniToken1).then((data) => setPair(data));
   }, [refresh]);
 
@@ -71,7 +69,7 @@ const TokenRatio = () => {
     if (pair == "") {
       return;
     } else {
-      const route = new Route([pair], uniToken0);
+      const route = new Route([pair], tokenUni0);
 
       const ratio0 = route.midPrice.toSignificant(6);
       const ratio1 = route.midPrice.invert().toSignificant(6);
@@ -79,18 +77,18 @@ const TokenRatio = () => {
       setTokenRatio(newRatio);
       console.log("newRatio");
       console.log(newRatio);
-      dispatch(limitActions.updateRatio(newRatio));
+      dispatch(limitPairActions.updateRatio(newRatio));
     }
   }, [pair]);
 
   return (
     <div className="mt-2">
-      <div className="mb-2">{`${tokenRatio.token0}`}</div>
+      <div className="mb-2">{`${tokenRatio.token0} / ${tokenRatio.token1}`}</div>
       <button
         onClick={onRefreshHandler}
         className="border-2 rounded-lg shadow text-sm py-1 px-4 hover:scale-110"
       >
-        Refresh Price
+        Refresh
       </button>
     </div>
   );

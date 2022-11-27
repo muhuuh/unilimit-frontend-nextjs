@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import useInput from "../../../hooks/use-input";
 import useModal from "../../../hooks/use-modal";
-import SelectToken1 from "../Tokens/SelectToken1";
-import SelectToken0 from "../Tokens/SelectToken0";
-import { contractAddresses, abi } from "../../../constants";
+import { contractAddresses, abi, tokens } from "../../../constants";
 import { useMoralis, useWeb3Contract } from "react-moralis";
 import TokenRatio4 from "../../../pages/TokenRatio4";
-import { limitActions } from "../../store/limit-slice";
 import { useDispatch, useSelector } from "react-redux";
 import DropdownIcon from "../../UI/Icons/DropdownIcon";
 import { openOrdersActions } from "../../store/openOrders-slice";
 import { ethers } from "ethers";
+import SelectPair from "../Tokens/SelectPair";
+import { limitPairActions } from "../../store/limitPair-slice";
 
 const OrderBoxLimit = () => {
   const dispatch = useDispatch();
@@ -18,54 +17,59 @@ const OrderBoxLimit = () => {
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
   //TODO import the loading feature from moralis and put the loadingspinenr when refreshin price
   const chainId = parseInt(chainIdHex).toString();
-  const [tokenTicker0, setTokenTicker0] = useState("WETH");
-  const [tokenTicker1, setTokenTicker1] = useState("DAI");
+  const [pairInfo, setPairInfo] = useState({
+    selectedPair: "USDC/WETH",
+    token0: {
+      ticker: "WETH",
+      decimals: 18,
+    },
+    token1: {
+      ticker: "USDC",
+      decimals: 6,
+    },
+  });
+
   const [setSell, setSetSell] = useState(false);
-  const [contractAddressPool, setContractAddressPool] = useState("");
+  const [contractAddressPool, setContractAddressPool] = useState(
+    "0xe0b4c2BAa33258Ca354E65Bee66f9A15045A7F6d"
+  );
 
-  //Modal
+  //------------- set up Modal -------------
+
   const {
-    isVisible: isVisibleToken0,
-    onCloseHandler: onCloseHandlerToken0,
-    onVisibleHandler: onVisibleHandlerToken0,
-  } = useModal();
-  const {
-    isVisible: isVisibleToken1,
-    onCloseHandler: onCloseHandlerToken1,
-    onVisibleHandler: onVisibleHandlerToken1,
+    isVisible: isVisiblePair,
+    onCloseHandler: onClosePairHandler,
+    onVisibleHandler: onVisiblePairHandler,
   } = useModal();
 
-  //Select Token & update tokenticker in store
-  const onSelectHandler0 = (tokenTicker) => {
-    setTokenTicker0(tokenTicker);
-  };
-  const onSelectHandler1 = (tokenTicker) => {
-    setTokenTicker1(tokenTicker);
-  };
+  //------------- Get token from UI and update store -------------
 
-  useEffect(() => {
-    const newTickers = { token0: tokenTicker0, token1: tokenTicker1 };
-    dispatch(limitActions.updateTicker(newTickers));
+  const onSelectTradingPairHandler = (selectedPair) => {
+    console.log("selectedPair");
+    console.log(selectedPair);
+    console.log("contractAddresses[selectedPair]");
+    console.log(contractAddresses[selectedPair]);
+    const newPairInfo = {
+      selectedPair: selectedPair,
+      token0: {
+        ticker: contractAddresses[selectedPair].pair.token0,
+        decimals: contractAddresses[selectedPair].decimals.token0,
+      },
+      token1: {
+        ticker: contractAddresses[selectedPair].pair.token1,
+        decimals: contractAddresses[selectedPair].decimals.token1,
+      },
+    };
+    setPairInfo(newPairInfo);
+    dispatch(limitPairActions.updateTicker(newPairInfo));
 
-    //get the new contract for the new token pair
-    const pairKeys = Object.keys(contractAddresses);
-    let pairKey;
-    let contractAddress;
-
-    pairKeys.map((key) => {
-      if (key.includes(tokenTicker0) && key.includes(tokenTicker1)) {
-        pairKey = key;
-      }
-    });
-
-    if (chainId && pairKey) {
-      contractAddress = contractAddresses[pairKey][chainId][0];
-    }
-    contractAddress = contractAddresses[pairKey][chainId][0];
+    const contractAddress = contractAddresses[selectedPair].chain[chainId][0];
+    console.log("check contractAddress");
+    console.log(contractAddress);
     setContractAddressPool(contractAddress);
-  }, [tokenTicker0, tokenTicker1]);
+  };
 
-  //prepare the input fields/checks, etc
+  //------------- Check if input form is valid -------------
   const checkValidity = (input) => {
     return input.trim() !== "";
   };
@@ -84,13 +88,15 @@ const OrderBoxLimit = () => {
   if (
     quantityLimInput.enteredInputisValid &&
     priceLimInput.enteredInputisValid &&
-    tokenTicker0 != "" &&
-    tokenTicker1 != "" &&
+    pairInfo.token0.ticker != "" &&
+    pairInfo.token1.ticker != "" &&
     quantityLimInput.enteredInput > 0 &&
     priceLimInput.enteredInput > 0
   ) {
     formIsValid = true;
   }
+
+  //------------- refresh address/pair when user select other token -------------
 
   useEffect(() => {
     if (formIsValid) {
@@ -98,33 +104,40 @@ const OrderBoxLimit = () => {
         quantity: quantityLimInput.enteredInput,
         price: priceLimInput.enteredInput,
       };
-      dispatch(limitActions.updatePriQua(newLimitOrderPriQua));
+      dispatch(limitPairActions.updatePriQua(newLimitOrderPriQua));
     }
   }, [quantityLimInput.enteredInput, priceLimInput.enteredInput]);
 
-  //interact with SC
-  useEffect(() => {
-    if (isWeb3Enabled) {
-      //updateUI();
-    }
-  }, [isWeb3Enabled]);
+  //------------- Interaction with smart contract -------------
 
-  const sqrtPriceX96 = Math.sqrt(limitStore.price) * 2 ** 96;
+  //sqrtPriceX96
+  const computedPairPrice =
+    (1 / limitStore.price) *
+    ((10 ^ pairInfo.token1.decimals) / (10 ^ pairInfo.token0.decimals));
+  const sqrtPriceX96 = Math.sqrt(computedPairPrice) * 2 ** 96;
   const sqrtPriceX96String = sqrtPriceX96.toLocaleString("fullwide", {
     useGrouping: false,
   });
 
-  const sqrtPriceX96BigNumber = ethers.BigNumber.from(sqrtPriceX96String);
-  const quantityParseUnits10 = ethers.utils.parseUnits(
+  //Quantity
+  let quantityDecimals;
+  if (limitStore.side) {
+    quantityDecimals = pairInfo.token0.decimals;
+  } else {
+    quantityDecimals = pairInfo.token1.decimals;
+  }
+  const quantityParseUnits = ethers.utils.parseUnits(
     limitStore.quantity.toString(),
-    10
+    quantityDecimals
   );
-  const quantiyBigNumber = ethers.BigNumber.from(quantityParseUnits10);
+  const quantityString = quantityParseUnits.toLocaleString("fullwide", {
+    useGrouping: false,
+  });
 
   const createOrderArgs = {
     side: limitStore.side,
-    sqrtPriceX96: sqrtPriceX96BigNumber,
-    quantity: quantiyBigNumber,
+    sqrtPriceX96: sqrtPriceX96String,
+    quantity: quantityString,
   };
   console.log("createOrderArgs");
   console.log(createOrderArgs);
@@ -135,6 +148,45 @@ const OrderBoxLimit = () => {
     functionName: "createOrder",
     params: createOrderArgs,
   });
+
+  const onBuyHandler = () => {
+    setSetSell(false);
+    dispatch(limitPairActions.updateSide(false));
+  };
+
+  const onSellHandler = () => {
+    setSetSell(true);
+    dispatch(limitPairActions.updateSide(true));
+  };
+
+  const onCreateOrderHandler = async () => {
+    console.log("function called");
+    await createOrder({
+      onSuccess: onHandleSuccess,
+      onError: (error) => {
+        console.log("error createorder");
+        console.log(error);
+      },
+    });
+  };
+
+  //------------- UI response from SC call -------------
+
+  useEffect(() => {
+    if (isWeb3Enabled) {
+      //updateUI();
+    }
+  }, [isWeb3Enabled]);
+
+  /*
+  if (httpState_fetch.status === "pending") {
+    return (
+      <div className="flex justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+  */
 
   const onHandleSuccess = async (tx) => {
     await tx.wait(1);
@@ -152,7 +204,7 @@ const OrderBoxLimit = () => {
     });
   };
 
-  //submit
+  //------------- Submit eneterd input and call SC function -------------
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
@@ -161,13 +213,7 @@ const OrderBoxLimit = () => {
     }
 
     //TODO call SC functions with enteredInput
-    //TODO pass the srqtPricex96
-
-    /*
-    const functionReturn = await createOrder();
-    console.log("positionId");
-    console.log(functionReturn);
-    */
+    await onCreateOrderHandler();
 
     //TODO If creating  through SC successful, then update openorder store with dispatch function addNewOpenOrder
 
@@ -175,7 +221,7 @@ const OrderBoxLimit = () => {
       id: Math.round(Math.random() * 100),
       wallet: "getMoralisWallet",
       contractAddress: contractAddressPool,
-      pairKey: tokenTicker0 + "/" + tokenTicker1,
+      pairKey: pairInfo.selectedPair,
       status: "active",
       side: setSell,
       quantity: quantityLimInput.enteredInput,
@@ -199,34 +245,23 @@ const OrderBoxLimit = () => {
           <div className="border-b-2 mb-6">
             <div className="flex flex-row justify-around mb-6">
               <button
-                onClick={onVisibleHandlerToken0}
-                className="flex flex-row justify-center items-center border-2 rounded-lg shadow hover:scale-110 py-1 w-24 "
+                onClick={onVisiblePairHandler}
+                className="flex flex-row justify-center items-center border-2 rounded-lg shadow hover:scale-110 py-1 px-4 "
               >
-                {tokenTicker0 != "" ? tokenTicker0 : "Select Token"}
+                {pairInfo.selectedPair != ""
+                  ? pairInfo.selectedPair
+                  : "Select Pair"}
                 <DropdownIcon />
               </button>
-              {isVisibleToken0 && (
-                <SelectToken0
-                  onClose={onCloseHandlerToken0}
-                  onSelect={onSelectHandler0}
-                />
-              )}
-              <button
-                onClick={onVisibleHandlerToken1}
-                className="flex flex-row justify-center items-center border-2 rounded-lg shadow hover:scale-110 py-1 w-24"
-              >
-                {tokenTicker1 != "" ? tokenTicker1 : "Select Token"}
-                <DropdownIcon />
-              </button>
-              {isVisibleToken1 && (
-                <SelectToken1
-                  onClose={onCloseHandlerToken1}
-                  onSelect={onSelectHandler1}
+              {isVisiblePair && (
+                <SelectPair
+                  onClose={onClosePairHandler}
+                  onSelect={onSelectTradingPairHandler}
                 />
               )}
             </div>
             <div className="mb-6">
-              <div>Current Price on Uniswap: </div>
+              <div>Current Ratio on Uniswap: </div>
               <TokenRatio4 />
             </div>
           </div>
@@ -252,49 +287,40 @@ const OrderBoxLimit = () => {
               />
             </div>
           </div>
-          <div>
-            <button
-              onClick={async () => {
-                setSetSell(false);
-                await createOrder({
-                  onSuccess: onHandleSuccess,
-                  onError: (error) => {
-                    console.log("error createorder");
-                    console.log(error);
-                  },
-                });
-                dispatch(limitActions.updateSide(false));
-              }}
-              className={` text-white ${
-                !formIsValid
-                  ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-buyGreen shadow hover:font-bold hover:scale-110 "
-              } border-2 rounded-l-lg border-white w-20 py-1 px-2 `}
-              disabled={!formIsValid}
+          <div className="flex flex-row justify-center">
+            <div
+              onClick={onBuyHandler}
+              className={` text-white border-2 rounded-l-lg border-white ${
+                setSell == false
+                  ? "bg-lightGreen font-bold scale-110"
+                  : "bg-buyGreen"
+              } shadow hover:font-bold hover:scale-110 w-20 py-1 px-2 `}
             >
               Buy
-            </button>
-            <button
-              onClick={async () => {
-                setSetSell(true);
-                await createOrder({
-                  onSuccess: onHandleSuccess,
-                  onError: (error) => {
-                    console.log("error createorder");
-                    console.log(error);
-                  },
-                });
-                dispatch(limitActions.updateSide(true));
-              }}
-              className={`text-white ${
-                !formIsValid
-                  ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-darkRed shadow hover:font-bold hover:scale-110"
-              } border-2 rounded-r-lg border-white w-20 py-1 px-2 `}
-              disabled={!formIsValid}
+            </div>
+            <div
+              onClick={onSellHandler}
+              className={`text-white border-2 rounded-r-lg border-white ${
+                setSell == true
+                  ? "bg-brightRedLight font-bold scale-110 "
+                  : "bg-darkRed"
+              } shadow hover:font-bold hover:scale-110 w-20 py-1 px-2 `}
             >
               {" "}
               Sell
+            </div>
+          </div>
+          <div>
+            <button
+              onClick={onCreateOrderHandler}
+              className={`text-white ${
+                !formIsValid
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-grayishBlue hover:bg-paleGrayishBlue hover:border-black hover:text-black"
+              } border-2 rounded-lg border-white py-1 px-2 mt-8`}
+              disabled={!formIsValid}
+            >
+              Create Order
             </button>
           </div>
         </div>
