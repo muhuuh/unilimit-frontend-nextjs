@@ -1,9 +1,6 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import OpenOrderIdRow from "./OpenOrderIdRow";
-import { contractAddresses } from "../../../constants";
-import { useMoralis } from "react-moralis";
-import { openOrdersActions } from "../../store/openOrders-slice";
 import ChangeAmountPopup from "../Popup/ChangeAmountPopup";
 
 const OpenOrders = () => {
