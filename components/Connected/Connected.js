@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import OpenOrders from "./OpenOrders/OpenOrders";
 import OrderBoxLimit from "./Ordering/OrderBoxLimit";
+import OrderBoxLimit2 from "./Ordering/OrderBoxLimit2";
 //import ReactTradingviewWidget from "react-tradingview-widget";
 import OrderBoxSwap from "./Ordering/OrderBoxSwap";
 
@@ -32,7 +33,7 @@ const Connected = () => {
         </button>
       </div>
       <div className="flex  justify-center mb-16">
-        {showLimit ? <OrderBoxLimit /> : <OrderBoxSwap />}
+        {showLimit ? <OrderBoxLimit2 /> : <OrderBoxSwap />}
       </div>
       <div className="">{showLimit ? <OpenOrders /> : <div />}</div>
     </div>

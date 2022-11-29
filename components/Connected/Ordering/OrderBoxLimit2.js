@@ -10,29 +10,47 @@ import { openOrdersActions } from "../../store/openOrders-slice";
 import { ethers } from "ethers";
 import SelectPair from "../Tokens/SelectPair";
 import { limitPairActions } from "../../store/limitPair-slice";
+//import { EvmChain } from "@moralisweb3/evm-utils";
 
-const OrderBoxLimit = () => {
-  const dispatch = useDispatch();
-  const limitStore = useSelector((state) => state.limit);
-  const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
-  //TODO import the loading feature from moralis and put the loadingspinenr when refreshin price
-  const chainId = parseInt(chainIdHex).toString();
-  const [pairInfo, setPairInfo] = useState({
-    selectedPair: "USDC/WETH",
-    token0: {
-      ticker: "WETH",
-      decimals: 18,
-    },
-    token1: {
-      ticker: "USDC",
-      decimals: 6,
-    },
-  });
+const OrderBoxLimit2 = () => {
+  //------------- set up constants -------------
 
   const [setSell, setSetSell] = useState(false);
+  const [currentAllowance, setCurrentAllowance] = useState(null);
   const [contractAddressPool, setContractAddressPool] = useState(
     "0xe0b4c2BAa33258Ca354E65Bee66f9A15045A7F6d"
   );
+  const dispatch = useDispatch();
+  const limitStore = useSelector((state) => state.limit);
+  const {
+    chainId: chainIdHex,
+    isWeb3Enabled,
+    isAuthenticated,
+    authenticate,
+    account,
+    Moralis,
+  } = useMoralis(); //authenticate: https://github.com/MoralisWeb3/react-moralis#usemoralis
+  const [pairInfo, setPairInfo] = useState({
+    selectedPair: "USDC/WETH",
+    token0: {
+      ticker: "USDC",
+      decimals: 6,
+    },
+    token1: {
+      ticker: "WETH",
+      decimals: 18,
+    },
+  });
+  const token0Address = tokens[pairInfo.token0.ticker].token_address;
+  const token1Address = tokens[pairInfo.token1.ticker].token_address;
+  useEffect(() => {
+    if (!isAuthenticated) {
+      authenticate();
+    }
+  }, [isAuthenticated]);
+
+  //TODO import the loading feature from moralis and put the loadingspinenr when refreshin price
+  const chainId = parseInt(chainIdHex).toString();
 
   //------------- set up Modal -------------
 
@@ -45,10 +63,6 @@ const OrderBoxLimit = () => {
   //------------- Get token from UI and update store -------------
 
   const onSelectTradingPairHandler = (selectedPair) => {
-    console.log("selectedPair");
-    console.log(selectedPair);
-    console.log("contractAddresses[selectedPair]");
-    console.log(contractAddresses[selectedPair]);
     const newPairInfo = {
       selectedPair: selectedPair,
       token0: {
@@ -64,8 +78,6 @@ const OrderBoxLimit = () => {
     dispatch(limitPairActions.updateTicker(newPairInfo));
 
     const contractAddress = contractAddresses[selectedPair].chain[chainId][0];
-    console.log("check contractAddress");
-    console.log(contractAddress);
     setContractAddressPool(contractAddress);
   };
 
@@ -108,7 +120,7 @@ const OrderBoxLimit = () => {
     }
   }, [quantityLimInput.enteredInput, priceLimInput.enteredInput]);
 
-  //------------- Interaction with smart contract -------------
+  //------------- Function for interaction with smart contract -------------
 
   //sqrtPriceX96
   const computedPairPrice =
@@ -134,13 +146,89 @@ const OrderBoxLimit = () => {
     useGrouping: false,
   });
 
+  //change spender from user to contractaddress
+  async function approve() {
+    const options = {
+      contractAddress: token1Address,
+      functionName: "approve",
+      abi: [
+        {
+          constant: false,
+          inputs: [
+            { name: "_spender", type: "address" },
+            { name: "_value", type: "uint256" },
+          ],
+          name: "approve",
+          outputs: [{ name: "", type: "bool" }],
+          payable: false,
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      params: {
+        _spender: contractAddressPool,
+        _value: "10000000000000000000000000000000",
+      },
+    };
+    await Moralis.executeFunction(options);
+  }
+
+  /*
+  async function allowance() {
+    const options = {
+      contractAddress: token1Address,
+      functionName: "allowance",
+      abi: [
+        {
+          constant: true,
+          inputs: [
+            { name: "_owner", type: "address" },
+            { name: "_spender", type: "address" },
+          ],
+          name: "allowance",
+          outputs: [{ name: "", type: "uint256" }],
+          payable: false,
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      params: {
+        _owner: account,
+        _spender: contractAddressPool,
+      },
+    };
+    await Moralis.executeFunction(options);
+  }
+  */
+
+  const { runContractFunction: allowance } = useWeb3Contract({
+    abi: [
+      {
+        constant: true,
+        inputs: [
+          { name: "_owner", type: "address" },
+          { name: "_spender", type: "address" },
+        ],
+        name: "allowance",
+        outputs: [{ name: "", type: "uint256" }],
+        payable: false,
+        stateMutability: "view",
+        type: "function",
+      },
+    ],
+    contractAddress: token1Address,
+    functionName: "allowance",
+    params: {
+      _owner: account,
+      _spender: contractAddressPool,
+    },
+  });
+
   const createOrderArgs = {
     side: limitStore.side,
     sqrtPriceX96: sqrtPriceX96String,
     quantity: quantityString,
   };
-  console.log("createOrderArgs");
-  console.log(createOrderArgs);
 
   const { runContractFunction: createOrder } = useWeb3Contract({
     abi: abi,
@@ -159,8 +247,34 @@ const OrderBoxLimit = () => {
     dispatch(limitPairActions.updateSide(true));
   };
 
+  const onApproveHandler = async () => {
+    console.log("function approved called");
+    await approve({
+      onSuccess: onHandleSuccess,
+      onError: (error) => {
+        console.log("error approve order");
+        console.log(error);
+      },
+    });
+  };
+
+  let allowanceTx;
+  const onAllowanceHandler = async () => {
+    console.log("function allowance called");
+    allowanceTx = await allowance({
+      onSuccess: onHandleSuccess,
+      onError: (error) => {
+        console.log("error approve order");
+        console.log(error);
+      },
+    });
+    console.log("allowance from handler");
+    setCurrentAllowance(allowanceTx);
+    console.log(allowanceTx.toString());
+  };
+
   const onCreateOrderHandler = async () => {
-    console.log("function called");
+    console.log("function create order called");
     await createOrder({
       onSuccess: onHandleSuccess,
       onError: (error) => {
@@ -179,9 +293,11 @@ const OrderBoxLimit = () => {
   }, [isWeb3Enabled]);
 
   const onHandleSuccess = async (tx) => {
-    await tx.wait(1);
+    console.log("onHandleSuccess called");
+    //await tx.wait(1);
+    console.log("onHandleSuccess");
     onHandleNotification(tx);
-    updateUI();
+    //updateUI();
   };
 
   const onHandleNotification = () => {
@@ -194,22 +310,34 @@ const OrderBoxLimit = () => {
     });
   };
 
-  //------------- Submit eneterd input and call SC function -------------
+  //------------- Submit entered input and call SC function -------------
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-
     if (!formIsValid) {
       return;
     }
 
-    //TODO call SC functions with enteredInput
-    await onCreateOrderHandler();
+    //check allowance
+    await onAllowanceHandler();
+
+    //approve if allowance is null
+    if (!allowanceTx) {
+      const txApprove = await onApproveHandler();
+      console.log("approved");
+      console.log(txApprove);
+    } else {
+      console.log("Allowance sufficient");
+    }
+
+    //create Order
+    const txCreate = await onCreateOrderHandler();
+    //await txCreate.wait(1);
+    console.log("order created");
 
     //TODO If creating  through SC successful, then update openorder store with dispatch function addNewOpenOrder
-
     const newOpenOrder = {
       id: Math.round(Math.random() * 100),
-      wallet: "getMoralisWallet",
+      wallet: account,
       contractAddress: contractAddressPool,
       pairKey: pairInfo.selectedPair,
       status: "active",
@@ -217,7 +345,6 @@ const OrderBoxLimit = () => {
       quantity: quantityLimInput.enteredInput,
       priceTarget: priceLimInput.enteredInput,
     };
-
     dispatch(openOrdersActions.addOpenOrder(newOpenOrder));
 
     quantityLimInput.resetInput();
@@ -249,10 +376,6 @@ const OrderBoxLimit = () => {
                   onSelect={onSelectTradingPairHandler}
                 />
               )}
-            </div>
-            <div className="mb-6">
-              <div>Current Ratio on Uniswap: </div>
-              <TokenRatio4 />
             </div>
           </div>
           <div className="flex flex-row gap-x-6">
@@ -302,7 +425,7 @@ const OrderBoxLimit = () => {
           </div>
           <div>
             <button
-              onClick={onCreateOrderHandler}
+              type="submit"
               className={`text-white ${
                 !formIsValid
                   ? "bg-gray-500 cursor-not-allowed"
@@ -319,4 +442,12 @@ const OrderBoxLimit = () => {
   );
 };
 
-export default OrderBoxLimit;
+export default OrderBoxLimit2;
+
+/*
+            <div className="mb-6">
+              <div>Current Ratio on Uniswap: </div>
+              <TokenRatio4 />
+            </div>
+
+*/
