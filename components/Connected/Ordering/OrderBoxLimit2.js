@@ -10,7 +10,6 @@ import { openOrdersActions } from "../../store/openOrders-slice";
 import { ethers } from "ethers";
 import SelectPair from "../Tokens/SelectPair";
 import { limitPairActions } from "../../store/limitPair-slice";
-//import { EvmChain } from "@moralisweb3/evm-utils";
 
 const OrderBoxLimit2 = () => {
   //------------- set up constants -------------
@@ -173,34 +172,6 @@ const OrderBoxLimit2 = () => {
     await Moralis.executeFunction(options);
   }
 
-  /*
-  async function allowance() {
-    const options = {
-      contractAddress: token1Address,
-      functionName: "allowance",
-      abi: [
-        {
-          constant: true,
-          inputs: [
-            { name: "_owner", type: "address" },
-            { name: "_spender", type: "address" },
-          ],
-          name: "allowance",
-          outputs: [{ name: "", type: "uint256" }],
-          payable: false,
-          stateMutability: "view",
-          type: "function",
-        },
-      ],
-      params: {
-        _owner: account,
-        _spender: contractAddressPool,
-      },
-    };
-    await Moralis.executeFunction(options);
-  }
-  */
-
   const { runContractFunction: allowance } = useWeb3Contract({
     abi: [
       {
@@ -273,15 +244,18 @@ const OrderBoxLimit2 = () => {
     console.log(allowanceTx.toString());
   };
 
+  let positionId = 0;
   const onCreateOrderHandler = async () => {
     console.log("function create order called");
-    await createOrder({
+    positionId = await createOrder({
       onSuccess: onHandleSuccess,
       onError: (error) => {
         console.log("error createorder");
         console.log(error);
       },
     });
+    console.log("positionId");
+    console.log(positionId);
   };
 
   //------------- UI response from SC call -------------
@@ -336,7 +310,8 @@ const OrderBoxLimit2 = () => {
 
     //TODO If creating  through SC successful, then update openorder store with dispatch function addNewOpenOrder
     const newOpenOrder = {
-      id: Math.round(Math.random() * 100),
+      id: positionId,
+      //id: Math.round(Math.random() * 100),
       wallet: account,
       contractAddress: contractAddressPool,
       pairKey: pairInfo.selectedPair,
@@ -345,7 +320,10 @@ const OrderBoxLimit2 = () => {
       quantity: quantityLimInput.enteredInput,
       priceTarget: priceLimInput.enteredInput,
     };
-    dispatch(openOrdersActions.addOpenOrder(newOpenOrder));
+
+    if (positionId != 0) {
+      dispatch(openOrdersActions.addOpenOrder(newOpenOrder));
+    }
 
     quantityLimInput.resetInput();
     priceLimInput.resetInput();
