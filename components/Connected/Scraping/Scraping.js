@@ -1,15 +1,15 @@
 import { ethers } from "ethers";
-import abi from "./constants/abi.json" assert { type: "json" };
-import contractAddress from "./constants/contractAddress.json" assert { type: "json" };
-import abi from "../../../constants/";
+//import abi from "./constants/abi.json" assert { type: "json" };
+import abi from "../../../constants/abi.json" assert { type: "json" };
+//import contractAddress from "./constants/contractAddress.json" assert { type: "json" };
+import contractAddress from "../../../constants/contractAddress.json" assert { type: "json" };
 
 import * as dotenv from "dotenv";
 import { useDispatch } from "react-redux";
 import { scrapingActions } from "../../store/scraping-slice";
 dotenv.config();
 
-async function main() {
-  console.log("runing scraping in server component");
+async function scraping() {
   const dispatch = useDispatch();
   const provider = new ethers.providers.AlchemyProvider(
     "goerli",
@@ -81,7 +81,13 @@ async function main() {
   dispatch(scrapingActions.updateScrapingOpenOrders(scrapedOrders));
 }
 
+module.exports = {
+  scraping,
+};
+
+/*
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+*/

@@ -28,7 +28,7 @@ const OpenOrderIdRow = (props) => {
     abi: abi,
     contractAddress: contractAddressPool,
     functionName: "closePositionOwner",
-    params: { positionId: 46023 }, //TODOget the current id from props. fetching should put in it store and the get from parent compoent
+    params: { positionId: 46047 }, //TODOget the current id from props. fetching should put in it store and the get from parent compoent
   });
 
   const onCloseOrderHandler = async () => {

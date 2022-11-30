@@ -244,7 +244,7 @@ const OrderBoxLimit2 = () => {
     console.log(allowanceTx.toString());
   };
 
-  let positionId = 0;
+  let positionId;
   const onCreateOrderHandler = async () => {
     console.log("function create order called");
     positionId = await createOrder({
@@ -296,7 +296,7 @@ const OrderBoxLimit2 = () => {
     if (!formIsValid) {
       return;
     }
-
+    //TODO make sure that allowance runs before the rest of the code continues
     //check allowance
     await onAllowanceHandler();
 
@@ -316,7 +316,7 @@ const OrderBoxLimit2 = () => {
 
     //TODO If creating  through SC successful, then update openorder store with dispatch function addNewOpenOrder
     const newOpenOrder = {
-      id: positionId,
+      id: positionId.value.toString(),
       //id: Math.round(Math.random() * 100),
       wallet: account,
       contractAddress: contractAddressPool,
@@ -327,9 +327,12 @@ const OrderBoxLimit2 = () => {
       priceTarget: priceLimInput.enteredInput,
     };
 
-    if (positionId != 0) {
+    /*
+    if (positionId[value].toString() != "0") {
       dispatch(openOrdersActions.addOpenOrder(newOpenOrder));
     }
+    */
+    dispatch(openOrdersActions.addOpenOrder(newOpenOrder));
 
     quantityLimInput.resetInput();
     priceLimInput.resetInput();

@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import OpenOrderIdRow from "./OpenOrderIdRow";
 import ChangeAmountPopup from "../Popup/ChangeAmountPopup";
+import { scraping } from "../Scraping/Scraping.js";
 
 const OpenOrders = () => {
   const openOrdersStore = useSelector((state) => state.openOrders);
+  const scrapingsStore = useSelector((state) => state.scraping);
+  const [refreshScraping, setRefreshScraping] = useState(0);
   //TODO get from store the open orders info that were fetched from scraper
+  useEffect(async () => {
+    console.log("useeffect scrapping");
+    await scraping();
+  }, [refreshScraping]);
 
   //call the getterfunction from the server side component and upload to store there
   const openOrdersItem = openOrdersStore.openOrders.map((order) => (
@@ -19,6 +26,9 @@ const OpenOrders = () => {
       priceCurrent={order.priceCurrent}
     />
   ));
+  const scrapedOpenOrders = scrapingsStore.openOrders[0];
+  console.log("scrapedOpenOrders");
+  console.log(scrapedOpenOrders);
 
   return (
     <div className="mb-20">
@@ -36,6 +46,7 @@ const OpenOrders = () => {
         </div>
         {openOrdersItem}
       </div>
+      {}
     </div>
   );
 };
