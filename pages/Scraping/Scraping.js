@@ -1,19 +1,17 @@
 import { ethers } from "ethers";
-import abi from "./constants/abi.json" assert { type: "json" };
-import contractAddress from "./constants/contractAddress.json" assert { type: "json" };
-import abi from "../../../constants/";
+//import abi from "./constants/abi.json" assert { type: "json" };
+import abi from "../../constants/abi.json" assert { type: "json" };
+//import contractAddress from "./constants/contractAddress.json" assert { type: "json" };
+import contractAddress from "../../constants/contractAddress.json" assert { type: "json" };
 
-import * as dotenv from "dotenv";
-import { useDispatch } from "react-redux";
-import { scrapingActions } from "../../store/scraping-slice";
-dotenv.config();
+//import * as dotenv from "dotenv";
+//dotenv.config();
 
-async function main() {
+export async function scraping() {
   console.log("runing scraping in server component");
-  const dispatch = useDispatch();
   const provider = new ethers.providers.AlchemyProvider(
     "goerli",
-    process.env.ALCHEMY_API_KEY
+    "PxyyCTVgOGIMfDM9huoLclb751rN1Luj" //TODO import correctly with dotenv (possibly reinstall all modules corrcetly)
   );
   const currentBlock = await provider.getBlock("latest");
   console.log("currentBlock");
@@ -78,10 +76,12 @@ async function main() {
   console.log("----------------------------------");
   console.log("scrapedOrders");
   console.log(scrapedOrders);
-  dispatch(scrapingActions.updateScrapingOpenOrders(scrapedOrders));
+  return scrapedOrders;
 }
 
+/*
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+*/
