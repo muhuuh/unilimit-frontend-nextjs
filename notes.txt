@@ -1,0 +1,5 @@
+- CreateOrder() event is Open(uint256 positionId,address trader,bool side,uint160 sqrtPriceX96,uint256 quantity);
+    -topics is "0x6c40f5ef74fd79b0dad7fa3da61f0a6a8ef8bf63b75eae10782c62baa2baf1bb"
+
+-event for closePositionOwner() is Close(uint256 positionId)
+    -topics is "0xbf67515a38ee520223d32c1266d52101c30d936ed1f3e436c8caeb0a43cb06bf"

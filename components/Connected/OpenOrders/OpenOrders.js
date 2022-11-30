@@ -5,6 +5,7 @@ import ChangeAmountPopup from "../Popup/ChangeAmountPopup";
 
 const OpenOrders = () => {
   const openOrdersStore = useSelector((state) => state.openOrders);
+  //TODO get from store the open orders info that were fetched from scraper
 
   //call the getterfunction from the server side component and upload to store there
   const openOrdersItem = openOrdersStore.openOrders.map((order) => (

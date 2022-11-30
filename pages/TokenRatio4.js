@@ -2,7 +2,7 @@ import { ChainId, Token, WETH, Fetcher, Route } from "@uniswap/sdk";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { limitPairActions } from "../components/store/limitPair-slice";
-import { tokens } from "../constants";
+import { tokensMainnet } from "../constants";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 
 //https://nextjs.org/docs/basic-features/data-fetching/client-side
@@ -32,9 +32,9 @@ const TokenRatio = () => {
   ];
   console.log("currentPair");
   console.log(currentPair);
-  const totalTokens = tokens;
+  const totalTokens = tokensMainnet;
   console.log("tokens");
-  console.log(tokens[currentPair[0]]);
+  console.log(tokensMainnet[currentPair[0]]);
 
   useEffect(() => {
     setIsFetching(true);

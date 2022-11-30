@@ -12,8 +12,8 @@
     "decimals": { "token0": 6, "token1": 18 },
     "image": "",
     "chain": {
-      "5": ["0xe0b4c2BAa33258Ca354E65Bee66f9A15045A7F6d"],
-      "31337": ["0xe0b4c2BAa33258Ca354E65Bee66f9A15045A7F6d"]
+      "5": ["0x9e5d7582fbc36d1366fc1f113f400ee3175b4bc2"],
+      "31337": ["0x9e5d7582fbc36d1366fc1f113f400ee3175b4bc2"]
     }
   },
   "WBTC/WETH": {

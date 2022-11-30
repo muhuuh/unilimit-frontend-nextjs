@@ -15,9 +15,9 @@ const OrderBoxLimit2 = () => {
   //------------- set up constants -------------
 
   const [setSell, setSetSell] = useState(false);
-  const [currentAllowance, setCurrentAllowance] = useState(null);
+  const [allowanceTrue, setAllowanceTrue] = useState(false);
   const [contractAddressPool, setContractAddressPool] = useState(
-    "0xe0b4c2BAa33258Ca354E65Bee66f9A15045A7F6d"
+    "0x9e5d7582fbc36d1366fc1f113f400ee3175b4bc2"
   );
   const dispatch = useDispatch();
   const limitStore = useSelector((state) => state.limit);
@@ -131,6 +131,7 @@ const OrderBoxLimit2 = () => {
   });
 
   //Quantity
+  //TODO quantity entered in the input value doesn't match the one in the conract on etherscan. look again at computation
   let quantityDecimals;
   if (limitStore.side) {
     quantityDecimals = pairInfo.token0.decimals;
@@ -233,14 +234,13 @@ const OrderBoxLimit2 = () => {
   const onAllowanceHandler = async () => {
     console.log("function allowance called");
     allowanceTx = await allowance({
-      onSuccess: onHandleSuccess,
+      onSuccess: onHandleSuccessAllowance,
       onError: (error) => {
         console.log("error approve order");
         console.log(error);
       },
     });
     console.log("allowance from handler");
-    setCurrentAllowance(allowanceTx);
     console.log(allowanceTx.toString());
   };
 
@@ -265,6 +265,12 @@ const OrderBoxLimit2 = () => {
       //updateUI();
     }
   }, [isWeb3Enabled]);
+
+  const onHandleSuccessAllowance = async (tx) => {
+    console.log("allowance is present");
+    setAllowanceTrue(true);
+    //updateUI();
+  };
 
   const onHandleSuccess = async (tx) => {
     console.log("onHandleSuccess called");
@@ -295,7 +301,7 @@ const OrderBoxLimit2 = () => {
     await onAllowanceHandler();
 
     //approve if allowance is null
-    if (!allowanceTx) {
+    if (!allowanceTrue) {
       const txApprove = await onApproveHandler();
       console.log("approved");
       console.log(txApprove);
@@ -333,7 +339,7 @@ const OrderBoxLimit2 = () => {
     <div className="">
       <form
         onSubmit={onSubmitHandler}
-        className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10"
+        className=" mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10"
       >
         <div className="text-center font-bold text-lg mb-14">Limit Orders</div>
         <div className="">
@@ -354,6 +360,10 @@ const OrderBoxLimit2 = () => {
                   onSelect={onSelectTradingPairHandler}
                 />
               )}
+            </div>
+            <div className="mb-6">
+              <div>Current Ratio on Uniswap: </div>
+              <TokenRatio4 />
             </div>
           </div>
           <div className="flex flex-row gap-x-6">
