@@ -23,7 +23,7 @@ const scrapingSlice = createSlice({
   initialState: defaultState,
   reducers: {
     updateScrapingOpenOrders(state, action) {
-      const scrapedOpenOrders = action.payload;
+      let scrapedOpenOrders = action.payload;
       state.openOrders = scrapedOpenOrders;
     },
   },

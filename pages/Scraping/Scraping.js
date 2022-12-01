@@ -82,11 +82,19 @@ export async function scraping() {
   let price;
   for (let i = 0; i < positionId.length; i++) {
     price = (parseInt(sqrtPriceX96[i]) ** 2 / 2 ** 192).toFixed(4);
+    let newSide;
+    if (side[i]) {
+      newSide = "true";
+    } else if (side[i] === false) {
+      newSide = "true";
+    } else {
+      newSide = "undefined";
+    }
     let newOrder = {
       pool: contractPool[i],
       positionId: positionId[i],
       trader: trader[i],
-      side: side[i],
+      side: newSide,
       sqrtPriceX96: price,
       quantity: quantity[i],
       signature: signature[i],

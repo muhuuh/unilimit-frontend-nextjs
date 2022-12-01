@@ -62,7 +62,6 @@ const OpenOrderIdRow2 = (props) => {
       <div>{props.side}</div>
       <div>{props.quantity}</div>
       <div>{props.priceTarget}</div>
-      <div>{props.priceCurrent}</div>
       <div className="my-2">
         <button
           onClick={onVisibleHandlerModify}
