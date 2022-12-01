@@ -30,24 +30,41 @@ export async function scraping() {
   });
   console.log("logs");
   console.log(logs);
-  const decodedEvents = logs.map((log) => iface.parseLog(log));
+  const decodedEvents = logs.map((log) => {
+    const contract = log.address;
+    const decodedEvent = iface.parseLog(log);
+    return { contract: contract, decodedEventLogs: decodedEvent };
+  });
+  console.log("----------------------------------");
   console.log("decodedEvents");
-  console.log(decodedEvents);
+  console.log(decodedEvents[0].contract);
+  console.log(decodedEvents[0].decodedEventLogs);
+  console.log(decodedEvents[0].decodedEventLogs["args"]["trader"]);
 
   console.log("----------------------------------");
 
+  const contractPool = decodedEvents.map((event) => event.contract);
   const positionId = decodedEvents.map((event) =>
-    event["args"]["positionId"].toString()
+    event.decodedEventLogs["args"]["positionId"].toString()
   );
-  const trader = decodedEvents.map((event) => event["args"]["trader"]);
-  const side = decodedEvents.map((event) => event["args"]["side"]);
-  const sqrtPriceX96 = decodedEvents.map(
-    (event) => event["args"]["sqrtPriceX96"]
+  const trader = decodedEvents.map(
+    (event) => event.decodedEventLogs["args"]["trader"]
+  );
+  const side = decodedEvents.map(
+    (event) => event.decodedEventLogs["args"]["side"]
+  );
+  const sqrtPriceX96 = decodedEvents.map((event) =>
+    event.decodedEventLogs["args"]["sqrtPriceX96"].toString()
   );
   const quantity = decodedEvents.map((event) =>
-    event["args"]["quantity"].toString()
+    event.decodedEventLogs["args"]["quantity"].toString()
   );
-  const signature = decodedEvents.map((event) => event["signature"].toString());
+  const signature = decodedEvents.map((event) =>
+    event.decodedEventLogs["signature"].toString()
+  );
+
+  console.log("contractPool");
+  console.log(contractPool);
   console.log("positionId");
   console.log(positionId);
   console.log("trader");
@@ -62,12 +79,15 @@ export async function scraping() {
   console.log(signature);
 
   const scrapedOrders = [];
+  let price;
   for (let i = 0; i < positionId.length; i++) {
+    price = (parseInt(sqrtPriceX96[i]) ** 2 / 2 ** 192).toFixed(4);
     let newOrder = {
+      pool: contractPool[i],
       positionId: positionId[i],
       trader: trader[i],
       side: side[i],
-      sqrtPriceX96: sqrtPriceX96[i],
+      sqrtPriceX96: price,
       quantity: quantity[i],
       signature: signature[i],
     };
@@ -78,10 +98,3 @@ export async function scraping() {
   console.log(scrapedOrders);
   return scrapedOrders;
 }
-
-/*
-main().catch((err) => {
-  console.error(err);
-  process.exitCode = 1;
-});
-*/

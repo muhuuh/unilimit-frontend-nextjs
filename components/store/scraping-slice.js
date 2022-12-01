@@ -2,7 +2,17 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const defaultState = {
   user: "",
-  openOrders: [{}],
+  openOrders: [
+    {
+      pool: "",
+      positionId: "",
+      trader: "",
+      side: "",
+      sqrtPriceX96: "",
+      quantity: "",
+      signature: "",
+    },
+  ],
   closedOrders: [{}],
   changedSize: [{}],
   settled: [{}],

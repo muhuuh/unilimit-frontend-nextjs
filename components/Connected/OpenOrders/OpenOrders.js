@@ -1,16 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import OpenOrderIdRow from "./OpenOrderIdRow";
+import OpenOrderIdRow2 from "./OpenOrderIdRow2";
 import ChangeAmountPopup from "../Popup/ChangeAmountPopup";
+import { useMoralis } from "react-moralis";
 import { scraping } from "../../../pages/Scraping/Scraping";
 import { scrapingActions } from "../../store/scraping-slice";
+import { addressPairPool, contractAddresses } from "../../../constants";
 
 const OpenOrders = () => {
-  const openOrdersStore = useSelector((state) => state.openOrders);
   const scrapingsStore = useSelector((state) => state.scraping);
+  const { chainId: chainIdHex, account, Moralis } = useMoralis();
+  const chainId = parseInt(chainIdHex).toString();
   const dispatch = useDispatch();
   const [refreshScraping, setRefreshScraping] = useState(0);
-  const [newScrapedOrders, setNewScrapedOrders] = useState(0);
+  const [newScrapedOrders, setNewScrapedOrders] = useState([
+    {
+      pool: "",
+      positionId: "",
+      trader: "",
+      side: "",
+      sqrtPriceX96: "",
+      quantity: "",
+      signature: "",
+    },
+  ]);
   //TODO get data from scraping function and upload to store
   let scrapedOrders;
   useEffect(() => {
@@ -22,43 +36,35 @@ const OpenOrders = () => {
     scrapeData();
   }, [refreshScraping]);
 
+  const pairAddresses = addressPairPool[chainId];
+
   useEffect(() => {
     console.log("run second useeffect");
-    dispatch(scrapingActions.updateScrapingOpenOrders(newScrapedOrders));
+    let newScrapedOrderWithTicker = [];
+    const test = newScrapedOrders.map((order) => {
+      const pair = pairAddresses[order.pool];
+      order = { ...order, pool: pair };
+      newScrapedOrderWithTicker.push(order);
+    });
+    dispatch(
+      scrapingActions.updateScrapingOpenOrders(newScrapedOrderWithTicker)
+    );
   }, [newScrapedOrders]);
 
-  console.log("scrapingsStore.openOrders");
-  console.log(scrapingsStore.openOrders[0]);
-
-  /*
-  const openOrdersItem2 = scrapingsStore.openOrders.map((order) => (
-    <OpenOrderIdRow
-      id={order.positionId}
-      status="status"
-      pair="pair"
-      side={order.side}
-      quantity={order.quantity}
-      priceTarget={order.sqrtPriceX96}
-      priceCurrent="none"
-    />
-  ));
-  */
-
-  //call the getterfunction from the server side component and upload to store there
-  const openOrdersItem = openOrdersStore.openOrders.map((order) => (
-    <OpenOrderIdRow
-      id={order.id}
-      status={order.status}
-      pair={order.pairKey}
-      side={order.side}
-      quantity={order.quantity}
-      priceTarget={order.priceTarget}
-      priceCurrent={order.priceCurrent}
-    />
-  ));
-  const scrapedOpenOrders = scrapingsStore.openOrders;
-  console.log("scrapedOpenOrders");
-  console.log(scrapedOpenOrders);
+  let openOrdersItem2;
+  if (scrapingsStore.openOrders.length > 0) {
+    openOrdersItem2 = scrapingsStore.openOrders.map((order) => (
+      <OpenOrderIdRow2
+        id={order.positionId}
+        status="status"
+        pair={order.pool}
+        side={order.side}
+        quantity={order.quantity}
+        priceTarget={order.sqrtPriceX96}
+        priceCurrent="none"
+      />
+    ));
+  }
 
   return (
     <div className="mb-20">
@@ -74,7 +80,7 @@ const OpenOrders = () => {
           <div>Adjust size</div>
           <div>Close</div>
         </div>
-        {openOrdersItem}
+        {openOrdersItem2}
       </div>
     </div>
   );

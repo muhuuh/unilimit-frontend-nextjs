@@ -4,13 +4,14 @@ import useModal from "../../../hooks/use-modal";
 import { openOrdersActions } from "../../store/openOrders-slice";
 import ChangeAmountPopup from "../Popup/ChangeAmountPopup";
 import { useMoralis, useWeb3Contract } from "react-moralis";
-import { contractAddresses, abi, tokens } from "../../../constants";
+import { contractAddresses, abi, addressPairPool } from "../../../constants";
 
 const OpenOrderIdRow = (props) => {
   const [contractAddressPool, setContractAddressPool] = useState(
     "0x9e5d7582fbc36d1366fc1f113f400ee3175b4bc2"
   );
   const { chainId: chainIdHex, account, Moralis } = useMoralis();
+  const chainId = parseInt(chainIdHex).toString();
   const dispatch = useDispatch();
   const {
     isVisible: isVisibleModify,
@@ -18,11 +19,14 @@ const OpenOrderIdRow = (props) => {
     onVisibleHandler: onVisibleHandlerModify,
   } = useModal();
 
-  const chainId = parseInt(chainIdHex).toString();
   const contractAddress = contractAddresses[props.pair].chain[chainId][0];
   useEffect(() => {
     setContractAddressPool(contractAddress);
   }, [contractAddress]);
+
+  const poolAddress = addressPairPool[chainId];
+  console.log("poolAddress");
+  console.log(poolAddress["0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6"]);
 
   const { runContractFunction: closePositionOwner } = useWeb3Contract({
     abi: abi,
