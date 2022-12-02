@@ -2,6 +2,7 @@ import Head from "next/head";
 import Unilimit from "./UniLimit";
 import styles from "../styles/Home.module.css";
 import Header from "./Header";
+import ScrapingMain from "./ScrapingMain";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       </Head>
       <Header />
       <Unilimit />
+      <ScrapingMain />
     </div>
   );
 }

@@ -1,20 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const DUMMY_OPEN_ORDERS = [
-  {
-    pool: "",
-    positionId: "",
-    trader: "",
-    side: "",
-    sqrtPriceX96: "",
-    quantity: "",
-    signature: "",
-  },
-];
-
 const defaultState = {
-  openOrders: DUMMY_OPEN_ORDERS,
-  wallet: "0xA6882d6bA4A27931F444dCfcaB9246741c5e71a7",
+  user: "",
+  openOrders: [
+    {
+      pool: "",
+      positionId: "",
+      trader: "",
+      side: "",
+      sqrtPriceX96: "",
+      quantity: "",
+      signature: "",
+    },
+  ],
+  changedSize: [{}],
+  closedOrdersId: [],
+  settled: [{}],
+  latestOrderStatus: [{}],
+  allOrdersOverview: [{}],
 };
 
 const openOrdersSlice = createSlice({
@@ -32,6 +35,7 @@ const openOrdersSlice = createSlice({
         currentOpenOrders[i].pairKey = keyPairs[i];
       }
     },
+    //----------------update visuals in table --------------
     updateQuantity(state, action) {
       const newQuantity = action.payload;
 
@@ -55,9 +59,31 @@ const openOrdersSlice = createSlice({
       const openOrderStore = state.openOrders;
       openOrderStore.push(newOrder);
     },
+    //--------------- general data scraping info --------------------
     updateScrapingOpenOrders(state, action) {
       let scrapedOpenOrders = action.payload;
       state.openOrders = scrapedOpenOrders;
+      state.allOrdersOverview = scrapedOpenOrders;
+    },
+    updateClosedIds(state, action) {
+      let closedOrdersIds = action.payload;
+      state.closedOrdersId = closedOrdersIds;
+      /*
+      let allOpenOrders = state.openOrders;
+      allOpenOrders.map((order) => {
+        console.log("orderid slice");
+        console.log(order.positionId);
+        if (closedOrdersIds.includes(order.positionId)) {
+          console.log("closed id found");
+          console.log(order.positionId);
+          order = { ...order, status: "closed" };
+        }
+      });
+      */
+    },
+    updateLatestOrderState(state, action) {
+      let latestOrdersState = action.payload;
+      state.allOrdersOverview = latestOrdersState;
     },
   },
 });
