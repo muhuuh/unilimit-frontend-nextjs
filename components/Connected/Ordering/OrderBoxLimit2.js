@@ -314,17 +314,16 @@ const OrderBoxLimit2 = () => {
     //await txCreate.wait(1);
     console.log("order created");
 
-    //TODO If creating  through SC successful, then update openorder store with dispatch function addNewOpenOrder
+    //TODO make sure to wait for suucesful creation order before submitting (will also give a correct)
     const newOpenOrder = {
-      id: positionId.value.toString(),
-      //id: Math.round(Math.random() * 100),
-      wallet: account,
-      contractAddress: contractAddressPool,
-      pairKey: pairInfo.selectedPair,
+      pair: pairInfo.selectedPair,
+      positionId: positionId.value.toString(),
+      trader: account,
       status: "active",
       side: setSell,
+      sqrtPriceX96: priceLimInput.enteredInput,
       quantity: quantityLimInput.enteredInput,
-      priceTarget: priceLimInput.enteredInput,
+      signature: "",
     };
 
     /*
@@ -332,6 +331,7 @@ const OrderBoxLimit2 = () => {
       dispatch(openOrdersActions.addOpenOrder(newOpenOrder));
     }
     */
+    //TODO make sure it either refresh scraping, or adds to the openorder store
     dispatch(openOrdersActions.addOpenOrder(newOpenOrder));
 
     quantityLimInput.resetInput();

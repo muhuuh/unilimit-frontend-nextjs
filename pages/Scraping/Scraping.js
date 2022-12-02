@@ -4,15 +4,12 @@ import abi from "../../constants/abi.json" assert { type: "json" };
 //import contractAddress from "./constants/contractAddress.json" assert { type: "json" };
 import contractAddress from "../../constants/contractAddress.json" assert { type: "json" };
 
-//import * as dotenv from "dotenv";
-//dotenv.config();
-
 export async function scraping() {
-  console.log("runing scraping in server component");
   const provider = new ethers.providers.AlchemyProvider(
     "goerli",
-    "PxyyCTVgOGIMfDM9huoLclb751rN1Luj" //TODO import correctly with dotenv (possibly reinstall all modules corrcetly)
+    process.env.NEXT_PUBLIC_ALCHEMY_API_KEY //TODO import correctly with dotenv (possibly reinstall all modules corrcetly)
   );
+
   const currentBlock = await provider.getBlock("latest");
   console.log("currentBlock");
   console.log(currentBlock);

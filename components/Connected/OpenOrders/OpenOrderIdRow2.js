@@ -19,11 +19,14 @@ const OpenOrderIdRow2 = (props) => {
     onVisibleHandler: onVisibleHandlerModify,
   } = useModal();
 
+  console.log("props.pool");
+  console.log(props.pool);
+
   const { runContractFunction: closePositionOwner } = useWeb3Contract({
     abi: abi,
-    contractAddress: props.pair,
+    contractAddress: props.pool,
     functionName: "closePositionOwner",
-    params: { positionId: 46047 }, //TODOget the current id from props. fetching should put in it store and the get from parent compoent
+    params: { positionId: props.id }, //TODOget the current id from props. fetching should put in it store and the get from parent compoent
   });
 
   const onCloseOrderHandler = async () => {

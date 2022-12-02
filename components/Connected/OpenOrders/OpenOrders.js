@@ -7,10 +7,12 @@ import { useMoralis } from "react-moralis";
 import { scraping } from "../../../pages/Scraping/Scraping";
 import { scrapingActions } from "../../store/scraping-slice";
 import { addressPairPool, contractAddresses } from "../../../constants";
+import { openOrdersActions } from "../../store/openOrders-slice";
 
 const OpenOrders = () => {
   const scrapingsStore = useSelector((state) => state.scraping);
-  const { chainId: chainIdHex, account, Moralis } = useMoralis();
+  const openOrderStore = useSelector((state) => state.openOrders);
+  const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex).toString();
   const dispatch = useDispatch();
   const [refreshScraping, setRefreshScraping] = useState(0);
@@ -43,21 +45,24 @@ const OpenOrders = () => {
     let newScrapedOrderWithTicker = [];
     const test = newScrapedOrders.map((order) => {
       const pair = pairAddresses[order.pool];
-      order = { ...order, pool: pair };
+      order = { ...order, pair: pair };
       newScrapedOrderWithTicker.push(order);
     });
     dispatch(
-      scrapingActions.updateScrapingOpenOrders(newScrapedOrderWithTicker)
+      openOrdersActions.updateScrapingOpenOrders(newScrapedOrderWithTicker)
+      //scrapingActions.updateScrapingOpenOrders(newScrapedOrderWithTicker)
     );
   }, [newScrapedOrders]);
 
   let openOrdersItem2;
   if (scrapingsStore.openOrders.length > 0) {
-    openOrdersItem2 = scrapingsStore.openOrders.map((order) => (
+    //openOrdersItem2 = scrapingsStore.openOrders.map((order) => (
+    openOrdersItem2 = openOrderStore.openOrders.map((order) => (
       <OpenOrderIdRow2
         id={order.positionId}
         status="status"
-        pair={order.pool}
+        pool={order.pool}
+        pair={order.pair}
         side={order.side}
         quantity={order.quantity}
         priceTarget={order.sqrtPriceX96}
