@@ -3,24 +3,19 @@ import { useDispatch } from "react-redux";
 import useModal from "../../../hooks/use-modal";
 import { openOrdersActions } from "../../store/openOrders-slice";
 import ChangeAmountPopup from "../Popup/ChangeAmountPopup";
-import { useMoralis, useWeb3Contract } from "react-moralis";
-import { abi, addressPairPool } from "../../../constants";
+import { useWeb3Contract } from "react-moralis";
+import { abi } from "../../../constants";
 
 const OpenOrderIdRow2 = (props) => {
   const [contractAddressPool, setContractAddressPool] = useState(
     "0x9e5d7582fbc36d1366fc1f113f400ee3175b4bc2"
   );
-  const { chainId: chainIdHex, account, Moralis } = useMoralis();
-  const chainId = parseInt(chainIdHex).toString();
   const dispatch = useDispatch();
   const {
     isVisible: isVisibleModify,
     onCloseHandler: onCloseHandlerModify,
     onVisibleHandler: onVisibleHandlerModify,
   } = useModal();
-
-  console.log("props.pool");
-  console.log(props.pool);
 
   const { runContractFunction: closePositionOwner } = useWeb3Contract({
     abi: abi,
@@ -73,7 +68,14 @@ const OpenOrderIdRow2 = (props) => {
           Change
         </button>
         {isVisibleModify && (
-          <ChangeAmountPopup onClose={onCloseHandlerModify} id={props.id} />
+          <ChangeAmountPopup
+            onClose={onCloseHandlerModify}
+            id={props.id}
+            quantity={props.quantity}
+            pool={props.pool}
+            side={props.side}
+            pair={props.pair}
+          />
         )}
       </div>
       <div className="my-2">

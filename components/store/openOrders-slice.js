@@ -38,11 +38,18 @@ const openOrdersSlice = createSlice({
     //----------------update visuals in table --------------
     updateQuantity(state, action) {
       const newQuantity = action.payload;
-
       const openOrderStore = state.openOrders;
-      const currentOrderIndex = newQuantity.id;
       const newOrderQuantity = newQuantity.quantity;
-      openOrderStore[currentOrderIndex].quantity = newOrderQuantity;
+      const currentId = newQuantity.id;
+      let updateThatOrderIndex = openOrderStore.findIndex(
+        (order) => order.positionId == currentId
+      );
+      let updateThatOrder = openOrderStore.find(
+        (order) => order.positionId == currentId
+      );
+
+      updateThatOrder = { ...updateThatOrder, quantity: newOrderQuantity };
+      openOrderStore[updateThatOrderIndex] = updateThatOrder;
     },
     closeOpenOrder(state, action) {
       const closeOrderId = action.payload;
@@ -68,18 +75,6 @@ const openOrdersSlice = createSlice({
     updateClosedIds(state, action) {
       let closedOrdersIds = action.payload;
       state.closedOrdersId = closedOrdersIds;
-      /*
-      let allOpenOrders = state.openOrders;
-      allOpenOrders.map((order) => {
-        console.log("orderid slice");
-        console.log(order.positionId);
-        if (closedOrdersIds.includes(order.positionId)) {
-          console.log("closed id found");
-          console.log(order.positionId);
-          order = { ...order, status: "closed" };
-        }
-      });
-      */
     },
     updateLatestOrderState(state, action) {
       let latestOrdersState = action.payload;

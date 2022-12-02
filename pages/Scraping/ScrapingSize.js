@@ -14,7 +14,7 @@ export async function scrapingClosed() {
     address: contractAddress.UnilimitGoerli,
     //TODO add indexed topics to five trader calling it
     topics: [
-      "0xbf67515a38ee520223d32c1266d52101c30d936ed1f3e436c8caeb0a43cb06bf", // Close(uint256 positionId)
+      "0x7d1114a92a206d9f21c8d18a4861689f9c82fad6213ca107aa3e11406a119bb8", // SizeChanged(uint256,uint256)
     ],
   });
 
@@ -28,17 +28,10 @@ export async function scrapingClosed() {
   const positionId = decodedEvents.map((event) =>
     event.decodedEventLogs["args"]["positionId"].toString()
   );
+  const newQuantity = decodedEvents.map((event) =>
+    event.decodedEventLogs["args"]["newQuantity"].toString()
+  );
 
-  /*
-  const scrapedClosedOrders = [];
-  for (let i = 0; i < positionId.length; i++) {
-    let newOrder = {
-      pool: contractPool[i],
-      positionId: positionId[i],
-    };
-    scrapedClosedOrders.push(newOrder);
-  }
-  */
   return positionId;
 }
 

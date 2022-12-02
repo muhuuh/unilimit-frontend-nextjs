@@ -1,18 +1,21 @@
 import React from "react";
+import { ethers } from "ethers";
 import { useDispatch } from "react-redux";
 import useInput from "../../../hooks/use-input";
 import { openOrdersActions } from "../../store/openOrders-slice";
 import Modal from "../../UI/Modal";
+import { useMoralis, useWeb3Contract } from "react-moralis";
+import { abi, contractAddresses } from "../../../constants";
 
 const ChangeAmountPopup = (props) => {
   const dispatch = useDispatch();
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex).toString();
   //some entries might stay empty (just getting the current values if emtpy hence now validity check)
   const checkValidity = (input) => {
     return input.trim() !== "";
   };
-
   const newAmountInput = useInput(checkValidity);
-
   const newAmountInputClasses = newAmountInput.hasError
     ? "form-control invalid"
     : "form-control";
@@ -21,6 +24,82 @@ const ChangeAmountPopup = (props) => {
   if (newAmountInput.enteredInputisValid && newAmountInput.enteredInput > 0) {
     formIsValid = true;
   }
+  //------------------- run SC functions ----------------
+
+  //get the tokens and decimals for computing the quantity
+  let quantityDecimals;
+  if (props.side === "true") {
+    quantityDecimals = contractAddresses[props.pair].decimals.token0;
+  } else {
+    quantityDecimals = contractAddresses[props.pair].decimals.token1;
+  }
+
+  let quantityString;
+  if (newAmountInput.enteredInput > 0) {
+    const quantityParseUnits = ethers.utils.parseUnits(
+      newAmountInput.enteredInput.toString(),
+      quantityDecimals
+    );
+    quantityString = quantityParseUnits.toLocaleString("fullwide", {
+      useGrouping: false,
+    });
+  }
+
+  //define the SC functions
+  const { runContractFunction: increaseSize } = useWeb3Contract({
+    abi: abi,
+    contractAddress: props.pool,
+    functionName: "increaseSize",
+    params: { positionId: props.id, quantity: quantityString },
+  });
+
+  const { runContractFunction: decreaseSize } = useWeb3Contract({
+    abi: abi,
+    contractAddress: props.pool,
+    functionName: "decreaseSize",
+    params: { positionId: props.id, quantity: quantityString },
+  });
+
+  const onIncreaseSizeHandler = async () => {
+    //TODO call SC function to close the order
+    console.log("closingorderhandler called");
+    increaseSize({
+      onSuccess: onHandleSuccess,
+      onError: (error) => {
+        console.log("error closing order");
+        console.log(error);
+      },
+    });
+    dispatch(openOrdersActions.closeOpenOrder(props.id));
+  };
+
+  const onDecreaseSizeHandler = async () => {
+    //TODO call SC function to close the order
+    console.log("closingorderhandler called");
+    decreaseSize({
+      onSuccess: onHandleSuccess,
+      onError: (error) => {
+        console.log("error closing order");
+        console.log(error);
+      },
+    });
+    dispatch(openOrdersActions.closeOpenOrder(props.id));
+  };
+
+  const onHandleSuccess = async (tx) => {
+    console.log("Close Order succesful");
+    onHandleNotification(tx);
+  };
+
+  const onHandleNotification = () => {
+    dispatch({
+      type: "info",
+      message: "transaction completed",
+      title: "Tx notification",
+      position: "topR",
+      icon: "bell",
+    });
+  };
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
@@ -35,8 +114,15 @@ const ChangeAmountPopup = (props) => {
       id: props.id,
       quantity: newAmountInput.enteredInput,
     };
-    //TODO call SC function to change order quantity with newOrderQuantity
-    //TODO add if successful check, then update store with below function
+
+    if (newAmountInput.enteredInput > props.quantity) {
+      onIncreaseSizeHandler();
+    } else if (newAmountInput.enteredInput < props.quantity) {
+      onDecreaseSizeHandler();
+    } else {
+      return;
+    }
+
     dispatch(openOrdersActions.updateQuantity(newOrderQuantity));
 
     props.onClose();
@@ -49,9 +135,10 @@ const ChangeAmountPopup = (props) => {
           <div className={` ${newAmountInputClasses}`}>
             <label className="text-lg mt-8">Modify order quantity</label>
             <input
-              type="number"
+              type="text"
               onChange={newAmountInput.inputChangeHandler}
               onBlur={newAmountInput.inputBlurHandler}
+              value={newAmountInput.enteredInput}
               className="border-2 rounded-lg shadow-sm mt-8 h-8 w-48"
             />
           </div>
@@ -64,10 +151,21 @@ const ChangeAmountPopup = (props) => {
                 !formIsValid
                   ? "bg-gray-500 cursor-not-allowed"
                   : "bg-buyGreen shadow hover:font-bold hover:scale-110"
-              } border-2 rounded-lg border-white w-20 py-1 px-2 `}
+              } border-2 rounded-l-lg border-white w-32 py-1 px-2 `}
               disabled={!formIsValid}
             >
-              Change
+              Increase Size
+            </button>
+            <button
+              type="submit"
+              className={`text-white ${
+                !formIsValid
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-buyGreen shadow hover:font-bold hover:scale-110"
+              } border-2 rounded-r-lg border-white w-32 py-1 px-2 `}
+              disabled={!formIsValid}
+            >
+              Decrease Size
             </button>
           </div>
         </div>
