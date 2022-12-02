@@ -28,6 +28,7 @@ const OpenOrders = () => {
     },
   ]);
   //TODO get data from scraping function and upload to store
+  /*
   let scrapedOrders;
   useEffect(() => {
     console.log("useeffect scrapping");
@@ -54,8 +55,9 @@ const OpenOrders = () => {
     );
   }, [newScrapedOrders]);
 
+  */
   let openOrdersItem2;
-  if (scrapingsStore.openOrders.length > 0) {
+  if (openOrderStore.openOrders.length > 0) {
     //openOrdersItem2 = scrapingsStore.openOrders.map((order) => (
     openOrdersItem2 = openOrderStore.openOrders.map((order) => (
       <OpenOrderIdRow2
