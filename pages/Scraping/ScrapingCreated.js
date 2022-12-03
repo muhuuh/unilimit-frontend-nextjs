@@ -10,6 +10,9 @@ export async function scrapingCreated() {
     process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
   );
 
+  console.log("process.env.NEXT_PUBLIC_ALCHEMY_API_KEY");
+  console.log(process.env.NEXT_PUBLIC_ALCHEMY_API_KEY);
+
   const currentBlock = await provider.getBlock("latest");
   console.log("currentBlock");
   console.log(currentBlock);
@@ -18,7 +21,7 @@ export async function scrapingCreated() {
   const iface = new ethers.utils.Interface(abi);
   console.log("Getting Logs ...");
   const logs = await provider.getLogs({
-    fromBlock: 8049000,
+    fromBlock: 8049200,
     address: contractAddress.UnilimitGoerli,
     //TODO add indexed topics to five trader calling it
     topics: [
@@ -83,7 +86,7 @@ export async function scrapingCreated() {
     if (side[i]) {
       newSide = "true";
     } else if (side[i] === false) {
-      newSide = "true";
+      newSide = "false";
     } else {
       newSide = "undefined";
     }

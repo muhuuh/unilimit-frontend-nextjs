@@ -11,6 +11,9 @@ const OpenOrders = () => {
   );
   const dispatch = useDispatch();
 
+  console.log("state.openOrders");
+  console.log(closedOrdersIds);
+
   let openOrdersItem2;
   if (openOrderStore.length > 0) {
     let updatedStatusOrder = [];

@@ -10,7 +10,7 @@ export async function scrapingClosed() {
 
   const iface = new ethers.utils.Interface(abi);
   const logs = await provider.getLogs({
-    fromBlock: 8049000,
+    fromBlock: 8049200,
     address: contractAddress.UnilimitGoerli,
     //TODO add indexed topics to five trader calling it
     topics: [

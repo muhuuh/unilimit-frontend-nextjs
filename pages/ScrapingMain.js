@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { scrapingCreated } from "./Scraping/ScrapingCreated";
 import { scrapingClosed } from "./Scraping/ScrapingClosed";
+import { scrapingQuantity } from "./Scraping/ScrapingQuantity";
 import { openOrdersActions } from "../components/store/openOrders-slice";
 import { addressPairPool } from "../constants";
 import { useMoralis } from "react-moralis";
@@ -10,6 +11,7 @@ const ScrapingMain = () => {
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex).toString();
   const dispatch = useDispatch();
+  const [newQuantitiesOrders, setNewQuantitiesOrders] = useState([]);
   const [newClosedOrders, setNewClosedOrders] = useState([]);
   const [newScrapedOrders, setNewScrapedOrders] = useState([
     {
@@ -61,16 +63,34 @@ const ScrapingMain = () => {
   let scrapedClosedOrders;
   useEffect(() => {
     console.log("useeffect closed scrapping");
-    const scrapeData = async () => {
+    const scrapeDataClosed = async () => {
       scrapedClosedOrders = await scrapingClosed();
       setNewClosedOrders(scrapedClosedOrders);
     };
-    scrapeData();
+    scrapeDataClosed();
   }, []);
+
+  console.log("newClosedOrders");
+  console.log(newClosedOrders);
 
   useEffect(() => {
     dispatch(openOrdersActions.updateClosedIds(newClosedOrders));
   }, [newClosedOrders]);
+
+  //--------------- scrape QUANTITY orders -----------------
+
+  let scrapednewQuantities;
+  useEffect(() => {
+    console.log("useeffect new quantites scrapping");
+    const scrapeDataQuantity = async () => {
+      scrapednewQuantities = await scrapingQuantity();
+      setNewQuantitiesOrders(scrapednewQuantities);
+    };
+    scrapeDataQuantity();
+  }, []);
+
+  console.log("newQuantitiesOrders");
+  console.log(newQuantitiesOrders);
 
   return <div></div>;
 };
