@@ -92,6 +92,10 @@ const ScrapingMain = () => {
   console.log("newQuantitiesOrders");
   console.log(newQuantitiesOrders);
 
+  useEffect(() => {
+    dispatch(openOrdersActions.updateQuantityOrders(newQuantitiesOrders));
+  }, [newQuantitiesOrders]);
+
   return <div></div>;
 };
 

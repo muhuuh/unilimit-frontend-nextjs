@@ -13,7 +13,7 @@ const defaultState = {
       signature: "",
     },
   ],
-  changedSize: [{}],
+  changedQuantityOrders: [{}],
   closedOrdersId: [],
   settled: [{}],
   latestOrderStatus: [{}],
@@ -75,6 +75,10 @@ const openOrdersSlice = createSlice({
     updateClosedIds(state, action) {
       let closedOrdersIds = action.payload;
       state.closedOrdersId = closedOrdersIds;
+    },
+    updateQuantityOrders(state, action) {
+      let changedQuantityOrders = action.payload;
+      state.changedQuantityOrders = changedQuantityOrders;
     },
     updateLatestOrderState(state, action) {
       let latestOrdersState = action.payload;

@@ -9,17 +9,33 @@ const OpenOrders = () => {
   const closedOrdersIds = useSelector(
     (state) => state.openOrders.closedOrdersId
   );
+  const changedQuantityOrders = useSelector(
+    (state) => state.openOrders.changedQuantityOrders
+  );
   const dispatch = useDispatch();
 
-  console.log("state.openOrders");
+  const allOrdersIds = [];
+  openOrderStore.map((order) => allOrdersIds.push(order.positionId));
+  console.log("allOrdersIds");
+  console.log(allOrdersIds);
+  console.log("closedOrdersIds store");
   console.log(closedOrdersIds);
+  console.log("changedQuantityOrders store");
+  console.log(changedQuantityOrders);
+  const changedOrdersIds = [];
+  changedQuantityOrders.map((order) => changedOrdersIds.push(order.positionId));
+  console.log("changedOrdersIds");
+  console.log(changedOrdersIds);
 
+  let openOrdersItem3;
   let openOrdersItem2;
   if (openOrderStore.length > 0) {
     let updatedStatusOrder = [];
+    /*
     openOrdersItem2 = openOrderStore.map((order) => {
       console.log("order.id");
       console.log(order.positionId);
+
       if (closedOrdersIds.includes(order.positionId)) {
         console.log("order found");
         order = { ...order, status: "closed" };
@@ -28,6 +44,7 @@ const OpenOrders = () => {
       } else {
         order = { ...order, status: "open" };
       }
+
       updatedStatusOrder.push(order);
       return (
         <OpenOrderIdRow2
@@ -42,6 +59,70 @@ const OpenOrders = () => {
         />
       );
     });
+*/
+    let testArray = [];
+    openOrdersItem2 = openOrderStore.map((order) => {
+      console.log("order.id");
+      console.log(order.positionId);
+
+      if (closedOrdersIds.includes(order.positionId)) {
+        console.log("order found");
+        order = { ...order, status: "closed" };
+        console.log("order closed");
+        console.log(order);
+      } else {
+        order = { ...order, status: "open" };
+      }
+
+      testArray.push(order);
+      return;
+    });
+
+    let loopCount = 0;
+    let quantityArray = [];
+    changedOrdersIds.map((quantityIds) => {
+      if (allOrdersIds.includes(quantityIds)) {
+        console.log("quantityIds found");
+        console.log(quantityIds);
+        let currentOrder = testArray.find(
+          (order) => order.positionId === quantityIds
+        );
+        console.log("currentOrder in loop");
+        console.log(currentOrder);
+        //currentOrder.quantity = changedQuantityOrders[loopCount].newQuantity;
+        console.log("changedQuantityOrders[loopCount].newQuantity");
+        console.log(changedQuantityOrders[loopCount].newQuantity);
+        currentOrder = {
+          ...currentOrder,
+          quantity: changedQuantityOrders[loopCount].newQuantity,
+        };
+        console.log();
+        console.log("new currentOrder in loop");
+        console.log(currentOrder);
+        loopCount++;
+
+        let currentOrderIndex = testArray.findIndex(
+          (order) => order.positionId === quantityIds
+        );
+        console.log("currentOrderIndex");
+        console.log(currentOrderIndex);
+        testArray[currentOrderIndex] = currentOrder;
+      }
+    });
+
+    openOrdersItem3 = testArray.map((order) => (
+      <OpenOrderIdRow2
+        id={order.positionId}
+        status={order.status}
+        pool={order.pool}
+        pair={order.pair}
+        side={order.side}
+        quantity={order.quantity}
+        priceTarget={order.sqrtPriceX96}
+        priceCurrent="none"
+      />
+    ));
+
     console.log("updatedStatusOrder");
     console.log(updatedStatusOrder);
     dispatch(openOrdersActions.updateLatestOrderState(updatedStatusOrder));
@@ -61,7 +142,7 @@ const OpenOrders = () => {
           <div>Adjust size</div>
           <div>Close</div>
         </div>
-        {openOrdersItem2}
+        {openOrdersItem3}
       </div>
     </div>
   );
