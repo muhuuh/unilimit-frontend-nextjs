@@ -16,50 +16,14 @@ const OpenOrders = () => {
 
   const allOrdersIds = [];
   openOrderStore.map((order) => allOrdersIds.push(order.positionId));
-  console.log("allOrdersIds");
-  console.log(allOrdersIds);
-  console.log("closedOrdersIds store");
-  console.log(closedOrdersIds);
-  console.log("changedQuantityOrders store");
-  console.log(changedQuantityOrders);
   const changedOrdersIds = [];
   changedQuantityOrders.map((order) => changedOrdersIds.push(order.positionId));
-  console.log("changedOrdersIds");
-  console.log(changedOrdersIds);
 
   let openOrdersItem3;
   let openOrdersItem2;
   if (openOrderStore.length > 0) {
     let updatedStatusOrder = [];
-    /*
-    openOrdersItem2 = openOrderStore.map((order) => {
-      console.log("order.id");
-      console.log(order.positionId);
 
-      if (closedOrdersIds.includes(order.positionId)) {
-        console.log("order found");
-        order = { ...order, status: "closed" };
-        console.log("order closed");
-        console.log(order);
-      } else {
-        order = { ...order, status: "open" };
-      }
-
-      updatedStatusOrder.push(order);
-      return (
-        <OpenOrderIdRow2
-          id={order.positionId}
-          status={order.status}
-          pool={order.pool}
-          pair={order.pair}
-          side={order.side}
-          quantity={order.quantity}
-          priceTarget={order.sqrtPriceX96}
-          priceCurrent="none"
-        />
-      );
-    });
-*/
     let testArray = [];
     openOrdersItem2 = openOrderStore.map((order) => {
       console.log("order.id");
@@ -79,7 +43,6 @@ const OpenOrders = () => {
     });
 
     let loopCount = 0;
-    let quantityArray = [];
     changedOrdersIds.map((quantityIds) => {
       if (allOrdersIds.includes(quantityIds)) {
         console.log("quantityIds found");

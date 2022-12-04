@@ -78,6 +78,7 @@ export async function scrapingCreated() {
   console.log("signature");
   console.log(signature);
 
+  //TODO divide the quantity received by the decimals of (if side true, token0, if false, token1)
   const scrapedOrders = [];
   let price;
   for (let i = 0; i < positionId.length; i++) {
