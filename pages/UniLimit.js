@@ -7,7 +7,7 @@ const UniLimit = () => {
   const { isWeb3Enabled, isAuthenticated } = useMoralis();
   return (
     <div className="text-center ">
-      <div className="text-xl font-bold mb-10 items-center">Welcome!</div>
+      <div className="text-xl font-bold mb-10 items-center"></div>
       {isWeb3Enabled ? <Connected /> : <NotConnected />}
     </div>
   );

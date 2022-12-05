@@ -5,12 +5,12 @@ const Tradingview2 = () => {
   const [script, setScript] = useState();
   const tradingView = {
     //autosize: true,
-    width: 980,
-    height: 980,
+    width: 900,
+    height: 630,
     symbol: "UNISWAP:WETHUSDT",
     interval: "240",
     timezone: "Etc/UTC",
-    theme: "dark",
+    theme: "light",
     style: "1",
     locale: "en",
     toolbar_bg: "#f1f3f6",
@@ -21,10 +21,10 @@ const Tradingview2 = () => {
 
   useEffect(() => {
     setScript(
-      <div className="h-96">
+      <div className="">
         <Script
-          type="text/javascript"
-          className="h-96"
+          type="module"
+          className=""
           src="https://s3.tradingview.com/tv.js"
           //strategy="afterInteractive"
           onLoad={() => {
@@ -36,7 +36,7 @@ const Tradingview2 = () => {
   }, []);
 
   return (
-    <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container mt-20">
       <div id="tradingview_ae5bb"></div>
       <div class="tradingview-widget-copyright">
         <a
@@ -44,14 +44,14 @@ const Tradingview2 = () => {
           rel="noopener"
           target="_blank"
         >
-          <span class="blue-text">AAPL Chart</span>
+          <span class="blue-text">Chart</span>
         </a>{" "}
         by TradingView
       </div>
-      <div className="h-96 bg-red-500">
+      <div className="">
         <Script
-          type="text/javascript"
-          className="h-96"
+          type="module"
+          className=""
           src="https://s3.tradingview.com/tv.js"
           //strategy="afterInteractive"
           onLoad={() => {
@@ -59,7 +59,6 @@ const Tradingview2 = () => {
           }}
         />
       </div>
-      <div>test</div>
     </div>
   );
 };
