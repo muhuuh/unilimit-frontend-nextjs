@@ -99,7 +99,7 @@ const HorizontalChart = () => {
     <div className="text-center mb-8">
       <div className="mb-6">
         <div>Hovering over Price: </div>
-        {positionYMoved}
+        {positionYMoved.toFixed(4)}
       </div>
       <Chart
         ref={chartRef}

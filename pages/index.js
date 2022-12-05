@@ -4,7 +4,7 @@ import styles from "../styles/Home.module.css";
 import Header from "./Header";
 import ScrapingMain from "./ScrapingMain";
 import HorizontalChart from "./Charts/HorizontalChart";
-import HorizontalChart2 from "./Charts/HorizontalChart2";
+import Tradingview2 from "./Charts/Tradingview2";
 
 export default function Home() {
   return (
@@ -16,6 +16,7 @@ export default function Home() {
       <Header />
       <Unilimit />
       <HorizontalChart />
+      <Tradingview2 />
       <ScrapingMain />
     </div>
   );
