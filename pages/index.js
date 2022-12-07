@@ -15,8 +15,7 @@ export default function Home() {
       </Head>
       <Header />
       <Unilimit />
-      <HorizontalChart />
-      <Tradingview2 />
+
       <ScrapingMain />
     </div>
   );

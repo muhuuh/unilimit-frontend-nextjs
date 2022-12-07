@@ -11,7 +11,7 @@ const Connected = () => {
   //Look into getting all transaction from wallet based on indexed events and display them
   return (
     <div>
-      <div className="flex flex-row justify-center gap-x-20">
+      <div className="flex flex-row justify-center">
         <div>
           <Tradingview2 />
         </div>
@@ -38,7 +38,7 @@ const Connected = () => {
               Swap
             </button>
           </div>
-          <div className="flex  justify-center mb-16">
+          <div className="flex justify-center mb-16">
             {showLimit ? <OrderBoxLimit2 /> : <OrderBoxSwap />}
           </div>
         </div>

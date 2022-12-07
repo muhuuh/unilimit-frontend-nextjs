@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import OpenOrderIdRow2 from "./OpenOrderIdRow2";
 import { useMoralis } from "react-moralis";
 import { openOrdersActions } from "../../store/openOrders-slice";
+import OpenOrdersChart from "./OpenOrdersChart";
 
 const OpenOrders = () => {
   const openOrderStore = useSelector((state) => state.openOrders.openOrders);
@@ -21,10 +22,11 @@ const OpenOrders = () => {
 
   let openOrdersItem3;
   let openOrdersItem2;
+  let openOrdersItem4;
+  let testArray = [];
   if (openOrderStore.length > 0) {
     let updatedStatusOrder = [];
 
-    let testArray = [];
     openOrdersItem2 = openOrderStore.map((order) => {
       console.log("order.id");
       console.log(order.positionId);
@@ -86,6 +88,9 @@ const OpenOrders = () => {
       />
     ));
 
+    //TODO make sure that the MUI table is correctly displayed
+    openOrdersItem4 = <OpenOrdersChart dataOpenOrder={testArray} />;
+
     console.log("updatedStatusOrder");
     console.log(updatedStatusOrder);
     dispatch(openOrdersActions.updateLatestOrderState(updatedStatusOrder));
@@ -93,7 +98,10 @@ const OpenOrders = () => {
 
   return (
     <div className="mb-20">
-      <div className="font-bold text-lg mb-10">Open Orders Overview</div>
+      <div className="text-xl font-bold mb-10 items-center underline mt-10">
+        Open Orders Overview
+      </div>
+
       <div className="flex flex-col items-center">
         <div className="flex flex-row justify-between w-2/3 border-b-4">
           <div>ID</div>
