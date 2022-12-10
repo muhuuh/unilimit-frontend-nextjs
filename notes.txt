@@ -2,4 +2,14 @@
     -topics is "0x6c40f5ef74fd79b0dad7fa3da61f0a6a8ef8bf63b75eae10782c62baa2baf1bb"
 
 -event for closePositionOwner() is Close(uint256 positionId)
-    -topics is "0xbf67515a38ee520223d32c1266d52101c30d936ed1f3e436c8caeb0a43cb06bf"
+-topics is "0xbf67515a38ee520223d32c1266d52101c30d936ed1f3e436c8caeb0a43cb06bf"
+
+Todo:
+-dark mode
+-check quantity 
+-check price 
+-check buy
+-make sure table open orders work
+-clean Connected
+- make sure swap and back doesn't through error
+- when opening an order, make sure all correct info are in store so that is it completly deplsayed in table

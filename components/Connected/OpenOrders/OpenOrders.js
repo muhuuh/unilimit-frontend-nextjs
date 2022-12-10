@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import OpenOrderIdRow2 from "./OpenOrderIdRow2";
 import { useMoralis } from "react-moralis";
 import { openOrdersActions } from "../../store/openOrders-slice";
-import OpenOrdersChart from "./OpenOrdersChart";
+import OpenOrdersTable from "./OpenOrdersTable";
 
 const OpenOrders = () => {
   const openOrderStore = useSelector((state) => state.openOrders.openOrders);
@@ -89,8 +89,9 @@ const OpenOrders = () => {
     ));
 
     //TODO make sure that the MUI table is correctly displayed
-    openOrdersItem4 = <OpenOrdersChart dataOpenOrder={testArray} />;
+    openOrdersItem4 = <OpenOrdersTable dataOpenOrder={testArray} />;
 
+    //TODO look into what that is
     console.log("updatedStatusOrder");
     console.log(updatedStatusOrder);
     dispatch(openOrdersActions.updateLatestOrderState(updatedStatusOrder));
@@ -114,6 +115,7 @@ const OpenOrders = () => {
           <div>Close</div>
         </div>
         {openOrdersItem3}
+        {openOrdersItem4}
       </div>
     </div>
   );

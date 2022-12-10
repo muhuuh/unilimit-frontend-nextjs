@@ -53,13 +53,21 @@ const rows = [
   { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
 ];
 
-const OpenOrdersChart = (props) => {
+const OpenOrdersTable = (props) => {
   console.log("props.dataOpenOrderrr");
   console.log(props.dataOpenOrder);
+  /*
+  const newRows = []
+  for (let i in props.dataOpenOrder) {
+    let newOpenOrder = {id: i, status}
+
+  }
+  */
+
   const rows2 = [];
   props.dataOpenOrder.map((order) => {
     const data = {
-      id: order.id,
+      id: order.positionId,
       status: order.status,
       pair: order.pair,
       side: order.side,
@@ -71,12 +79,16 @@ const OpenOrdersChart = (props) => {
     rows2.push(data);
   });
 
+  console.log("rows2");
+  console.log(rows2);
+
   const ids = [];
   props.dataOpenOrder.map((order) => {
     ids.push(order.id);
   });
   console.log("test ids");
   console.log(ids);
+
   return (
     <Box sx={{ height: 400, width: "75%" }}>
       <DataGrid
@@ -92,4 +104,4 @@ const OpenOrdersChart = (props) => {
   );
 };
 
-export default OpenOrdersChart;
+export default OpenOrdersTable;

@@ -15,7 +15,6 @@ export default function Home() {
       </Head>
       <Header />
       <Unilimit />
-
       <ScrapingMain />
     </div>
   );
