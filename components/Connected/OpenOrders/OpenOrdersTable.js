@@ -1,67 +1,173 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-
-const columns = [
-  { field: "id", headerName: "ID", width: 90 },
-  {
-    field: "status",
-    headerName: "Status",
-    width: 150,
-  },
-  {
-    field: "pair",
-    headerName: "Pair",
-    width: 150,
-  },
-  {
-    field: "side",
-    headerName: "Side",
-    width: 150,
-  },
-  {
-    field: "quantity",
-    headerName: "Quantity",
-    width: 150,
-  },
-  {
-    field: "targetPrice",
-    headerName: "Target Price",
-    width: 150,
-  },
-  {
-    field: "newSize",
-    headerName: "Adjust Size",
-    width: 150,
-  },
-  {
-    field: "close",
-    headerName: "Close",
-    width: 150,
-  },
-];
-
-const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-];
+import { DataGrid } from "@mui/x-data-grid";
+import { useDispatch } from "react-redux";
+import { useWeb3Contract } from "react-moralis";
+import { abi } from "../../../constants";
+import useModal from "../../../hooks/use-modal";
+import { openOrdersActions } from "../../store/openOrders-slice";
+import ChangeAmountPopup from "../Popup/ChangeAmountPopup";
 
 const OpenOrdersTable = (props) => {
-  console.log("props.dataOpenOrderrr");
+  const [closeCellValue, setCloseCellValue] = useState({
+    row: { pool: "0x9E5D7582Fbc36d1366FC1F113f400eE3175B4bc2", id: 0 },
+  });
+  console.log("dataOpenOrder");
   console.log(props.dataOpenOrder);
-  /*
-  const newRows = []
-  for (let i in props.dataOpenOrder) {
-    let newOpenOrder = {id: i, status}
+  const columns = [
+    { field: "id", headerName: "ID", width: 90 },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 150,
+    },
+    {
+      field: "pair",
+      headerName: "Pair",
+      width: 150,
+    },
+    {
+      field: "pool",
+      headerName: "Pool",
+      width: 150,
+    },
+    {
+      field: "side",
+      headerName: "Side",
+      width: 150,
+    },
+    {
+      field: "quantity",
+      headerName: "Quantity",
+      width: 150,
+    },
+    {
+      field: "targetPrice",
+      headerName: "Target Price",
+      width: 150,
+    },
+    {
+      field: "newSize",
+      headerName: "Adjust Size",
+      width: 150,
+      renderCell: (cellValues) => {
+        return (
+          <div>
+            <button
+              variant="contained"
+              color="primary"
+              onClick={onVisibleHandlerModify}
+              className="bg-grayishBlue text-white border-2 rounded-lg px-2 py-1 hover:bg-paleGrayishBlue hover:border-black hover:text-black"
+            >
+              Modify
+            </button>
+            {isVisibleModify && (
+              <ChangeAmountPopup
+                onClose={onCloseHandlerModify}
+                id={cellValues.row.id}
+                quantity={cellValues.row.quantity}
+                pool={cellValues.row.pool}
+                side={cellValues.row.side}
+                pair={cellValues.row.pair}
+              />
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      field: "close",
+      headerName: "Close",
+      width: 150,
+      renderCell: (cellValues) => {
+        return (
+          <button
+            variant="contained"
+            color="primary"
+            onClick={async () => {
+              console.log("close cellValues");
+              console.log(cellValues);
+              console.log("closingorderhandler called");
+              const changeCloseCellValue = async () => {
+                console.log("changing closing cell value ..)");
+                setCloseCellValue(cellValues);
+              };
+              await changeCloseCellValue();
+              console.log("closeCellValue");
+              console.log(closeCellValue);
+            }}
+            className="bg-grayishBlue text-white border-2 rounded-lg px-2 py-1 hover:bg-paleGrayishBlue hover:border-black hover:text-black"
+          >
+            Close
+          </button>
+        );
+      },
+    },
+  ];
+  const dispatch = useDispatch();
+  const {
+    isVisible: isVisibleModify,
+    onCloseHandler: onCloseHandlerModify,
+    onVisibleHandler: onVisibleHandlerModify,
+  } = useModal();
 
-  }
+  const onHandleSuccess = async (tx) => {
+    console.log("Close Order succesful");
+    onHandleNotification(tx);
+  };
+
+  const onHandleNotification = () => {
+    dispatch({
+      type: "info",
+      message: "transaction completed",
+      title: "Tx notification",
+      position: "topR",
+      icon: "bell",
+    });
+  };
+
+  const { runContractFunction: closePositionOwner } = useWeb3Contract({
+    abi: abi,
+    contractAddress: closeCellValue.row.pool,
+    functionName: "closePositionOwner",
+    params: { positionId: closeCellValue.row.id }, //TODOget the current id from props. fetching should put in it store and the get from parent compoent
+  });
+
+  useEffect(() => {
+    if (Number(closeCellValue.row.id) > 0) {
+      console.log("closing starting");
+      closePositionOwner({
+        onSuccess: onHandleSuccess,
+        onError: (error) => {
+          console.log("error closing order");
+          console.log(error);
+        },
+      });
+      dispatch(openOrdersActions.closeOpenOrder(props.id));
+    }
+  }, [closeCellValue]);
+
+  /*
+  const onCloseHandler = async (cellValues) => {
+    console.log("close cellValues");
+    console.log(cellValues);
+    console.log("closingorderhandler called");
+    const { runContractFunction: closePositionOwner } = useWeb3Contract({
+      abi: abi,
+      contractAddress: props.pool,
+      functionName: "closePositionOwner",
+      params: { positionId: cellValues }, //TODOget the current id from props. fetching should put in it store and the get from parent compoent
+    });
+
+    closePositionOwner({
+      onSuccess: onHandleSuccess,
+      onError: (error) => {
+        console.log("error closing order");
+        console.log(error);
+      },
+    });
+    dispatch(openOrdersActions.closeOpenOrder(props.id));
+  };
   */
 
   const rows2 = [];
@@ -70,24 +176,15 @@ const OpenOrdersTable = (props) => {
       id: order.positionId,
       status: order.status,
       pair: order.pair,
+      pool: order.pool,
       side: order.side,
       quantity: order.quantity,
-      targetPrice: order.targetPrice,
+      targetPrice: order.sqrtPriceX96,
       newSize: "Change",
       close: "Close",
     };
     rows2.push(data);
   });
-
-  console.log("rows2");
-  console.log(rows2);
-
-  const ids = [];
-  props.dataOpenOrder.map((order) => {
-    ids.push(order.id);
-  });
-  console.log("test ids");
-  console.log(ids);
 
   return (
     <Box sx={{ height: 400, width: "75%" }}>
@@ -105,3 +202,6 @@ const OpenOrdersTable = (props) => {
 };
 
 export default OpenOrdersTable;
+
+/*
+ */

@@ -319,6 +319,7 @@ const OrderBoxLimit2 = () => {
       pair: pairInfo.selectedPair,
       positionId: positionId.value.toString(),
       trader: account,
+      pool: contractAddressPool,
       status: "active",
       side: setSell,
       sqrtPriceX96: priceLimInput.enteredInput,

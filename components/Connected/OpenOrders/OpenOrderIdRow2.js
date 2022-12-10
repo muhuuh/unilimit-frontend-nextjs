@@ -25,7 +25,6 @@ const OpenOrderIdRow2 = (props) => {
   });
 
   const onCloseOrderHandler = async () => {
-    //TODO call SC function to close the order
     console.log("closingorderhandler called");
     closePositionOwner({
       onSuccess: onHandleSuccess,

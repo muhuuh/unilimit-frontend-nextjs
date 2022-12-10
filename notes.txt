@@ -11,5 +11,8 @@ Todo:
 -check buy
 -make sure table open orders work
 -clean Connected
+- add export to the table, remove selecting rows
+- add button to table
+- add time when open order (also in hours/days ago)
 - make sure swap and back doesn't through error
 - when opening an order, make sure all correct info are in store so that is it completly deplsayed in table
