@@ -24,7 +24,7 @@ const OpenOrdersTable = (props) => {
     {
       field: "pair",
       headerName: "Pair",
-      width: 150,
+      width: 100,
     },
     {
       field: "pool",
@@ -34,12 +34,13 @@ const OpenOrdersTable = (props) => {
     {
       field: "side",
       headerName: "Side",
-      width: 150,
+      width: 100,
     },
     {
       field: "quantity",
       headerName: "Quantity",
-      width: 150,
+      type: "number",
+      width: 100,
     },
     {
       field: "targetPrice",
@@ -178,8 +179,8 @@ const OpenOrdersTable = (props) => {
       pair: order.pair,
       pool: order.pool,
       side: order.side,
-      quantity: order.quantity,
-      targetPrice: order.sqrtPriceX96,
+      quantity: Number(order.quantity),
+      targetPrice: Number(order.sqrtPriceX96),
       newSize: "Change",
       close: "Close",
     };

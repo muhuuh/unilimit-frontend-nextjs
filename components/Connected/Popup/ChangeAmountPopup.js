@@ -61,29 +61,41 @@ const ChangeAmountPopup = (props) => {
   });
 
   const onIncreaseSizeHandler = async () => {
-    //TODO call SC function to close the order
     console.log("closingorderhandler called");
     increaseSize({
       onSuccess: onHandleSuccess,
       onError: (error) => {
-        console.log("error closing order");
+        console.log("error increasing size");
         console.log(error);
       },
     });
-    dispatch(openOrdersActions.closeOpenOrder(props.id));
+    /*
+    dispatch(
+      openOrdersActions.updateQuantity({
+        id: props.id,
+        quantity: newAmountInput.enteredInput,
+      })
+    );
+    */
   };
 
   const onDecreaseSizeHandler = async () => {
-    //TODO call SC function to close the order
     console.log("closingorderhandler called");
     decreaseSize({
       onSuccess: onHandleSuccess,
       onError: (error) => {
-        console.log("error closing order");
+        console.log("error decreasing size");
         console.log(error);
       },
     });
-    dispatch(openOrdersActions.closeOpenOrder(props.id));
+    /*
+    dispatch(
+      openOrdersActions.updateQuantity({
+        id: props.id,
+        quantity: newAmountInput.enteredInput,
+      })
+    );
+    */
   };
 
   const onHandleSuccess = async (tx) => {
@@ -123,6 +135,7 @@ const ChangeAmountPopup = (props) => {
       return;
     }
 
+    //TODO check why didn't update
     dispatch(openOrdersActions.updateQuantity(newOrderQuantity));
 
     props.onClose();

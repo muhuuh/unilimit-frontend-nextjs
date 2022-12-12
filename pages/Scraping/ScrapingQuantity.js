@@ -1,8 +1,11 @@
 import { ethers } from "ethers";
 import abi from "../../constants/abi.json" assert { type: "json" };
 import contractAddress from "../../constants/contractAddress.json" assert { type: "json" };
+import addressPairPool from "../../constants/addressPairPool.json" assert { type: "json" };
+import contractAddresses from "../../constants/contractAddress.json" assert { type: "json" };
 
 export async function scrapingQuantity() {
+  const allPoolsFromChain = addressPairPool["5"];
   const provider = new ethers.providers.AlchemyProvider(
     "goerli",
     process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
@@ -34,7 +37,20 @@ export async function scrapingQuantity() {
   );
 
   const scrapedOrders = [];
+  let currentQuantity, currentDecimals;
   for (let i = 0; i < positionId.length; i++) {
+    const currentPoolAddress = contractPool[i];
+    const currentPair = allPoolsFromChain[String(currentPoolAddress)];
+    const pairDecimals = contractAddresses[String(currentPair)].decimals;
+    //TODO find out which side it is to get the correct decimals
+    /*
+    if (side[i]) {
+      currentDecimals = pairDecimals.token0;
+    } else {
+      currentDecimals = pairDecimals.token1;
+    }
+    currentQuantity = quantity[i] / 10 ** currentDecimals;
+    */
     let newOrder = {
       pool: contractPool[i],
       positionId: positionId[i],

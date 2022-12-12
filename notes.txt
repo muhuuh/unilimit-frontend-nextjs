@@ -16,3 +16,6 @@ Todo:
 - add time when open order (also in hours/days ago)
 - make sure swap and back doesn't through error
 - when opening an order, make sure all correct info are in store so that is it completly deplsayed in table
+
+
+- in scrapingCreate, the contract address is black. Need to put the correct one (or think of how to put them all?)

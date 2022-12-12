@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import Tradingview2 from "../../pages/Charts/Tradingview2";
 import OpenOrders from "./OpenOrders/OpenOrders";
-import OrderBoxLimit from "./Ordering/OrderBoxLimit";
 import OrderBoxLimit2 from "./Ordering/OrderBoxLimit2";
-//import ReactTradingviewWidget from "react-tradingview-widget";
 import OrderBoxSwap from "./Ordering/OrderBoxSwap";
 
 const Connected = () => {

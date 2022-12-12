@@ -20,7 +20,6 @@ const OpenOrders = () => {
   const changedOrdersIds = [];
   changedQuantityOrders.map((order) => changedOrdersIds.push(order.positionId));
 
-  let openOrdersItem3;
   let openOrdersItem2;
   let openOrdersItem4;
   let testArray = [];
@@ -75,19 +74,6 @@ const OpenOrders = () => {
       }
     });
 
-    openOrdersItem3 = testArray.map((order) => (
-      <OpenOrderIdRow2
-        id={order.positionId}
-        status={order.status}
-        pool={order.pool}
-        pair={order.pair}
-        side={order.side}
-        quantity={order.quantity}
-        priceTarget={order.sqrtPriceX96}
-        priceCurrent="none"
-      />
-    ));
-
     //TODO make sure that the MUI table is correctly displayed
     openOrdersItem4 = <OpenOrdersTable dataOpenOrder={testArray} />;
 
@@ -103,20 +89,7 @@ const OpenOrders = () => {
         Open Orders Overview
       </div>
 
-      <div className="flex flex-col items-center">
-        <div className="flex flex-row justify-between w-2/3 border-b-4">
-          <div>ID</div>
-          <div>Status</div>
-          <div>Pair</div>
-          <div>Side</div>
-          <div>Quantity</div>
-          <div>Target Price</div>
-          <div>Adjust size</div>
-          <div>Close</div>
-        </div>
-        {openOrdersItem3}
-        {openOrdersItem4}
-      </div>
+      <div className="flex flex-col items-center">{openOrdersItem4}</div>
     </div>
   );
 };

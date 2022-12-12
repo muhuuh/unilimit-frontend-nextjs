@@ -3,15 +3,15 @@ import { ethers } from "ethers";
 import abi from "../../constants/abi.json" assert { type: "json" };
 //import contractAddress from "./constants/contractAddress.json" assert { type: "json" };
 import contractAddress from "../../constants/contractAddress.json" assert { type: "json" };
+import addressPairPool from "../../constants/addressPairPool.json" assert { type: "json" };
+import contractAddresses from "../../constants/contractAddress.json" assert { type: "json" };
 
 export async function scrapingCreated() {
+  const allPoolsFromChain = addressPairPool["5"];
   const provider = new ethers.providers.AlchemyProvider(
     "goerli",
     process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
   );
-
-  console.log("process.env.NEXT_PUBLIC_ALCHEMY_API_KEY");
-  console.log(process.env.NEXT_PUBLIC_ALCHEMY_API_KEY);
 
   const currentBlock = await provider.getBlock("latest");
   console.log("currentBlock");
@@ -22,6 +22,7 @@ export async function scrapingCreated() {
   console.log("Getting Logs ...");
   const logs = await provider.getLogs({
     fromBlock: 8049200,
+    //TODO Put correct contract address
     address: contractAddress.UnilimitGoerli,
     //TODO add indexed topics to five trader calling it
     topics: [
@@ -63,8 +64,17 @@ export async function scrapingCreated() {
     event.decodedEventLogs["signature"].toString()
   );
 
+  console.log("addressPairPool test");
+
   console.log("contractPool");
   console.log(contractPool);
+
+  const currentPoolAddress = contractPool[0];
+  const currentPair = allPoolsFromChain[String(currentPoolAddress)];
+  console.log(allPoolsFromChain[String(currentPoolAddress)]);
+  console.log(contractAddresses);
+  console.log(contractAddresses[String(currentPair)].decimals);
+  const currentPairDecimals = contractAddresses[String(currentPair)].decimals;
   console.log("positionId");
   console.log(positionId);
   console.log("trader");
@@ -80,9 +90,25 @@ export async function scrapingCreated() {
 
   //TODO divide the quantity received by the decimals of (if side true, token0, if false, token1)
   const scrapedOrders = [];
-  let price;
+  let price, currentQuantity, currentDecimalsQuantity;
   for (let i = 0; i < positionId.length; i++) {
-    price = (parseInt(sqrtPriceX96[i]) ** 2 / 2 ** 192).toFixed(4);
+    const currentPoolAddress = contractPool[i];
+    const currentPair = allPoolsFromChain[String(currentPoolAddress)];
+    const pairDecimals = contractAddresses[String(currentPair)].decimals;
+    if (side[i]) {
+      currentDecimalsQuantity = pairDecimals.token0;
+    } else {
+      currentDecimalsQuantity = pairDecimals.token1;
+    }
+    console.log("currentDecimals");
+    console.log(currentDecimalsQuantity);
+    console.log(quantity[i]);
+    console.log(10 ^ currentDecimalsQuantity);
+    console.log(10 ** currentDecimalsQuantity);
+    currentQuantity = quantity[i] / 10 ** currentDecimalsQuantity;
+    console.log(currentDecimalsQuantity);
+    //price = (parseInt(sqrtPriceX96[i]) ** 2 / 2 ** 192).toFixed(4); //prce token0
+    price = (2 ** 192 / parseInt(sqrtPriceX96[i]) ** 2).toFixed(2); //price token1 or WETH
     let newSide;
     if (side[i]) {
       newSide = "true";
@@ -97,7 +123,7 @@ export async function scrapingCreated() {
       trader: trader[i],
       side: newSide,
       sqrtPriceX96: price,
-      quantity: quantity[i],
+      quantity: currentQuantity,
       signature: signature[i],
     };
     scrapedOrders.push(newOrder);
