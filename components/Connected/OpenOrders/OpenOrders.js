@@ -4,6 +4,7 @@ import OpenOrderIdRow2 from "./OpenOrderIdRow2";
 import { useMoralis } from "react-moralis";
 import { openOrdersActions } from "../../store/openOrders-slice";
 import OpenOrdersTable from "./OpenOrdersTable";
+import contractAddresses from "../../../constants/contractAddress.json" assert { type: "json" };
 
 const OpenOrders = () => {
   const openOrderStore = useSelector((state) => state.openOrders.openOrders);
@@ -44,6 +45,7 @@ const OpenOrders = () => {
     });
 
     let loopCount = 0;
+    let currentDecimalsQuantity, newCurrentQuantity;
     changedOrdersIds.map((quantityIds) => {
       if (allOrdersIds.includes(quantityIds)) {
         console.log("quantityIds found");
@@ -53,12 +55,23 @@ const OpenOrders = () => {
         );
         console.log("currentOrder in loop");
         console.log(currentOrder);
+        const currentPair = currentOrder.pair;
+        const pairDecimals = contractAddresses[String(currentPair)].decimals;
+        if (currentOrder.side) {
+          currentDecimalsQuantity = pairDecimals.token0;
+        } else {
+          currentDecimalsQuantity = pairDecimals.token1;
+        }
+        newCurrentQuantity =
+          changedQuantityOrders[loopCount].newQuantity /
+          10 ** currentDecimalsQuantity;
         //currentOrder.quantity = changedQuantityOrders[loopCount].newQuantity;
         console.log("changedQuantityOrders[loopCount].newQuantity");
         console.log(changedQuantityOrders[loopCount].newQuantity);
         currentOrder = {
           ...currentOrder,
-          quantity: changedQuantityOrders[loopCount].newQuantity,
+          //quantity: changedQuantityOrders[loopCount].newQuantity,
+          quantity: newCurrentQuantity,
         };
         console.log();
         console.log("new currentOrder in loop");

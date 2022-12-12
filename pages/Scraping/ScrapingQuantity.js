@@ -37,11 +37,8 @@ export async function scrapingQuantity() {
   );
 
   const scrapedOrders = [];
-  let currentQuantity, currentDecimals;
+
   for (let i = 0; i < positionId.length; i++) {
-    const currentPoolAddress = contractPool[i];
-    const currentPair = allPoolsFromChain[String(currentPoolAddress)];
-    const pairDecimals = contractAddresses[String(currentPair)].decimals;
     //TODO find out which side it is to get the correct decimals
     /*
     if (side[i]) {
