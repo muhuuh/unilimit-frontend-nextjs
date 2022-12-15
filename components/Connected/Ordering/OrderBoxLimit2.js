@@ -152,6 +152,7 @@ const OrderBoxLimit2 = () => {
   });
 
   //change spender from user to contractaddress
+
   async function approve() {
     const options = {
       contractAddress: token1Address,
@@ -176,10 +177,44 @@ const OrderBoxLimit2 = () => {
       },
     };
     //await Moralis.executeFunction(options);
-    await contractProcessor.fetch({
+    const res = await contractProcessor.fetch({
       params: options,
+      onSuccess: () => {
+        console.log("approving successful");
+      },
+      onError: (error) => {
+        console.log("error in approval", error);
+      },
     });
+    console.log("res");
+    console.log(res);
+    return res;
   }
+
+  /*
+  const { runContractFunction: approve } = useWeb3Contract({
+    abi: [
+      {
+        constant: false,
+        inputs: [
+          { name: "_spender", type: "address" },
+          { name: "_value", type: "uint256" },
+        ],
+        name: "approve",
+        outputs: [{ name: "", type: "bool" }],
+        payable: false,
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+    ],
+    contractAddress: token1Address,
+    functionName: "approve",
+    params: {
+      _spender: contractAddressPool,
+      _value: "10000000000000000000000000000000",
+    },
+  });
+  */
 
   const { runContractFunction: allowance } = useWeb3Contract({
     abi: [
@@ -271,23 +306,6 @@ const OrderBoxLimit2 = () => {
   };
 */
 
-  let allowanceTx;
-  const onAllowanceHandler = async () => {
-    console.log("function allowance handler called");
-    allowanceTx = await allowance({
-      onSuccess: (tx) =>
-        tx.wait(1).then((finalTx) => {
-          console.log("allowance present");
-          console.log(finalTx);
-          setAllowanceTrue(true);
-        }),
-      onError: (error) => {
-        console.log("error approve order");
-        console.log(error);
-      },
-    });
-  };
-
   /*
   let positionId;
   const onCreateOrderHandler = async () => {
@@ -373,11 +391,30 @@ const OrderBoxLimit2 = () => {
     console.log(convertedAllowance);
 
     //approve if allowance is null
-    if (!allowanceTrue) {
+    //if (convertedAllowance > 10000) {
+    if (true) {
       console.log("no allowance");
-      const txApprove = await onApproveHandler();
+      /*
+      const approval = await approve({
+        onSuccess: (tx) =>
+          tx.wait(1).then((finalTx) => {
+            console.log("on handle success");
+            console.log(finalTx);
+            onHandleNotification(finalTx);
+          }),
+        onError: (error) => {
+          console.log("error approve order");
+          console.log(error);
+        },
+      });
+      */
+      const approvalTx = await approve();
+      const approvalTxResult = await approvalTx.wait();
+      if (approvalTxResult.status !== 1) {
+        throw new Error("Failed approval");
+      }
       console.log("approved");
-      console.log(txApprove);
+      //console.log(txApprove);
     } else {
       console.log("Allowance sufficient");
     }
