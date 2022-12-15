@@ -33,6 +33,7 @@ const OrderBoxLimit2 = () => {
     account,
     Moralis,
   } = useMoralis(); //authenticate: https://github.com/MoralisWeb3/react-moralis#usemoralis
+  const contractProcessor = useWeb3ExecuteFunction();
   const [pairInfo, setPairInfo] = useState({
     selectedPair: "USDC/WETH",
     token0: {
@@ -174,7 +175,10 @@ const OrderBoxLimit2 = () => {
         _value: "10000000000000000000000000000000",
       },
     };
-    await Moralis.executeFunction(options);
+    //await Moralis.executeFunction(options);
+    await contractProcessor.fetch({
+      params: options,
+    });
   }
 
   const { runContractFunction: allowance } = useWeb3Contract({
@@ -251,6 +255,7 @@ const OrderBoxLimit2 = () => {
     });
   };
 
+  /*
   let allowanceTx;
   const onAllowanceHandler = async () => {
     console.log("function allowance called");
@@ -264,8 +269,8 @@ const OrderBoxLimit2 = () => {
     console.log("allowance from handler");
     console.log(allowanceTx.toString());
   };
+*/
 
-  /*
   let allowanceTx;
   const onAllowanceHandler = async () => {
     console.log("function allowance handler called");
@@ -282,7 +287,6 @@ const OrderBoxLimit2 = () => {
       },
     });
   };
-  */
 
   /*
   let positionId;
@@ -360,10 +364,17 @@ const OrderBoxLimit2 = () => {
     }
     //TODO make sure that allowance runs before the rest of the code continues
     //check allowance
-    await onAllowanceHandler();
+    const allowanceTx = await allowance();
+    console.log("allowance read");
+    console.log(allowanceTx);
+    //console.log(allowanceTx.toNumber());
+    const convertedAllowance = ethers.utils.formatEther(allowanceTx);
+    console.log("convertedAllowance");
+    console.log(convertedAllowance);
 
     //approve if allowance is null
     if (!allowanceTrue) {
+      console.log("no allowance");
       const txApprove = await onApproveHandler();
       console.log("approved");
       console.log(txApprove);
