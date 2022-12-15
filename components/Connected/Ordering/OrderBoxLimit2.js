@@ -14,16 +14,17 @@ import { openOrdersActions } from "../../store/openOrders-slice";
 import { ethers } from "ethers";
 import SelectPair from "../Tokens/SelectPair";
 import { limitPairActions } from "../../store/limitPair-slice";
+import { useNotification } from "web3uikit";
 
 const OrderBoxLimit2 = () => {
   //------------- set up constants -------------
 
   const [setSell, setSetSell] = useState(false);
-  const [allowanceTrue, setAllowanceTrue] = useState(false);
   const [contractAddressPool, setContractAddressPool] = useState(
     "0x9e5d7582fbc36d1366fc1f113f400ee3175b4bc2"
   );
   const dispatch = useDispatch();
+  const dispatchNotif = useNotification();
   const limitStore = useSelector((state) => state.limit);
   const {
     chainId: chainIdHex,
@@ -191,31 +192,6 @@ const OrderBoxLimit2 = () => {
     return res;
   }
 
-  /*
-  const { runContractFunction: approve } = useWeb3Contract({
-    abi: [
-      {
-        constant: false,
-        inputs: [
-          { name: "_spender", type: "address" },
-          { name: "_value", type: "uint256" },
-        ],
-        name: "approve",
-        outputs: [{ name: "", type: "bool" }],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ],
-    contractAddress: token1Address,
-    functionName: "approve",
-    params: {
-      _spender: contractAddressPool,
-      _value: "10000000000000000000000000000000",
-    },
-  });
-  */
-
   const { runContractFunction: allowance } = useWeb3Contract({
     abi: [
       {
@@ -262,66 +238,6 @@ const OrderBoxLimit2 = () => {
     dispatch(limitPairActions.updateSide(true));
   };
 
-  /*
-  const onApproveHandler = async () => {
-    console.log("function approved called");
-    await approve({
-      onSuccess: onHandleSuccess,
-      onError: (error) => {
-        console.log("error approve order");
-        console.log(error);
-      },
-    });
-  };
-  */
-  const onApproveHandler = async () => {
-    console.log("function approve handler called");
-    await approve({
-      onSuccess: (tx) =>
-        tx.wait(1).then((finalTx) => {
-          console.log("on handle success");
-          console.log(finalTx);
-          onHandleNotification(finalTx);
-        }),
-      onError: (error) => {
-        console.log("error approve order");
-        console.log(error);
-      },
-    });
-  };
-
-  /*
-  let allowanceTx;
-  const onAllowanceHandler = async () => {
-    console.log("function allowance called");
-    allowanceTx = await allowance({
-      onSuccess: onHandleSuccessAllowance,
-      onError: (error) => {
-        console.log("error approve order");
-        console.log(error);
-      },
-    });
-    console.log("allowance from handler");
-    console.log(allowanceTx.toString());
-  };
-*/
-
-  /*
-  let positionId;
-  const onCreateOrderHandler = async () => {
-    console.log("function create order called");
-    positionId = await createOrder({
-      onSuccess: onHandleSuccess,
-      onError: (error) => {
-        console.log("error createorder");
-        console.log(error);
-      },
-    });
-    console.log("positionId");
-    console.log(positionId);
-  };
-  */
-
   let positionId;
   const onCreateOrderHandler = async () => {
     console.log("function create order called");
@@ -350,12 +266,6 @@ const OrderBoxLimit2 = () => {
     }
   }, [isWeb3Enabled]);
 
-  const onHandleSuccessAllowance = async (tx) => {
-    console.log("allowance is present");
-    setAllowanceTrue(true);
-    //updateUI();
-  };
-
   const onHandleSuccess = async (tx) => {
     console.log("onHandleSuccess called");
     //await tx.wait(1);
@@ -364,10 +274,11 @@ const OrderBoxLimit2 = () => {
     //updateUI();
   };
 
-  const onHandleNotification = () => {
-    dispatch({
-      type: "info",
-      message: "transaction completed",
+  const onHandleNotification = (tx) => {
+    dispatchNotif({
+      type: "success",
+      //status: success,
+      message: `Order creation successful to ${tx.to}`,
       title: "Tx notification",
       position: "topR",
       icon: "bell",
@@ -394,33 +305,19 @@ const OrderBoxLimit2 = () => {
     //if (convertedAllowance > 10000) {
     if (true) {
       console.log("no allowance");
-      /*
-      const approval = await approve({
-        onSuccess: (tx) =>
-          tx.wait(1).then((finalTx) => {
-            console.log("on handle success");
-            console.log(finalTx);
-            onHandleNotification(finalTx);
-          }),
-        onError: (error) => {
-          console.log("error approve order");
-          console.log(error);
-        },
-      });
-      */
       const approvalTx = await approve();
       const approvalTxResult = await approvalTx.wait();
       if (approvalTxResult.status !== 1) {
         throw new Error("Failed approval");
       }
       console.log("approved");
-      //console.log(txApprove);
     } else {
       console.log("Allowance sufficient");
     }
 
     //create Order
-    const txCreate = await onCreateOrderHandler();
+    const createTx = await onCreateOrderHandler();
+    //const createTxResult = await createTx.wait();
     //await txCreate.wait(1);
     console.log("order created");
 
