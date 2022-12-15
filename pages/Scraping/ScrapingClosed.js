@@ -1,8 +1,9 @@
 import { ethers } from "ethers";
 import abi from "../../constants/abi.json" assert { type: "json" };
-import contractAddress from "../../constants/contractAddress.json" assert { type: "json" };
+import contractAddresses from "../../constants/contractAddress.json" assert { type: "json" };
 
 export async function scrapingClosed() {
+  const currentPoolAddress = contractAddresses["USDC/WETH"].chain["5"][0];
   const provider = new ethers.providers.AlchemyProvider(
     "goerli",
     process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
@@ -11,7 +12,7 @@ export async function scrapingClosed() {
   const iface = new ethers.utils.Interface(abi);
   const logs = await provider.getLogs({
     fromBlock: 8049200,
-    address: contractAddress.UnilimitGoerli,
+    address: currentPoolAddress,
     //TODO add indexed topics to five trader calling it
     topics: [
       "0xbf67515a38ee520223d32c1266d52101c30d936ed1f3e436c8caeb0a43cb06bf", // Close(uint256 positionId)

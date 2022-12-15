@@ -1,17 +1,19 @@
 import { ethers } from "ethers";
 //import abi from "./constants/abi.json" assert { type: "json" };
 import abi from "../../constants/abi.json" assert { type: "json" };
-//import contractAddress from "./constants/contractAddress.json" assert { type: "json" };
-import contractAddress from "../../constants/contractAddress.json" assert { type: "json" };
 import addressPairPool from "../../constants/addressPairPool.json" assert { type: "json" };
 import contractAddresses from "../../constants/contractAddress.json" assert { type: "json" };
 
 export async function scrapingCreated() {
   const allPoolsFromChain = addressPairPool["5"];
+  const currentPoolAddress = contractAddresses["USDC/WETH"].chain["5"][0];
+
   const provider = new ethers.providers.AlchemyProvider(
     "goerli",
     process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
   );
+
+  console.log("run test");
 
   const currentBlock = await provider.getBlock("latest");
   console.log("currentBlock");
@@ -23,7 +25,7 @@ export async function scrapingCreated() {
   const logs = await provider.getLogs({
     fromBlock: 8049200,
     //TODO Put correct contract address
-    address: contractAddress.UnilimitGoerli,
+    address: currentPoolAddress,
     //TODO add indexed topics to five trader calling it
     topics: [
       "0x6c40f5ef74fd79b0dad7fa3da61f0a6a8ef8bf63b75eae10782c62baa2baf1bb", //Open(uint256,address,bool,uint160,uint256)
@@ -69,9 +71,9 @@ export async function scrapingCreated() {
   console.log("contractPool");
   console.log(contractPool);
 
-  const currentPoolAddress = contractPool[0];
-  const currentPair = allPoolsFromChain[String(currentPoolAddress)];
-  console.log(allPoolsFromChain[String(currentPoolAddress)]);
+  const scrappedPoolAddress = contractPool[0];
+  const currentPair = allPoolsFromChain[String(scrappedPoolAddress)];
+  console.log(allPoolsFromChain[String(scrappedPoolAddress)]);
   console.log(contractAddresses);
   console.log(contractAddresses[String(currentPair)].decimals);
   const currentPairDecimals = contractAddresses[String(currentPair)].decimals;

@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import useInput from "../../../hooks/use-input";
 import useModal from "../../../hooks/use-modal";
 import { contractAddresses, abi, tokens } from "../../../constants";
-import { useMoralis, useWeb3Contract } from "react-moralis";
+import {
+  useMoralis,
+  useWeb3Contract,
+  useWeb3ExecuteFunction,
+} from "react-moralis";
 import TokenRatio4 from "../../../pages/TokenRatio4";
 import { useDispatch, useSelector } from "react-redux";
 import DropdownIcon from "../../UI/Icons/DropdownIcon";
@@ -219,10 +223,27 @@ const OrderBoxLimit2 = () => {
     dispatch(limitPairActions.updateSide(true));
   };
 
+  /*
   const onApproveHandler = async () => {
     console.log("function approved called");
     await approve({
       onSuccess: onHandleSuccess,
+      onError: (error) => {
+        console.log("error approve order");
+        console.log(error);
+      },
+    });
+  };
+  */
+  const onApproveHandler = async () => {
+    console.log("function approve handler called");
+    await approve({
+      onSuccess: (tx) =>
+        tx.wait(1).then((finalTx) => {
+          console.log("on handle success");
+          console.log(finalTx);
+          onHandleNotification(finalTx);
+        }),
       onError: (error) => {
         console.log("error approve order");
         console.log(error);
@@ -244,11 +265,52 @@ const OrderBoxLimit2 = () => {
     console.log(allowanceTx.toString());
   };
 
+  /*
+  let allowanceTx;
+  const onAllowanceHandler = async () => {
+    console.log("function allowance handler called");
+    allowanceTx = await allowance({
+      onSuccess: (tx) =>
+        tx.wait(1).then((finalTx) => {
+          console.log("allowance present");
+          console.log(finalTx);
+          setAllowanceTrue(true);
+        }),
+      onError: (error) => {
+        console.log("error approve order");
+        console.log(error);
+      },
+    });
+  };
+  */
+
+  /*
   let positionId;
   const onCreateOrderHandler = async () => {
     console.log("function create order called");
     positionId = await createOrder({
       onSuccess: onHandleSuccess,
+      onError: (error) => {
+        console.log("error createorder");
+        console.log(error);
+      },
+    });
+    console.log("positionId");
+    console.log(positionId);
+  };
+  */
+
+  let positionId;
+  const onCreateOrderHandler = async () => {
+    console.log("function create order called");
+    positionId = await createOrder({
+      onSuccess: (tx) =>
+        tx.wait(1).then((finalTx) => {
+          console.log("on handle success...");
+          console.log(finalTx);
+          onHandleNotification(finalTx);
+          console.log("done");
+        }),
       onError: (error) => {
         console.log("error createorder");
         console.log(error);
