@@ -6,9 +6,12 @@ import { openOrdersActions } from "../../store/openOrders-slice";
 import Modal from "../../UI/Modal";
 import { useMoralis, useWeb3Contract } from "react-moralis";
 import { abi, contractAddresses } from "../../../constants";
+import { useNotification } from "web3uikit";
+import { Edit } from "@web3uikit/icons";
 
 const ChangeAmountPopup = (props) => {
   const dispatch = useDispatch();
+  const dispatchNotif = useNotification();
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex).toString();
   //some entries might stay empty (just getting the current values if emtpy hence now validity check)
@@ -61,9 +64,15 @@ const ChangeAmountPopup = (props) => {
   });
 
   const onIncreaseSizeHandler = async () => {
-    console.log("closingorderhandler called");
+    console.log("onIncreaseSizeHandler called");
     increaseSize({
-      onSuccess: onHandleSuccess,
+      onSuccess: (tx) =>
+        tx.wait(1).then((finalTx) => {
+          console.log("on increasing size ...");
+          console.log(finalTx);
+          onHandleNotification(finalTx);
+          console.log("modifying closed");
+        }),
       onError: (error) => {
         console.log("error increasing size");
         console.log(error);
@@ -80,9 +89,15 @@ const ChangeAmountPopup = (props) => {
   };
 
   const onDecreaseSizeHandler = async () => {
-    console.log("closingorderhandler called");
+    console.log("onDecreaseSizeHandler called");
     decreaseSize({
-      onSuccess: onHandleSuccess,
+      onSuccess: (tx) =>
+        tx.wait(1).then((finalTx) => {
+          console.log("on decreasing size ..");
+          console.log(finalTx);
+          onHandleNotification(finalTx);
+          console.log("modifying closed");
+        }),
       onError: (error) => {
         console.log("error decreasing size");
         console.log(error);
@@ -98,22 +113,17 @@ const ChangeAmountPopup = (props) => {
     */
   };
 
-  const onHandleSuccess = async (tx) => {
-    console.log("Close Order succesful");
-    onHandleNotification(tx);
-  };
-
   const onHandleNotification = () => {
     dispatch({
       type: "info",
-      message: "transaction completed",
+      message: "Modifying size sucessful",
       title: "Tx notification",
       position: "topR",
-      icon: "bell",
+      icon: <Edit fontSize="50px" />,
     });
   };
 
-  const onSubmitHandler = (event) => {
+  const onSubmitHandler = async (event) => {
     event.preventDefault();
     console.log("submit");
 
@@ -128,9 +138,9 @@ const ChangeAmountPopup = (props) => {
     };
 
     if (newAmountInput.enteredInput > props.quantity) {
-      onIncreaseSizeHandler();
+      await onIncreaseSizeHandler();
     } else if (newAmountInput.enteredInput < props.quantity) {
-      onDecreaseSizeHandler();
+      await onDecreaseSizeHandler();
     } else {
       return;
     }

@@ -108,7 +108,9 @@ export async function scrapingCreated() {
     console.log(10 ^ currentDecimalsQuantity);
     console.log(10 ** currentDecimalsQuantity);
     currentQuantity = quantity[i] / 10 ** currentDecimalsQuantity;
-    console.log(currentDecimalsQuantity);
+
+    console.log("sqrtPriceX96[i]");
+    console.log(sqrtPriceX96[i]);
     //price = (parseInt(sqrtPriceX96[i]) ** 2 / 2 ** 192).toFixed(4); //prce token0
     price = (2 ** 192 / parseInt(sqrtPriceX96[i]) ** 2).toFixed(2); //price token1 or WETH
     let newSide;

@@ -7,6 +7,8 @@ import { abi } from "../../../constants";
 import useModal from "../../../hooks/use-modal";
 import { openOrdersActions } from "../../store/openOrders-slice";
 import ChangeAmountPopup from "../Popup/ChangeAmountPopup";
+import { useNotification } from "web3uikit";
+import { Off } from "@web3uikit/icons";
 
 const OpenOrdersTable = (props) => {
   const [closeCellValue, setCloseCellValue] = useState({
@@ -112,6 +114,7 @@ const OpenOrdersTable = (props) => {
     onCloseHandler: onCloseHandlerModify,
     onVisibleHandler: onVisibleHandlerModify,
   } = useModal();
+  const dispatchNotif = useNotification();
 
   const onHandleSuccess = async (tx) => {
     console.log("Close Order succesful");
@@ -119,12 +122,12 @@ const OpenOrdersTable = (props) => {
   };
 
   const onHandleNotification = () => {
-    dispatch({
+    dispatchNotif({
       type: "info",
-      message: "transaction completed",
+      message: "Open Order closed",
       title: "Tx notification",
       position: "topR",
-      icon: "bell",
+      icon: <Off fontSize="50px" />,
     });
   };
 
@@ -132,14 +135,20 @@ const OpenOrdersTable = (props) => {
     abi: abi,
     contractAddress: closeCellValue.row.pool,
     functionName: "closePositionOwner",
-    params: { positionId: closeCellValue.row.id }, //TODOget the current id from props. fetching should put in it store and the get from parent compoent
+    params: { positionId: closeCellValue.row.id },
   });
 
   useEffect(() => {
     if (Number(closeCellValue.row.id) > 0) {
       console.log("closing starting");
       closePositionOwner({
-        onSuccess: onHandleSuccess,
+        onSuccess: (tx) =>
+          tx.wait(1).then((finalTx) => {
+            console.log("on closing tx...");
+            console.log(finalTx);
+            onHandleNotification(finalTx);
+            console.log("done closed");
+          }),
         onError: (error) => {
           console.log("error closing order");
           console.log(error);

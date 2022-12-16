@@ -15,6 +15,7 @@ import { ethers } from "ethers";
 import SelectPair from "../Tokens/SelectPair";
 import { limitPairActions } from "../../store/limitPair-slice";
 import { useNotification } from "web3uikit";
+import { Rocket } from "@web3uikit/icons";
 
 const OrderBoxLimit2 = () => {
   //------------- set up constants -------------
@@ -130,12 +131,21 @@ const OrderBoxLimit2 = () => {
   //sqrtPriceX96
   const computedPairPrice =
     (1 / limitStore.price) *
-    (10 ** pairInfo.token1.decimals / 10 ** pairInfo.token0.decimals);
+    (10 ^ (pairInfo.token1.decimals / 10) ^ pairInfo.token0.decimals);
+  console.log("limitStore.price");
+  console.log(limitStore.price);
+  console.log("pairInfo.token1.decimals");
+  console.log(pairInfo.token1.decimals);
+  console.log("pairInfo.token0.decimals");
+  console.log(pairInfo.token0.decimals);
+  console.log("computedPairPrice");
+  console.log(computedPairPrice);
   const sqrtPriceX96 = Math.sqrt(computedPairPrice) * 2 ** 96;
   const sqrtPriceX96String = sqrtPriceX96.toLocaleString("fullwide", {
     useGrouping: false,
   });
-
+  console.log("sqrtPriceX96String");
+  console.log(sqrtPriceX96String);
   //Quantity
   //TODO quantity entered in the input value doesn't match the one in the conract on etherscan. look again at computation
   let quantityDecimals;
@@ -221,6 +231,9 @@ const OrderBoxLimit2 = () => {
     quantity: quantityString,
   };
 
+  console.log("createOrderArgs");
+  console.log(createOrderArgs);
+
   const { runContractFunction: createOrder } = useWeb3Contract({
     abi: abi,
     contractAddress: contractAddressPool,
@@ -276,12 +289,11 @@ const OrderBoxLimit2 = () => {
 
   const onHandleNotification = (tx) => {
     dispatchNotif({
-      type: "success",
-      //status: success,
+      type: "info",
       message: `Order creation successful to ${tx.to}`,
       title: "Tx notification",
       position: "topR",
-      icon: "bell",
+      icon: <Rocket fontSize="50px" />,
     });
   };
 
@@ -294,16 +306,12 @@ const OrderBoxLimit2 = () => {
     //TODO make sure that allowance runs before the rest of the code continues
     //check allowance
     const allowanceTx = await allowance();
-    console.log("allowance read");
-    console.log(allowanceTx);
-    //console.log(allowanceTx.toNumber());
     const convertedAllowance = ethers.utils.formatEther(allowanceTx);
     console.log("convertedAllowance");
     console.log(convertedAllowance);
 
-    //approve if allowance is null
-    //if (convertedAllowance > 10000) {
-    if (true) {
+    if (convertedAllowance < 10000) {
+      //if (true) {
       console.log("no allowance");
       const approvalTx = await approve();
       const approvalTxResult = await approvalTx.wait();
