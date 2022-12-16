@@ -131,7 +131,7 @@ const OrderBoxLimit2 = () => {
   //sqrtPriceX96
   const computedPairPrice =
     (1 / limitStore.price) *
-    (10 ^ (pairInfo.token1.decimals / 10) ^ pairInfo.token0.decimals);
+    (10 ** pairInfo.token1.decimals / 10 ** pairInfo.token0.decimals);
   const sqrtPriceX96 = Math.sqrt(computedPairPrice) * 2 ** 96;
   const sqrtPriceX96String = sqrtPriceX96.toLocaleString("fullwide", {
     useGrouping: false,
