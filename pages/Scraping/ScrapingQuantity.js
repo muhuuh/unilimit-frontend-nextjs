@@ -14,7 +14,7 @@ export async function scrapingQuantity() {
   const logs = await provider.getLogs({
     fromBlock: 8049000,
     address: currentPoolAddress,
-    //TODO add indexed topics to five trader calling it
+    //TODO change topic to make sure it is the current trader
     topics: [
       "0x7d1114a92a206d9f21c8d18a4861689f9c82fad6213ca107aa3e11406a119bb8", // Size
       "0x00000000000000000000000078fe389778e5e8be04c4010ac407b2373b987b62",

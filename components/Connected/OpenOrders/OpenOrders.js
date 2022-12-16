@@ -47,17 +47,9 @@ const OpenOrders = () => {
 
     let testArray2 = [];
     testArray.map((order) => {
-      console.log("order.id");
-      console.log(order.positionId);
-      console.log("settledOrdersIds");
-      console.log(settledOrdersIds);
       if (settledOrdersIds.includes(order.positionId)) {
-        console.log("settlement found");
         order = { ...order, status: "settled" };
-        console.log("order settled");
-        console.log(order);
       }
-
       testArray2.push(order);
       return;
     });

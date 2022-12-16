@@ -26,9 +26,9 @@ export async function scrapingCreated() {
   console.log("Getting Logs ...");
   const logs = await provider.getLogs({
     fromBlock: 8049200,
-    //TODO Put correct contract address
+    //TODO Make contract address flexible
     address: currentPoolAddress,
-    //TODO add indexed topics to five trader calling it
+    //TODO change topic to make sure it is the current trader
     topics: [
       "0x6c40f5ef74fd79b0dad7fa3da61f0a6a8ef8bf63b75eae10782c62baa2baf1bb", //Open(uint256,address,bool,uint160,uint256)
       "0x00000000000000000000000078fe389778e5e8be04c4010ac407b2373b987b62",
@@ -108,15 +108,14 @@ export async function scrapingCreated() {
     }
     console.log("currentDecimals");
     console.log(currentDecimalsQuantity);
-    console.log(quantity[i]);
-    console.log(10 ^ currentDecimalsQuantity);
-    console.log(10 ** currentDecimalsQuantity);
     currentQuantity = quantity[i] / 10 ** currentDecimalsQuantity;
 
     console.log("sqrtPriceX96[i]");
     console.log(sqrtPriceX96[i]);
+    const ratio = 10 ** pairDecimals.token0 / 10 ** pairDecimals.token1;
     //price = (parseInt(sqrtPriceX96[i]) ** 2 / 2 ** 192).toFixed(4); //prce token0
-    price = (2 ** 192 / parseInt(sqrtPriceX96[i]) ** 2).toFixed(2); //price token1 or WETH
+    //price = (parseInt(sqrtPriceX96[i]) ** 2 / 2 ** 192) * ratio;
+    price = (2 ** 192 / parseInt(sqrtPriceX96[i]) ** 2 / ratio).toFixed(2); //price token1 or WETH
     let newSide;
     if (side[i]) {
       newSide = "true";

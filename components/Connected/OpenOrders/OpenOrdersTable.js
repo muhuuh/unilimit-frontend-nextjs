@@ -31,7 +31,7 @@ const OpenOrdersTable = (props) => {
     {
       field: "pair",
       headerName: "Pair",
-      width: 100,
+      width: 150,
     },
     {
       field: "pool",
@@ -41,7 +41,7 @@ const OpenOrdersTable = (props) => {
     {
       field: "side",
       headerName: "Side",
-      width: 100,
+      width: 70,
     },
     {
       field: "quantity",
@@ -55,38 +55,6 @@ const OpenOrdersTable = (props) => {
       type: "number",
       width: 150,
     },
-    /*
-    {
-      field: "newSize",
-      headerName: "Adjust Size",
-      width: 150,
-      renderCell: (cellValues) => {
-        return (
-          <div>
-            <button
-              variant="contained"
-              color="primary"
-              onClick={onVisibleHandlerModify}
-              className="bg-grayishBlue text-white border-2 rounded-lg px-2 py-1 hover:bg-paleGrayishBlue hover:border-black hover:text-black"
-            >
-              Modify
-            </button>
-            {isVisibleModify && (
-              <ChangeAmountPopup
-                onClose={onCloseHandlerModify}
-                id={cellValues.row.id}
-                quantity={cellValues.row.quantity}
-                pool={cellValues.row.pool}
-                side={cellValues.row.side}
-                pair={cellValues.row.pair}
-              />
-            )}
-          </div>
-        );
-      },
-    },
-    */
-
     {
       field: "newSize",
       headerName: "Adjust Size",
@@ -119,7 +87,6 @@ const OpenOrdersTable = (props) => {
         );
       },
     },
-
     {
       field: "close",
       headerName: "Close",

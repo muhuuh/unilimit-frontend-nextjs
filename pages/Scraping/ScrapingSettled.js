@@ -13,7 +13,7 @@ export async function scrapingSettled() {
   const logs = await provider.getLogs({
     fromBlock: 8049000,
     address: currentPoolAddress,
-    //TODO add indexed topics to five trader calling it
+    //TODO change topic to make sure it is the current trader
     topics: [
       "0x7e953f96ae54ab2378a31227b9077cac6e9fa627cb10e333065cb7883c1df776", // Settle
       "0x00000000000000000000000078fe389778e5e8be04c4010ac407b2373b987b62",
@@ -26,8 +26,6 @@ export async function scrapingSettled() {
     return { contract: contract, decodedEventLogs: decodedEvent };
   });
 
-  console.log("decodedEvents settled");
-  console.log(decodedEvents);
   const contractPool = decodedEvents.map((event) => event.contract);
   const positionId = decodedEvents.map((event) =>
     event.decodedEventLogs["args"]["positionId"].toString()

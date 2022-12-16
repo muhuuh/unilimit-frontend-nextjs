@@ -13,7 +13,7 @@ export async function scrapingClosed() {
   const logs = await provider.getLogs({
     fromBlock: 8049200,
     address: currentPoolAddress,
-    //TODO add indexed topics to five trader calling it
+    //TODO change topic to make sure it is the current trader
     topics: [
       "0xbf67515a38ee520223d32c1266d52101c30d936ed1f3e436c8caeb0a43cb06bf", // Close(uint256 positionId)
     ],
