@@ -114,8 +114,9 @@ export async function scrapingCreated() {
     console.log(sqrtPriceX96[i]);
     const ratio = 10 ** pairDecimals.token0 / 10 ** pairDecimals.token1;
     //price = (parseInt(sqrtPriceX96[i]) ** 2 / 2 ** 192).toFixed(4); //prce token0
-    //price = (parseInt(sqrtPriceX96[i]) ** 2 / 2 ** 192) * ratio;
+    //price = (2 ** 192 / parseInt(sqrtPriceX96[i]) ** 2).toFixed(2); //price token1 or WETH
     price = (2 ** 192 / parseInt(sqrtPriceX96[i]) ** 2 / ratio).toFixed(2); //price token1 or WETH
+
     let newSide;
     if (side[i]) {
       newSide = "true";
