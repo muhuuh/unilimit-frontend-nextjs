@@ -5,17 +5,24 @@ const defaultState = {
   openOrders: [
     {
       pool: "",
-      positionId: "",
+      positionId: 0,
       trader: "",
-      side: "",
-      sqrtPriceX96: "",
-      quantity: "",
+      side: false,
+      sqrtPriceX96: 0,
+      quantity: 0,
       signature: "",
     },
   ],
   changedQuantityOrders: [{}],
   closedOrdersId: [],
-  settled: [{}],
+  settled: [
+    {
+      positionId: 0,
+      settledQuantity: 0,
+      executionPrice: 0,
+      side: false,
+    },
+  ],
   latestOrderStatus: [{}],
   allOrdersOverview: [{}],
 };
@@ -79,6 +86,10 @@ const openOrdersSlice = createSlice({
     updateQuantityOrders(state, action) {
       let changedQuantityOrders = action.payload;
       state.changedQuantityOrders = changedQuantityOrders;
+    },
+    updateSettledOrders(state, action) {
+      let settledOrders = action.payload;
+      state.settled = settledOrders;
     },
     updateLatestOrderState(state, action) {
       let latestOrdersState = action.payload;

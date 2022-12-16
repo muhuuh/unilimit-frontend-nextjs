@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import OpenOrderIdRow2 from "./OpenOrderIdRow2";
-import { useMoralis } from "react-moralis";
 import { openOrdersActions } from "../../store/openOrders-slice";
 import OpenOrdersTable from "./OpenOrdersTable";
 import contractAddresses from "../../../constants/contractAddress.json" assert { type: "json" };
@@ -14,12 +12,15 @@ const OpenOrders = () => {
   const changedQuantityOrders = useSelector(
     (state) => state.openOrders.changedQuantityOrders
   );
+  const settledOrders = useSelector((state) => state.openOrders.settled);
   const dispatch = useDispatch();
 
   const allOrdersIds = [];
   openOrderStore.map((order) => allOrdersIds.push(order.positionId));
   const changedOrdersIds = [];
   changedQuantityOrders.map((order) => changedOrdersIds.push(order.positionId));
+  const settledOrdersIds = [];
+  settledOrders.map((order) => settledOrdersIds.push(order.positionId));
 
   let openOrdersItem2;
   let openOrdersItem4;
@@ -44,13 +45,33 @@ const OpenOrders = () => {
       return;
     });
 
+    let testArray2 = [];
+    testArray.map((order) => {
+      console.log("order.id");
+      console.log(order.positionId);
+      console.log("settledOrdersIds");
+      console.log(settledOrdersIds);
+      if (settledOrdersIds.includes(order.positionId)) {
+        console.log("settlement found");
+        order = { ...order, status: "settled" };
+        console.log("order settled");
+        console.log(order);
+      }
+
+      testArray2.push(order);
+      return;
+    });
+
+    console.log("settled view");
+    console.log(testArray2);
+
     let loopCount = 0;
     let currentDecimalsQuantity, newCurrentQuantity;
     changedOrdersIds.map((quantityIds) => {
       if (allOrdersIds.includes(quantityIds)) {
         console.log("quantityIds found");
         console.log(quantityIds);
-        let currentOrder = testArray.find(
+        let currentOrder = testArray2.find(
           (order) => order.positionId === quantityIds
         );
         console.log("currentOrder in loop");
@@ -78,17 +99,17 @@ const OpenOrders = () => {
         console.log(currentOrder);
         loopCount++;
 
-        let currentOrderIndex = testArray.findIndex(
+        let currentOrderIndex = testArray2.findIndex(
           (order) => order.positionId === quantityIds
         );
         console.log("currentOrderIndex");
         console.log(currentOrderIndex);
-        testArray[currentOrderIndex] = currentOrder;
+        testArray2[currentOrderIndex] = currentOrder;
       }
     });
 
     //TODO make sure that the MUI table is correctly displayed
-    openOrdersItem4 = <OpenOrdersTable dataOpenOrder={testArray} />;
+    openOrdersItem4 = <OpenOrdersTable dataOpenOrder={testArray2} />;
 
     //TODO look into what that is
     console.log("updatedStatusOrder");
