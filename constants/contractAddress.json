@@ -13,7 +13,7 @@
     "image": "",
     "chain": {
       "5": ["0x9E5D7582Fbc36d1366FC1F113f400eE3175B4bc2"],
-      "31337": ["0x9e5d7582fbc36d1366fc1f113f400ee3175b4bc2"]
+      "31337": ["0x9E5D7582Fbc36d1366FC1F113f400eE3175B4bc2"]
     }
   },
   "WBTC/WETH": {

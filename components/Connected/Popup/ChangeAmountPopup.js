@@ -31,7 +31,9 @@ const ChangeAmountPopup = (props) => {
 
   //get the tokens and decimals for computing the quantity
   let quantityDecimals;
-  if (props.side === "true") {
+  console.log("props.side popup");
+  console.log(props.side);
+  if (props.side) {
     quantityDecimals = contractAddresses[props.pair].decimals.token0;
   } else {
     quantityDecimals = contractAddresses[props.pair].decimals.token1;
@@ -47,6 +49,9 @@ const ChangeAmountPopup = (props) => {
       useGrouping: false,
     });
   }
+
+  console.log("quantityString popup");
+  console.log(quantityString);
 
   //define the SC functions
   const { runContractFunction: increaseSize } = useWeb3Contract({
@@ -64,7 +69,8 @@ const ChangeAmountPopup = (props) => {
   });
 
   const onIncreaseSizeHandler = async () => {
-    console.log("onIncreaseSizeHandler called");
+    console.log("onIncreaseSizeHandler function called");
+    console.log(quantityString);
     increaseSize({
       onSuccess: (tx) =>
         tx.wait(1).then((finalTx) => {
@@ -90,6 +96,7 @@ const ChangeAmountPopup = (props) => {
 
   const onDecreaseSizeHandler = async () => {
     console.log("onDecreaseSizeHandler called");
+    console.log(quantityString);
     decreaseSize({
       onSuccess: (tx) =>
         tx.wait(1).then((finalTx) => {
@@ -114,7 +121,7 @@ const ChangeAmountPopup = (props) => {
   };
 
   const onHandleNotification = () => {
-    dispatch({
+    dispatchNotif({
       type: "info",
       message: "Modifying size sucessful",
       title: "Tx notification",
@@ -136,6 +143,15 @@ const ChangeAmountPopup = (props) => {
       id: props.id,
       quantity: newAmountInput.enteredInput,
     };
+
+    console.log("newAmountInput.enteredInput");
+    console.log(newAmountInput.enteredInput);
+    console.log("props.quantity");
+    console.log(props.quantity);
+    console.log("quantityString");
+    console.log(quantityString);
+    console.log("submit props.id");
+    console.log(props.id);
 
     if (newAmountInput.enteredInput > props.quantity) {
       await onIncreaseSizeHandler();

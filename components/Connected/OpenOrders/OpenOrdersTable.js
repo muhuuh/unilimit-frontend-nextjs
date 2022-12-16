@@ -14,6 +14,11 @@ const OpenOrdersTable = (props) => {
   const [closeCellValue, setCloseCellValue] = useState({
     row: { pool: "0x9E5D7582Fbc36d1366FC1F113f400eE3175B4bc2", id: 0 },
   });
+  const [changeQuantityCellInfo, setChangeQuantityCellInfo] = useState({});
+  const [isVisible, setIsVisible] = useState(false);
+  const onCloseHandlerModify = () => {
+    setIsVisible(false);
+  };
   console.log("dataOpenOrder");
   console.log(props.dataOpenOrder);
   const columns = [
@@ -50,6 +55,7 @@ const OpenOrdersTable = (props) => {
       type: "number",
       width: 150,
     },
+    /*
     {
       field: "newSize",
       headerName: "Adjust Size",
@@ -79,6 +85,41 @@ const OpenOrdersTable = (props) => {
         );
       },
     },
+    */
+
+    {
+      field: "newSize",
+      headerName: "Adjust Size",
+      width: 150,
+      renderCell: (cellValues) => {
+        return (
+          <div>
+            <button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                setChangeQuantityCellInfo(cellValues);
+                setIsVisible(true);
+              }}
+              className="bg-grayishBlue text-white border-2 rounded-lg px-2 py-1 hover:bg-paleGrayishBlue hover:border-black hover:text-black"
+            >
+              Modify
+            </button>
+            {isVisible && (
+              <ChangeAmountPopup
+                onClose={onCloseHandlerModify}
+                id={changeQuantityCellInfo.row.id}
+                quantity={changeQuantityCellInfo.row.quantity}
+                pool={changeQuantityCellInfo.row.pool}
+                side={changeQuantityCellInfo.row.side}
+                pair={changeQuantityCellInfo.row.pair}
+              />
+            )}
+          </div>
+        );
+      },
+    },
+
     {
       field: "close",
       headerName: "Close",
@@ -109,11 +150,13 @@ const OpenOrdersTable = (props) => {
     },
   ];
   const dispatch = useDispatch();
+  /*
   const {
     isVisible: isVisibleModify,
     onCloseHandler: onCloseHandlerModify,
     onVisibleHandler: onVisibleHandlerModify,
   } = useModal();
+  */
   const dispatchNotif = useNotification();
 
   const onHandleSuccess = async (tx) => {

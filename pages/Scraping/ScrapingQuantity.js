@@ -39,15 +39,6 @@ export async function scrapingQuantity() {
   const scrapedOrders = [];
 
   for (let i = 0; i < positionId.length; i++) {
-    //TODO find out which side it is to get the correct decimals
-    /*
-    if (side[i]) {
-      currentDecimals = pairDecimals.token0;
-    } else {
-      currentDecimals = pairDecimals.token1;
-    }
-    currentQuantity = quantity[i] / 10 ** currentDecimals;
-    */
     let newOrder = {
       pool: contractPool[i],
       positionId: positionId[i],

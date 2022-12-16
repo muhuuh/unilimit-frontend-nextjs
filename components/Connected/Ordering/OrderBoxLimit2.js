@@ -132,28 +132,21 @@ const OrderBoxLimit2 = () => {
   const computedPairPrice =
     (1 / limitStore.price) *
     (10 ^ (pairInfo.token1.decimals / 10) ^ pairInfo.token0.decimals);
-  console.log("limitStore.price");
-  console.log(limitStore.price);
-  console.log("pairInfo.token1.decimals");
-  console.log(pairInfo.token1.decimals);
-  console.log("pairInfo.token0.decimals");
-  console.log(pairInfo.token0.decimals);
-  console.log("computedPairPrice");
-  console.log(computedPairPrice);
   const sqrtPriceX96 = Math.sqrt(computedPairPrice) * 2 ** 96;
   const sqrtPriceX96String = sqrtPriceX96.toLocaleString("fullwide", {
     useGrouping: false,
   });
-  console.log("sqrtPriceX96String");
-  console.log(sqrtPriceX96String);
+
   //Quantity
   //TODO quantity entered in the input value doesn't match the one in the conract on etherscan. look again at computation
   let quantityDecimals;
+
   if (limitStore.side) {
-    quantityDecimals = pairInfo.token0.decimals;
-  } else {
     quantityDecimals = pairInfo.token1.decimals;
+  } else {
+    quantityDecimals = pairInfo.token0.decimals;
   }
+
   const quantityParseUnits = ethers.utils.parseUnits(
     limitStore.quantity.toString(),
     quantityDecimals
@@ -162,11 +155,24 @@ const OrderBoxLimit2 = () => {
     useGrouping: false,
   });
 
+  console.log("quantityString orderbox");
+  console.log(quantityString);
+
   //change spender from user to contractaddress
+  let approveTokenAddress;
+  console.log("approve setSell");
+  console.log(setSell);
+  if (setSell) {
+    approveTokenAddress = token1Address;
+  } else {
+    approveTokenAddress = token0Address;
+  }
+  console.log("approveTokenAddress");
+  console.log(approveTokenAddress);
 
   async function approve() {
     const options = {
-      contractAddress: token1Address,
+      contractAddress: approveTokenAddress,
       functionName: "approve",
       abi: [
         {
@@ -184,7 +190,7 @@ const OrderBoxLimit2 = () => {
       ],
       params: {
         _spender: contractAddressPool,
-        _value: "10000000000000000000000000000000",
+        _value: "10000000000000000000000000000000000000000000000000000",
       },
     };
     //await Moralis.executeFunction(options);
@@ -217,7 +223,7 @@ const OrderBoxLimit2 = () => {
         type: "function",
       },
     ],
-    contractAddress: token1Address,
+    contractAddress: approveTokenAddress,
     functionName: "allowance",
     params: {
       _owner: account,
@@ -325,30 +331,23 @@ const OrderBoxLimit2 = () => {
 
     //create Order
     const createTx = await onCreateOrderHandler();
-    //const createTxResult = await createTx.wait();
-    //await txCreate.wait(1);
     console.log("order created");
 
-    //TODO make sure to wait for suucesful creation order before submitting (will also give a correct)
-    const newOpenOrder = {
-      pair: pairInfo.selectedPair,
-      positionId: positionId.value.toString(),
-      trader: account,
-      pool: contractAddressPool,
-      status: "active",
-      side: setSell,
-      sqrtPriceX96: priceLimInput.enteredInput,
-      quantity: quantityLimInput.enteredInput,
-      signature: "",
-    };
+    if (positionId != null) {
+      const newOpenOrder = {
+        pair: pairInfo.selectedPair,
+        positionId: positionId.value.toString(),
+        trader: account,
+        pool: contractAddressPool,
+        status: "active",
+        side: setSell,
+        sqrtPriceX96: priceLimInput.enteredInput,
+        quantity: quantityLimInput.enteredInput,
+        signature: "",
+      };
 
-    /*
-    if (positionId[value].toString() != "0") {
       dispatch(openOrdersActions.addOpenOrder(newOpenOrder));
     }
-    */
-    //TODO make sure it either refresh scraping, or adds to the openorder store
-    dispatch(openOrdersActions.addOpenOrder(newOpenOrder));
 
     quantityLimInput.resetInput();
     priceLimInput.resetInput();

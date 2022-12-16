@@ -98,9 +98,9 @@ export async function scrapingCreated() {
     const currentPair = allPoolsFromChain[String(currentPoolAddress)];
     const pairDecimals = contractAddresses[String(currentPair)].decimals;
     if (side[i]) {
-      currentDecimalsQuantity = pairDecimals.token0;
-    } else {
       currentDecimalsQuantity = pairDecimals.token1;
+    } else {
+      currentDecimalsQuantity = pairDecimals.token0;
     }
     console.log("currentDecimals");
     console.log(currentDecimalsQuantity);
