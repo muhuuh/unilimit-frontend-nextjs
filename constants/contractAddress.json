@@ -12,7 +12,7 @@
     "decimals": { "token0": 6, "token1": 18 },
     "image": "",
     "chain": {
-      "5": ["0x9E5D7582Fbc36d1366FC1F113f400eE3175B4bc2"],
+      "5": ["0xfE316F912c5908018DE074370Cc1Dd857547692e"],
       "31337": ["0x9E5D7582Fbc36d1366FC1F113f400eE3175B4bc2"]
     }
   },

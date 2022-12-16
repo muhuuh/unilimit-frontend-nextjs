@@ -7,6 +7,8 @@ import contractAddresses from "../../constants/contractAddress.json" assert { ty
 export async function scrapingCreated() {
   const allPoolsFromChain = addressPairPool["5"];
   const currentPoolAddress = contractAddresses["USDC/WETH"].chain["5"][0];
+  console.log("currentPoolAddress");
+  console.log(currentPoolAddress);
 
   const provider = new ethers.providers.AlchemyProvider(
     "goerli",
@@ -29,10 +31,12 @@ export async function scrapingCreated() {
     //TODO add indexed topics to five trader calling it
     topics: [
       "0x6c40f5ef74fd79b0dad7fa3da61f0a6a8ef8bf63b75eae10782c62baa2baf1bb", //Open(uint256,address,bool,uint160,uint256)
+      "0x00000000000000000000000078fe389778e5e8be04c4010ac407b2373b987b62",
     ],
   });
   console.log("logs");
   console.log(logs);
+
   const decodedEvents = logs.map((log) => {
     const contract = log.address;
     const decodedEvent = iface.parseLog(log);
@@ -40,7 +44,7 @@ export async function scrapingCreated() {
   });
   console.log("----------------------------------");
   console.log("decodedEvents");
-  console.log(decodedEvents[0].contract);
+  console.log(decodedEvents[0]);
   console.log(decodedEvents[0].decodedEventLogs);
   console.log(decodedEvents[0].decodedEventLogs["args"]["trader"]);
 

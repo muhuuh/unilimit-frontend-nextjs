@@ -6,6 +6,7 @@ import { openOrdersActions } from "../components/store/openOrders-slice";
 import { addressPairPool } from "../constants";
 import { useMoralis } from "react-moralis";
 import { useDispatch } from "react-redux";
+import { scrapingSettled } from "./Scraping/ScrapingSettled";
 
 const ScrapingMain = () => {
   const { chainId: chainIdHex } = useMoralis();
@@ -13,6 +14,7 @@ const ScrapingMain = () => {
   const dispatch = useDispatch();
   const [newQuantitiesOrders, setNewQuantitiesOrders] = useState([]);
   const [newClosedOrders, setNewClosedOrders] = useState([]);
+  const [newSettledOrders, setNewSettledOrders] = useState([]);
   const [newScrapedOrders, setNewScrapedOrders] = useState([
     {
       pool: "",
@@ -95,6 +97,25 @@ const ScrapingMain = () => {
   useEffect(() => {
     dispatch(openOrdersActions.updateQuantityOrders(newQuantitiesOrders));
   }, [newQuantitiesOrders]);
+
+  //--------------- scrape SETTLED orders -----------------
+
+  let scrapedSettledOrders;
+  useEffect(() => {
+    console.log("useeffect settled orders scrapping");
+    const scrapeDataSettled = async () => {
+      scrapedSettledOrders = await scrapingSettled();
+      setNewSettledOrders(scrapedSettledOrders);
+    };
+    scrapeDataSettled();
+  }, []);
+
+  console.log("newSettledOrders");
+  console.log(newSettledOrders);
+
+  useEffect(() => {
+    dispatch(openOrdersActions.updateSettledOrders(newSettledOrders));
+  }, [newSettledOrders]);
 
   return <div></div>;
 };

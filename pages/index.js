@@ -3,8 +3,6 @@ import Unilimit from "./UniLimit";
 import styles from "../styles/Home.module.css";
 import Header from "./Header";
 import ScrapingMain from "./ScrapingMain";
-import HorizontalChart from "./Charts/HorizontalChart";
-import Tradingview2 from "./Charts/Tradingview2";
 
 export default function Home() {
   return (
