@@ -2,12 +2,15 @@ import { ethers } from "ethers";
 import { useState } from "react";
 import { useMoralis } from "react-moralis";
 //import abi from "./constants/abi.json" assert { type: "json" };
-import abi from "../../constants/abi.json" assert { type: "json" };
-import addressPairPool from "../../constants/addressPairPool.json" assert { type: "json" };
-import contractAddresses from "../../constants/contractAddress.json" assert { type: "json" };
+import abi from "../constants/abi.json" assert { type: "json" };
+import addressPairPool from "../constants/addressPairPool.json" assert { type: "json" };
+import contractAddresses from "../constants/contractAddress.json" assert { type: "json" };
 
-export async function scrapingCreated(accountTopic) {
+export async function scrapingCreated2(accountTopic) {
   //const { chainId: chainIdHex, account } = useMoralis();
+  //const { chainId: chainIdHex } = useMoralis();
+  console.log("scraping account");
+  console.log(accountTopic);
   const allPoolsFromChain = addressPairPool["5"];
   const currentPoolAddress = contractAddresses["USDC/WETH"].chain["5"][0];
   console.log("currentPoolAddress");

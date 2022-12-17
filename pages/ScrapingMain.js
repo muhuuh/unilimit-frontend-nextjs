@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { scrapingCreated } from "./Scraping/ScrapingCreated";
+import { scrapingCreated2 } from "./ScrapingCreated2";
 import { scrapingClosed } from "./Scraping/ScrapingClosed";
 import { scrapingQuantity } from "./Scraping/ScrapingQuantity";
 import { openOrdersActions } from "../components/store/openOrders-slice";
@@ -9,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { scrapingSettled } from "./Scraping/ScrapingSettled";
 
 const ScrapingMain = () => {
-  const { chainId: chainIdHex } = useMoralis();
+  const { chainId: chainIdHex, account } = useMoralis();
   const chainId = parseInt(chainIdHex).toString();
   const dispatch = useDispatch();
   const [newQuantitiesOrders, setNewQuantitiesOrders] = useState([]);
@@ -27,16 +28,41 @@ const ScrapingMain = () => {
     },
   ]);
 
+  //screape created data
+  console.log("account test");
+  console.log(account);
+  let currentAccount;
+  if (account != null) {
+    currentAccount = account;
+  } else {
+    currentAccount = "0x78fe389778e5e8be04c4010Ac407b2373B987b62";
+  }
+  const trimmedAccount = currentAccount.slice(2);
+  const accountTopic = `0x000000000000000000000000${trimmedAccount}`;
+  console.log("accountTopic");
+  console.log(accountTopic);
+
+  let scrapedtestOrders;
+  useEffect(() => {
+    const scrapeData2 = async () => {
+      scrapedOrders = await scrapingCreated2(accountTopic);
+      console.log("scrapedOrders test");
+      console.log(scrapedOrders);
+      //setNewScrapedOrders(scrapedOrders);
+    };
+    scrapeData2();
+  }, [currentAccount]);
+
   //--------------- scrape CREATED orders -----------------
   //screape created data
   let scrapedOrders;
   useEffect(() => {
     const scrapeData = async () => {
-      scrapedOrders = await scrapingCreated();
+      scrapedOrders = await scrapingCreated(accountTopic);
       setNewScrapedOrders(scrapedOrders);
     };
     scrapeData();
-  }, []);
+  }, [currentAccount]);
 
   const pairAddresses = addressPairPool[chainId];
 
@@ -82,11 +108,11 @@ const ScrapingMain = () => {
   useEffect(() => {
     console.log("useeffect new quantites scrapping");
     const scrapeDataQuantity = async () => {
-      scrapednewQuantities = await scrapingQuantity();
+      scrapednewQuantities = await scrapingQuantity(accountTopic);
       setNewQuantitiesOrders(scrapednewQuantities);
     };
     scrapeDataQuantity();
-  }, []);
+  }, [currentAccount]);
 
   console.log("newQuantitiesOrders");
   console.log(newQuantitiesOrders);
@@ -100,11 +126,11 @@ const ScrapingMain = () => {
   let scrapedSettledOrders;
   useEffect(() => {
     const scrapeDataSettled = async () => {
-      scrapedSettledOrders = await scrapingSettled();
+      scrapedSettledOrders = await scrapingSettled(accountTopic);
       setNewSettledOrders(scrapedSettledOrders);
     };
     scrapeDataSettled();
-  }, []);
+  }, [currentAccount]);
 
   console.log("newSettledOrders");
   console.log(newSettledOrders);

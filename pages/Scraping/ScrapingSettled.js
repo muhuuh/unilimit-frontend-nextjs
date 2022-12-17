@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import abi from "../../constants/abi.json" assert { type: "json" };
 import contractAddresses from "../../constants/contractAddress.json" assert { type: "json" };
 
-export async function scrapingSettled() {
+export async function scrapingSettled(accountTopic) {
   const currentPoolAddress = contractAddresses["USDC/WETH"].chain["5"][0];
   const provider = new ethers.providers.AlchemyProvider(
     "goerli",
@@ -16,7 +16,8 @@ export async function scrapingSettled() {
     //TODO change topic to make sure it is the current trader
     topics: [
       "0x7e953f96ae54ab2378a31227b9077cac6e9fa627cb10e333065cb7883c1df776", // Settle
-      "0x00000000000000000000000078fe389778e5e8be04c4010ac407b2373b987b62",
+      //"0x00000000000000000000000078fe389778e5e8be04c4010ac407b2373b987b62",
+      accountTopic,
     ],
   });
 
