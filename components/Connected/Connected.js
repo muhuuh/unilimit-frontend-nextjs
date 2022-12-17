@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import Tradingview2 from "../../pages/Charts/Tradingview2";
 import OpenOrders from "./OpenOrders/OpenOrders";
-import OrderBoxLimit2 from "./Ordering/OrderBoxLimit2";
+import OrderBoxLimit from "./Ordering/OrderBoxLimit";
 import OrderBoxSwap from "./Ordering/OrderBoxSwap";
 
 const Connected = () => {
   const [showLimit, setShowLimit] = useState(true);
-  //Look into getting all transaction from wallet based on indexed events and display them
   return (
     <div>
       <div className="flex flex-row justify-center">
@@ -37,7 +36,7 @@ const Connected = () => {
             </button>
           </div>
           <div className="flex justify-center mb-16">
-            {showLimit ? <OrderBoxLimit2 /> : <OrderBoxSwap />}
+            {showLimit ? <OrderBoxLimit /> : <OrderBoxSwap />}
           </div>
         </div>
       </div>

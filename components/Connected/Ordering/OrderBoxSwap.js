@@ -10,6 +10,8 @@ import { limitActions } from "../../store/limit-slice";
 import { useDispatch, useSelector } from "react-redux";
 
 const OrderBoxSwap = () => {
+  //-------Define variables-----------
+
   const dispatch = useDispatch();
   const limitStore = useSelector((state) => state.limit);
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();

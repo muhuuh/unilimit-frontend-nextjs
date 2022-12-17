@@ -18,19 +18,19 @@ const ScrapingMain = () => {
   const [newScrapedOrders, setNewScrapedOrders] = useState([
     {
       pool: "",
-      positionId: "",
+      positionId: 0,
       trader: "",
-      side: "",
-      sqrtPriceX96: "",
-      quantity: "",
+      side: false,
+      sqrtPriceX96: 0,
+      quantity: 0,
       signature: "",
     },
   ]);
 
   //--------------- scrape CREATED orders -----------------
+  //screape created data
   let scrapedOrders;
   useEffect(() => {
-    console.log("useeffect scrapping");
     const scrapeData = async () => {
       scrapedOrders = await scrapingCreated();
       setNewScrapedOrders(scrapedOrders);
@@ -40,9 +40,8 @@ const ScrapingMain = () => {
 
   const pairAddresses = addressPairPool[chainId];
 
+  //when created data is scraped, we make some modification to it before sending it to the store
   useEffect(() => {
-    console.log("run second useeffect");
-
     let newScrapedOrderWithTicker = [];
     newScrapedOrders.map((order) => {
       let pair;
@@ -56,7 +55,6 @@ const ScrapingMain = () => {
     });
     dispatch(
       openOrdersActions.updateScrapingOpenOrders(newScrapedOrderWithTicker)
-      //scrapingActions.updateScrapingOpenOrders(newScrapedOrderWithTicker)
     );
   }, [newScrapedOrders]);
 
@@ -64,7 +62,6 @@ const ScrapingMain = () => {
 
   let scrapedClosedOrders;
   useEffect(() => {
-    console.log("useeffect closed scrapping");
     const scrapeDataClosed = async () => {
       scrapedClosedOrders = await scrapingClosed();
       setNewClosedOrders(scrapedClosedOrders);
@@ -102,7 +99,6 @@ const ScrapingMain = () => {
 
   let scrapedSettledOrders;
   useEffect(() => {
-    console.log("useeffect settled orders scrapping");
     const scrapeDataSettled = async () => {
       scrapedSettledOrders = await scrapingSettled();
       setNewSettledOrders(scrapedSettledOrders);

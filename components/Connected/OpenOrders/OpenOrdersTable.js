@@ -4,23 +4,27 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch } from "react-redux";
 import { useWeb3Contract } from "react-moralis";
 import { abi } from "../../../constants";
-import useModal from "../../../hooks/use-modal";
 import { openOrdersActions } from "../../store/openOrders-slice";
 import ChangeAmountPopup from "../Popup/ChangeAmountPopup";
 import { useNotification } from "web3uikit";
 import { Off } from "@web3uikit/icons";
+import contractAddresses from "../../../constants/contractAddress.json" assert { type: "json" };
 
 const OpenOrdersTable = (props) => {
+  //-------Define variables-----------
+  const currentPoolAddress = contractAddresses["USDC/WETH"].chain["5"][0];
+  const dispatch = useDispatch();
+  const dispatchNotif = useNotification();
   const [closeCellValue, setCloseCellValue] = useState({
-    row: { pool: "0x9E5D7582Fbc36d1366FC1F113f400eE3175B4bc2", id: 0 },
+    row: { pool: currentPoolAddress, id: 0 },
   });
   const [changeQuantityCellInfo, setChangeQuantityCellInfo] = useState({});
   const [isVisible, setIsVisible] = useState(false);
   const onCloseHandlerModify = () => {
     setIsVisible(false);
   };
-  console.log("dataOpenOrder");
-  console.log(props.dataOpenOrder);
+
+  //-------Define Table columns and button functionalities in cells-----------
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     {
@@ -97,16 +101,10 @@ const OpenOrdersTable = (props) => {
             variant="contained"
             color="primary"
             onClick={async () => {
-              console.log("close cellValues");
-              console.log(cellValues);
-              console.log("closingorderhandler called");
               const changeCloseCellValue = async () => {
-                console.log("changing closing cell value ..)");
                 setCloseCellValue(cellValues);
               };
               await changeCloseCellValue();
-              console.log("closeCellValue");
-              console.log(closeCellValue);
             }}
             className="bg-grayishBlue text-white border-2 rounded-lg px-2 py-1 hover:bg-paleGrayishBlue hover:border-black hover:text-black"
           >
@@ -116,20 +114,8 @@ const OpenOrdersTable = (props) => {
       },
     },
   ];
-  const dispatch = useDispatch();
-  /*
-  const {
-    isVisible: isVisibleModify,
-    onCloseHandler: onCloseHandlerModify,
-    onVisibleHandler: onVisibleHandlerModify,
-  } = useModal();
-  */
-  const dispatchNotif = useNotification();
 
-  const onHandleSuccess = async (tx) => {
-    console.log("Close Order succesful");
-    onHandleNotification(tx);
-  };
+  //-------Connection to Smart Contract-----------
 
   const onHandleNotification = () => {
     dispatchNotif({
@@ -168,28 +154,7 @@ const OpenOrdersTable = (props) => {
     }
   }, [closeCellValue]);
 
-  /*
-  const onCloseHandler = async (cellValues) => {
-    console.log("close cellValues");
-    console.log(cellValues);
-    console.log("closingorderhandler called");
-    const { runContractFunction: closePositionOwner } = useWeb3Contract({
-      abi: abi,
-      contractAddress: props.pool,
-      functionName: "closePositionOwner",
-      params: { positionId: cellValues }, //TODOget the current id from props. fetching should put in it store and the get from parent compoent
-    });
-
-    closePositionOwner({
-      onSuccess: onHandleSuccess,
-      onError: (error) => {
-        console.log("error closing order");
-        console.log(error);
-      },
-    });
-    dispatch(openOrdersActions.closeOpenOrder(props.id));
-  };
-  */
+  //-------Display table-----------
 
   const rows2 = [];
   props.dataOpenOrder.map((order) => {
@@ -223,6 +188,3 @@ const OpenOrdersTable = (props) => {
 };
 
 export default OpenOrdersTable;
-
-/*
- */
