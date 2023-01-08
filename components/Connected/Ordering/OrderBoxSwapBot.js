@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-//import { useUniswapV3 } from "../../lib/uniswapV3";
+import React, { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
+import { useWeb3 } from "react-moralis";
 import { useUniswapV3 } from "../../../hooks/use-uniswap";
 
 const OrderBoxSwapBot = () => {
@@ -9,16 +9,21 @@ const OrderBoxSwapBot = () => {
   const [amount, setAmount] = useState(0);
   const [swapError, setSwapError] = useState(null);
   const [swapLoading, setSwapLoading] = useState(false);
+  const { web3, account } = useMoralis();
+  //const { web3 } = useWeb3();
   const uniswap = useUniswapV3();
-  const { web3 } = useMoralis();
 
-  const handleSwap = async () => {
+  const handleSwap = async (event) => {
+    event.preventDefault();
     setSwapError(null);
     setSwapLoading(true);
+    console.log("button clicked");
+    console.log(uniswap);
 
     if (!uniswap) {
       setSwapError("Uniswap is not initialized");
       setSwapLoading(false);
+      console.log("error");
       return;
     }
 
@@ -40,49 +45,74 @@ const OrderBoxSwapBot = () => {
       console.log(`Token swap transaction hash: ${txHash}`);
     } catch (error) {
       setSwapError(error.message);
+      console.log("error swap");
+      console.log(error);
     } finally {
       setSwapLoading(false);
+      console.log("done");
     }
   };
 
   return (
-    <div>
-      <h1>Token Swap</h1>
-      {swapError && <p className="error">{swapError}</p>}
-      <form onSubmit={handleSwap}>
-        <label htmlFor="fromToken">
-          From Token:
+    <div className="mx-auto max-w-md">
+      <form
+        onSubmit={handleSwap}
+        className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10 w-96"
+      >
+        <div className="mb-4">
+          <label
+            className="block font-bold mb-2 text-sm uppercase"
+            htmlFor="fromToken"
+          >
+            From Token
+          </label>
           <input
+            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             type="text"
             id="fromToken"
             value={fromToken}
             onChange={(event) => setFromToken(event.target.value)}
           />
-        </label>
-        <br />
-        <label htmlFor="toToken">
-          To Token:
+        </div>
+        <div className="mb-4">
+          <label
+            className="block font-bold mb-2 text-sm uppercase"
+            htmlFor="toToken"
+          >
+            To Token
+          </label>
           <input
+            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             type="text"
             id="toToken"
             value={toToken}
             onChange={(event) => setToToken(event.target.value)}
           />
-        </label>
-        <br />
-        <label htmlFor="amount">
-          Amount:
+        </div>
+        <div className="mb-4">
+          <label
+            className="block font-bold mb-2 text-sm uppercase"
+            htmlFor="amount"
+          >
+            Amount
+          </label>
           <input
+            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             type="number"
             id="amount"
             value={amount}
             onChange={(event) => setAmount(event.target.value)}
           />
-        </label>
-        <br />
-        <button type="submit" disabled={swapLoading}>
-          Swap
-        </button>
+        </div>
+        <div className="mb-4">
+          <button
+            className="w-full py-2 px-4 bg-blue-500 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+            type="submit"
+            disabled={swapLoading}
+          >
+            Swap
+          </button>
+        </div>
       </form>
     </div>
   );

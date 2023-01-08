@@ -38,7 +38,7 @@ const Connected = () => {
             </button>
           </div>
           <div className="flex justify-center mb-16">
-            {showLimit ? <OrderBoxLimit /> : <OrderBoxSwapBot />}
+            {showLimit ? <OrderBoxLimit /> : <OrderBoxSwapMessage />}
           </div>
         </div>
       </div>
