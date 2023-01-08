@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { scrapingCreated } from "./Scraping/ScrapingCreated";
-import { scrapingCreated2 } from "./ScrapingCreated2";
 import { scrapingClosed } from "./Scraping/ScrapingClosed";
 import { scrapingQuantity } from "./Scraping/ScrapingQuantity";
 import { openOrdersActions } from "../components/store/openOrders-slice";
@@ -28,9 +27,7 @@ const ScrapingMain = () => {
     },
   ]);
 
-  //screape created data
-  console.log("account test");
-  console.log(account);
+  //current wallet topic
   let currentAccount;
   if (account != null) {
     currentAccount = account;
@@ -41,17 +38,6 @@ const ScrapingMain = () => {
   const accountTopic = `0x000000000000000000000000${trimmedAccount}`;
   console.log("accountTopic");
   console.log(accountTopic);
-
-  let scrapedtestOrders;
-  useEffect(() => {
-    const scrapeData2 = async () => {
-      scrapedOrders = await scrapingCreated2(accountTopic);
-      console.log("scrapedOrders test");
-      console.log(scrapedOrders);
-      //setNewScrapedOrders(scrapedOrders);
-    };
-    scrapeData2();
-  }, [currentAccount]);
 
   //--------------- scrape CREATED orders -----------------
   //screape created data
