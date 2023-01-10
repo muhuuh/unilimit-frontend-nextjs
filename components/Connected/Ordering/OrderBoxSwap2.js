@@ -2,12 +2,23 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useMoralis } from "react-moralis";
 import GearIcon from "../../UI/Icons/GearIcon";
-import ConfigModal from "./ConfigModal";
+import ConfigModal from "./SwapComponents/ConfigModal";
+import DumpLoader from "react-spinners";
+import CurrencyField from "./SwapComponents/CurrencyField";
 
 const OrderBoxSwap2 = () => {
   const [showModal, setShowModal] = useState(undefined);
   const [slippageAmount, setSlippageAmount] = useState(2);
   const [deadlineMinutes, setDeadlineMinutes] = useState(10);
+  const [inputAmount, setInputAmount] = useState(undefined);
+  const [outputAmount, setOutputAmount] = useState(undefined);
+  const [transaction, setTransaction] = useState(undefined);
+  const [loading, setLoading] = useState(undefined);
+  const [ratio, setRatio] = useState(undefined);
+  const [contract0, setContract0] = useState(undefined);
+  const [contract1, setContract1] = useState(undefined);
+  const [amount0, setamount0] = useState(undefined);
+  const [amount1, setamount1] = useState(undefined);
   const {
     chainId: chainIdHex,
     isWeb3Enabled,
@@ -29,15 +40,18 @@ const OrderBoxSwap2 = () => {
   const [signer, setSigner] = useState(undefined);
   //const [signerAddress, setSignerAddress] = useState(undefined);
 
-  /*
   useEffect(() => {
     const onLoad = async () => {
-      const provider = await new ethers.providers.Web3Provider(window.ethereum);
-      setProvider(provider);
+      //const provider = await new ethers.providers.Web3Provider(window.ethereum);
+      //setProvider(provider);
+      const contrat1 = getContrat1();
+      setContract1(contrat1);
+
+      const contrat0 = getContrat0();
+      setContract0(contrat0);
     };
     onLoad();
   }, []);
-  */
 
   //console.log(provider.getSigner());
   console.log("web3");
@@ -59,10 +73,10 @@ const OrderBoxSwap2 = () => {
 
     // todo: connect weth and uni contracts
     wethContract.balanceOf(account).then((res) => {
-      setWethAmount(Number(ethers.utils.formatEther(res)));
+      setamount0(Number(ethers.utils.formatEther(res)));
     });
     uniContract.balanceOf(account).then((res) => {
-      setUniAmount(Number(ethers.utils.formatEther(res)));
+      setamount1(Number(ethers.utils.formatEther(res)));
     });
 
     //})
@@ -87,7 +101,6 @@ const OrderBoxSwap2 = () => {
               />
             )}
           </div>
-
           <div className="px-4 py-3">
             <CurrencyField
               className="mb-3"
@@ -95,7 +108,7 @@ const OrderBoxSwap2 = () => {
               tokenName="WETH"
               getSwapPrice={getSwapPrice}
               signer={signer}
-              balance={wethAmount}
+              balance={amount0}
             />
             <CurrencyField
               className="mb-3"
@@ -103,12 +116,11 @@ const OrderBoxSwap2 = () => {
               tokenName="UNI"
               value={outputAmount}
               signer={signer}
-              balance={uniAmount}
+              balance={amount1}
               spinner={DumpLoader}
               loading={loading}
             />
           </div>
-
           <div className="px-4 py-3">
             {ratio && <>{`1 UNI = ${ratio} WETH`}</>}
           </div>

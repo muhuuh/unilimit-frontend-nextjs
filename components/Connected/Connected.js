@@ -4,7 +4,7 @@ import OpenOrders from "./OpenOrders/OpenOrders";
 import OrderBoxLimit from "./Ordering/OrderBoxLimit";
 import OrderBoxSwap from "./Ordering/OrderBoxSwap";
 import OrderBoxSwap2 from "./Ordering/OrderBoxSwap2";
-import OrderBoxSwapMessage from "./Ordering/OrderBoxSwapMessage";
+import OrderBoxSwapMessage from "./Ordering/SwapComponents/OrderBoxSwapMessage";
 
 const Connected = () => {
   const [showLimit, setShowLimit] = useState(true);
