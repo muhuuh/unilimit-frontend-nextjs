@@ -3,7 +3,7 @@ import Tradingview2 from "../../pages/Charts/Tradingview2";
 import OpenOrders from "./OpenOrders/OpenOrders";
 import OrderBoxLimit from "./Ordering/OrderBoxLimit";
 import OrderBoxSwap from "./Ordering/OrderBoxSwap";
-import OrderBoxSwapBot from "./Ordering/OrderBoxSwapBot";
+import OrderBoxSwap2 from "./Ordering/OrderBoxSwap2";
 import OrderBoxSwapMessage from "./Ordering/OrderBoxSwapMessage";
 
 const Connected = () => {
@@ -38,7 +38,7 @@ const Connected = () => {
             </button>
           </div>
           <div className="flex justify-center mb-16">
-            {showLimit ? <OrderBoxLimit /> : <OrderBoxSwapMessage />}
+            {showLimit ? <OrderBoxLimit /> : <OrderBoxSwap2 />}
           </div>
         </div>
       </div>

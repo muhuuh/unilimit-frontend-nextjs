@@ -10,7 +10,7 @@ const Header = () => {
         <button>About</button>
       </div>
       <div className="flex flex-row justify-center gap-x-6">
-        <ConnectButton moralisAuth={false} />
+        <ConnectButton moralisAuth={true} />
       </div>
     </div>
   );
