@@ -51,11 +51,17 @@ const OrderBoxLimit = () => {
   const token0Address = tokens[pairInfo.token0.ticker].token_address;
   const token1Address = tokens[pairInfo.token1.ticker].token_address;
 
+  console.log("isAuthenticated limit");
+  console.log(isAuthenticated);
+
   useEffect(() => {
     if (!isAuthenticated) {
+      console.log("authenticating");
       authenticate();
+      console.log("isAuthenticated limit2");
+      console.log(isAuthenticated);
     }
-  }, [isAuthenticated]);
+  }, []);
 
   //------------- Set up Modal to select token-------------
 
