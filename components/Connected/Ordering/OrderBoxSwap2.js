@@ -5,9 +5,21 @@ import GearIcon from "../../UI/Icons/GearIcon";
 import ConfigModal from "./SwapComponents/ConfigModal";
 import DumpLoader from "react-spinners";
 import CurrencyField from "./SwapComponents/CurrencyField";
-import { getContrat0, getContrat1 } from "./SwapComponents/AlphaRouterService";
+/*
+import AlphaRouterService, {
+  getContrat0,
+  getContrat1,
+  getPrice,
+  runSwap,
+} from "./SwapComponents/AlphaRouterService";
+*/
+
+import AlphaRouterService from "./SwapComponents/AlphaRouterService";
 
 const OrderBoxSwap2 = () => {
+  const { getContract0, getContract1, getPrice, runSwap } =
+    AlphaRouterService();
+
   const [showModal, setShowModal] = useState(undefined);
   const [slippageAmount, setSlippageAmount] = useState(2);
   const [deadlineMinutes, setDeadlineMinutes] = useState(10);
@@ -45,11 +57,11 @@ const OrderBoxSwap2 = () => {
     const onLoad = async () => {
       //const provider = await new ethers.providers.Web3Provider(window.ethereum);
       //setProvider(provider);
-      const contrat0 = getContrat0();
-      setContract0(contrat0);
+      const contract0 = getContract0();
+      setContract0(contract0);
 
-      const contrat1 = getContrat1();
-      setContract1(contrat1);
+      const contract1 = getContract1();
+      setContract1(contract1);
     };
     onLoad();
   }, []);
@@ -81,6 +93,23 @@ const OrderBoxSwap2 = () => {
     });
 
     //})
+  };
+
+  const getSwapPrice = (inputAmount) => {
+    setLoading(true);
+    setInputAmount(inputAmount);
+
+    const swap = getPrice(
+      inputAmount,
+      slippageAmount,
+      Math.floor(Date.now() / 1000 + deadlineMinutes * 60),
+      account
+    ).then((data) => {
+      setTransaction(data[0]);
+      setOutputAmount(data[1]);
+      setRatio(data[2]);
+      setLoading(false);
+    });
   };
 
   return (
