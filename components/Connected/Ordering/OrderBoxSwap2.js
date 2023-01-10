@@ -5,6 +5,7 @@ import GearIcon from "../../UI/Icons/GearIcon";
 import ConfigModal from "./SwapComponents/ConfigModal";
 import DumpLoader from "react-spinners";
 import CurrencyField from "./SwapComponents/CurrencyField";
+import { getContrat0, getContrat1 } from "./SwapComponents/AlphaRouterService";
 
 const OrderBoxSwap2 = () => {
   const [showModal, setShowModal] = useState(undefined);
@@ -44,11 +45,11 @@ const OrderBoxSwap2 = () => {
     const onLoad = async () => {
       //const provider = await new ethers.providers.Web3Provider(window.ethereum);
       //setProvider(provider);
-      const contrat1 = getContrat1();
-      setContract1(contrat1);
-
       const contrat0 = getContrat0();
       setContract0(contrat0);
+
+      const contrat1 = getContrat1();
+      setContract1(contrat1);
     };
     onLoad();
   }, []);
@@ -72,10 +73,10 @@ const OrderBoxSwap2 = () => {
     */
 
     // todo: connect weth and uni contracts
-    wethContract.balanceOf(account).then((res) => {
+    contract0.balanceOf(account).then((res) => {
       setamount0(Number(ethers.utils.formatEther(res)));
     });
-    uniContract.balanceOf(account).then((res) => {
+    contract1.balanceOf(account).then((res) => {
       setamount1(Number(ethers.utils.formatEther(res)));
     });
 
@@ -105,7 +106,7 @@ const OrderBoxSwap2 = () => {
             <CurrencyField
               className="mb-3"
               field="input"
-              tokenName="WETH"
+              tokenName="Token0"
               getSwapPrice={getSwapPrice}
               signer={signer}
               balance={amount0}
@@ -113,7 +114,7 @@ const OrderBoxSwap2 = () => {
             <CurrencyField
               className="mb-3"
               field="output"
-              tokenName="UNI"
+              tokenName="Token1"
               value={outputAmount}
               signer={signer}
               balance={amount1}
