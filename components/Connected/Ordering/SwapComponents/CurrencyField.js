@@ -1,5 +1,6 @@
 import React from "react";
 import LoadingSpinner from "../../../UI/LoadingSpinner";
+import { BeatLoader } from "react-spinners";
 
 const CurrencyField = (props) => {
   const getPrice = (value) => {
@@ -8,7 +9,7 @@ const CurrencyField = (props) => {
 
   const fetchElement = (
     <div className="flex justify-center items-center my-4">
-      <LoadingSpinner />
+      <BeatLoader color="#36d7b7" size={8} margin={3} />
     </div>
   );
   return (

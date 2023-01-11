@@ -128,7 +128,7 @@ const OrderBoxSwap2 = () => {
     <div className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10 h-96">
       <div className="mx-auto max-w-sm p-6 bg-white rounded-lg">
         <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-lg font-medium">Swap</span>
+          <span className="text-xl font-bold text-center">Swap</span>
           <span className="cursor-pointer" onClick={() => setShowModal(true)}>
             <GearIcon />
           </span>
