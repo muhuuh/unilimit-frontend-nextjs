@@ -58,6 +58,8 @@ const OrderBoxSwap2 = () => {
       //const provider = await new ethers.providers.Web3Provider(window.ethereum);
       //setProvider(provider);
       const contract0 = getContract0();
+      console.log("contract0");
+      console.log(contract0);
       setContract0(contract0);
 
       const contract1 = getContract1();
@@ -86,6 +88,8 @@ const OrderBoxSwap2 = () => {
 
     // todo: connect weth and uni contracts
     contract0.balanceOf(account).then((res) => {
+      console.log("balance of wallet");
+      console.log(Number(ethers.utils.formatEther(res)));
       setamount0(Number(ethers.utils.formatEther(res)));
     });
     contract1.balanceOf(account).then((res) => {
@@ -94,6 +98,14 @@ const OrderBoxSwap2 = () => {
 
     //})
   };
+
+  console.log("signer balance");
+  console.log(signer);
+
+  if (signer !== undefined) {
+    console.log("function signer called");
+    getWalletAddress();
+  }
 
   const getSwapPrice = (inputAmount) => {
     setLoading(true);
@@ -114,64 +126,62 @@ const OrderBoxSwap2 = () => {
 
   return (
     <div className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10 h-96">
-      <div className="bg-gray-100 min-h-screen">
-        <div className="mx-auto max-w-sm p-6 bg-white rounded-lg">
-          <div className="flex items-center justify-between px-4 py-3">
-            <span className="text-lg font-medium">Swap</span>
-            <span className="cursor-pointer" onClick={() => setShowModal(true)}>
-              <GearIcon />
-            </span>
-            {showModal && (
-              <ConfigModal
-                onClose={() => setShowModal(false)}
-                setDeadlineMinutes={setDeadlineMinutes}
-                deadlineMinutes={deadlineMinutes}
-                setSlippageAmount={setSlippageAmount}
-                slippageAmount={slippageAmount}
-              />
-            )}
-          </div>
-          <div className="px-4 py-3">
-            <CurrencyField
-              className="mb-3"
-              field="input"
-              tokenName="Token0"
-              getSwapPrice={getSwapPrice}
-              signer={signer}
-              balance={amount0}
+      <div className="mx-auto max-w-sm p-6 bg-white rounded-lg">
+        <div className="flex items-center justify-between px-4 py-3">
+          <span className="text-xl font-bold text-center">Swap</span>
+          <span className="cursor-pointer" onClick={() => setShowModal(true)}>
+            <GearIcon />
+          </span>
+          {showModal && (
+            <ConfigModal
+              onClose={() => setShowModal(false)}
+              setDeadlineMinutes={setDeadlineMinutes}
+              deadlineMinutes={deadlineMinutes}
+              setSlippageAmount={setSlippageAmount}
+              slippageAmount={slippageAmount}
             />
-            <CurrencyField
-              className="mb-3"
-              field="output"
-              tokenName="Token1"
-              value={outputAmount}
-              signer={signer}
-              balance={amount1}
-              spinner={DumpLoader}
-              loading={loading}
-            />
-          </div>
-          <div className="px-4 py-3">
-            {ratio && <>{`1 UNI = ${ratio} WETH`}</>}
-          </div>
+          )}
+        </div>
+        <div className="px-4 py-3">
+          <CurrencyField
+            className="mb-3"
+            field="input"
+            tokenName="WETH"
+            getSwapPrice={getSwapPrice}
+            signer={signer}
+            balance={amount0}
+          />
+          <CurrencyField
+            className="mb-3"
+            field="output"
+            tokenName="UNI"
+            value={outputAmount}
+            signer={signer}
+            balance={amount1}
+            spinner={DumpLoader}
+            loading={loading}
+          />
+        </div>
+        <div className="px-4 py-3">
+          {ratio && <>{`1 UNI = ${ratio} WETH`}</>}
+        </div>
 
-          <div className="px-4 py-3">
-            {isConnected() ? (
-              <button
-                className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg"
-                onClick={() => runSwap(transaction, signer)}
-              >
-                Swap
-              </button>
-            ) : (
-              <button
-                className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg"
-                onClick={() => getSigner(provider)}
-              >
-                Connect Wallet
-              </button>
-            )}
-          </div>
+        <div className="px-4 py-3">
+          {isConnected() ? (
+            <button
+              className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg"
+              onClick={() => runSwap(transaction, signer)}
+            >
+              Swap
+            </button>
+          ) : (
+            <button
+              className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg"
+              onClick={() => getSigner(web3)}
+            >
+              Connect Wallet
+            </button>
+          )}
         </div>
       </div>
     </div>
