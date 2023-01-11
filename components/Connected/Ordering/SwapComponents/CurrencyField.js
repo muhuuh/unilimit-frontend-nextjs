@@ -1,16 +1,21 @@
 import React from "react";
+import LoadingSpinner from "../../../UI/LoadingSpinner";
 
 const CurrencyField = (props) => {
   const getPrice = (value) => {
     props.getSwapPrice(value);
   };
+
+  const fetchElement = (
+    <div className="flex justify-center items-center my-4">
+      <LoadingSpinner />
+    </div>
+  );
   return (
     <div className="flex">
       <div className="w-1/2 pr-4">
         {props.loading ? (
-          <div className="text-center py-5">
-            <props.spinner />
-          </div>
+          <div className="text-center py-5">{fetchElement}</div>
         ) : (
           <input
             className="bg-gray-100 rounded-lg py-2 px-3 text-gray-800"

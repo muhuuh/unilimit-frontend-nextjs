@@ -1,8 +1,16 @@
-import { AlphaRouter } from "@uniswap/smart-order-router";
-import { Token, CurrencyAmount, TradeType, Percent } from "@uniswap/sdk-core";
-import { ethers, BigNumber } from "ethers";
+//import { AlphaRouter } from "@uniswap/smart-order-router";
+//import { Token, CurrencyAmount, TradeType, Percent } from "@uniswap/sdk-core";
+//import { ethers, BigNumber } from "ethers";
+const { AlphaRouter } = require("@uniswap/smart-order-router");
+const {
+  Token,
+  CurrencyAmount,
+  TradeType,
+  Percent,
+} = require("@uniswap/sdk-core");
+const { ethers, BigNumber } = require("ethers");
 import JSBI from "jsbi";
-import ERC20ABI from "../../../../constants";
+import ERC20ABI from "../../../../constants/ERC20abi.json";
 import { useSelector } from "react-redux";
 import { useMoralis } from "react-moralis";
 
@@ -18,13 +26,17 @@ const AlphaRouterService = () => {
     authenticate,
     account,
   } = useMoralis();
-  const chainId = parseInt(chainIdHex).toString();
-  console.log("chainId router");
-  console.log(chainId);
+
+  const chainId = parseInt(chainIdHex);
+  //const chainId = 5;
 
   const web3Provider = new ethers.providers.JsonRpcProvider(INFURA_URL_TESTNET);
   const router = new AlphaRouter({ chainId: chainId, provider: web3Provider });
 
+  console.log("web3Provider");
+  console.log(web3Provider);
+  console.log("router");
+  console.log(router);
   const swapStore = useSelector((state) => state.swap);
 
   const token0 = swapStore.token0;
@@ -34,13 +46,15 @@ const AlphaRouterService = () => {
     chainId,
     token0.token_address,
     token0.decimals,
-    token0.ticker
+    token0.ticker,
+    "Wrapped Ether"
   );
   const token1Token = new Token(
     chainId,
     token1.token_address,
     token1.decimals,
-    token1.ticker
+    token1.ticker,
+    "Uniswap Token"
   );
 
   //get amount of token that is in the wallet
@@ -57,14 +71,28 @@ const AlphaRouterService = () => {
     walletAddress
   ) => {
     const percentSlippage = new Percent(slippageAmount, 100);
+    console.log("percentSlippage");
+    console.log(percentSlippage);
     const wei = ethers.utils.parseUnits(
       inputAmount.toString(),
       token0.decimals
     );
+    console.log("wei");
+    console.log(wei);
     const currencyAmount = CurrencyAmount.fromRawAmount(
       token0Token,
       JSBI.BigInt(wei)
     );
+    console.log("currencyAmount");
+    console.log(currencyAmount);
+    console.log("walletAddress");
+    console.log(walletAddress);
+    console.log("deadline");
+    console.log(deadline);
+    console.log("TradeType.EXACT_INPUT");
+    console.log(TradeType);
+    console.log("slippageAmount");
+    console.log(slippageAmount);
 
     const route = await router.route(
       currencyAmount,
@@ -76,6 +104,8 @@ const AlphaRouterService = () => {
         deadline: deadline,
       }
     );
+    console.log("route");
+    console.log(route);
 
     const transaction = {
       data: route.methodParameters.calldata,
