@@ -68,44 +68,29 @@ const OrderBoxSwap2 = () => {
     onLoad();
   }, []);
 
-  //console.log(provider.getSigner());
-  console.log("web3");
-  console.log(web3.getSigner());
-  console.log("account");
-  console.log(account);
-
   const getSigner = async () => {
     const signer = web3.getSigner();
     setSigner(signer);
   };
-  const isConnected = () => signer !== undefined;
+  const isConnected = () => web3.getSigner() !== undefined;
   const getWalletAddress = () => {
-    /*
-    signer.getAddress()
-      .then(address => {
-        setSignerAddress(address)
-    */
-
-    // todo: connect weth and uni contracts
     contract0.balanceOf(account).then((res) => {
-      console.log("balance of wallet");
-      console.log(Number(ethers.utils.formatEther(res)));
       setamount0(Number(ethers.utils.formatEther(res)));
     });
     contract1.balanceOf(account).then((res) => {
       setamount1(Number(ethers.utils.formatEther(res)));
     });
-
-    //})
   };
 
   console.log("signer balance");
   console.log(signer);
 
-  if (signer !== undefined) {
-    console.log("function signer called");
-    getWalletAddress();
-  }
+  useEffect(() => {
+    if (web3.getSigner() !== undefined && contract0 !== undefined) {
+      console.log("function signer called");
+      getWalletAddress();
+    }
+  }, [contract0, contract1]);
 
   const getSwapPrice = (inputAmount) => {
     setLoading(true);
@@ -125,8 +110,8 @@ const OrderBoxSwap2 = () => {
   };
 
   return (
-    <div className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10 h-96">
-      <div className="mx-auto max-w-sm p-6 bg-white rounded-lg">
+    <div className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10 ">
+      <div className="mx-auto max-w-sm p-6 bg-white rounded-lg ">
         <div className="flex items-center justify-between px-4 py-3">
           <span className="text-xl font-bold text-center">Swap</span>
           <span className="cursor-pointer" onClick={() => setShowModal(true)}>
@@ -142,7 +127,7 @@ const OrderBoxSwap2 = () => {
             />
           )}
         </div>
-        <div className="px-4 py-3">
+        <div className="flex flex-col gap-y-4 px-4 py-3">
           <CurrencyField
             className="mb-3"
             field="input"

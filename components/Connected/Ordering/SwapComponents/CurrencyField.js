@@ -8,18 +8,18 @@ const CurrencyField = (props) => {
   };
 
   const fetchElement = (
-    <div className="flex justify-center items-center my-4">
+    <div>
       <BeatLoader color="#36d7b7" size={8} margin={3} />
     </div>
   );
   return (
-    <div className="flex">
-      <div className="w-1/2 pr-4">
+    <div className="flex flex-row gap-x-3">
+      <div className="">
         {props.loading ? (
           <div className="text-center py-5">{fetchElement}</div>
         ) : (
           <input
-            className="bg-gray-100 rounded-lg py-2 px-3 text-gray-800"
+            className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
             placeholder="0.0"
             value={props.value}
             onBlur={(e) =>
@@ -28,7 +28,7 @@ const CurrencyField = (props) => {
           />
         )}
       </div>
-      <div className="w-1/2 pl-4">
+      <div className="">
         <span className="text-lg font-medium">{props.tokenName}</span>
         <div className="text-sm text-gray-600">
           Balance: {props.balance?.toFixed(3)}
