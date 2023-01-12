@@ -5,22 +5,13 @@ import GearIcon from "../../UI/Icons/GearIcon";
 import ConfigModal from "./SwapComponents/ConfigModal";
 import DumpLoader from "react-spinners";
 import CurrencyField from "./SwapComponents/CurrencyField";
-/*
-import AlphaRouterService, {
-  getContrat0,
-  getContrat1,
-  getPrice,
-  runSwap,
-} from "./SwapComponents/AlphaRouterService";
-*/
-
 import AlphaRouterService from "./SwapComponents/AlphaRouterService";
+import useModal from "../../../hooks/use-modal";
 
 const OrderBoxSwap2 = () => {
   const { getContract0, getContract1, getPrice, runSwap } =
     AlphaRouterService();
-
-  const [showModal, setShowModal] = useState(undefined);
+  const { isVisible, onCloseHandler, onVisibleHandler } = useModal();
   const [slippageAmount, setSlippageAmount] = useState(2);
   const [deadlineMinutes, setDeadlineMinutes] = useState(10);
   const [inputAmount, setInputAmount] = useState(undefined);
@@ -114,12 +105,12 @@ const OrderBoxSwap2 = () => {
       <div className="mx-auto max-w-sm p-6 bg-white rounded-lg ">
         <div className="flex items-center justify-between px-4 py-3">
           <span className="text-xl font-bold text-center">Swap</span>
-          <span className="cursor-pointer" onClick={() => setShowModal(true)}>
+          <span className="cursor-pointer" onClick={onVisibleHandler}>
             <GearIcon />
           </span>
-          {showModal && (
+          {isVisible && (
             <ConfigModal
-              onClose={() => setShowModal(false)}
+              onClose={onCloseHandler}
               setDeadlineMinutes={setDeadlineMinutes}
               deadlineMinutes={deadlineMinutes}
               setSlippageAmount={setSlippageAmount}
