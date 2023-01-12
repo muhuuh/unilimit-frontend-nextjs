@@ -30,6 +30,14 @@ const swapPairSlice = createSlice({
       const newRatio = action.payload;
       state.ratio = newRatio;
     },
+    updateSwapToken0(state, action) {
+      const token0 = action.payload;
+      state.token0 = token0;
+    },
+    updateSwapToken1(state, action) {
+      const token1 = action.payload;
+      state.token1 = token1;
+    },
   },
 });
 

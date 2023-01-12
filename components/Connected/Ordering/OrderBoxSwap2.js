@@ -126,6 +126,7 @@ const OrderBoxSwap2 = () => {
             getSwapPrice={getSwapPrice}
             signer={signer}
             balance={amount0}
+            tokenNumber={0}
           />
           <CurrencyField
             className="mb-3"
@@ -136,6 +137,7 @@ const OrderBoxSwap2 = () => {
             balance={amount1}
             spinner={DumpLoader}
             loading={loading}
+            tokenNumber={1}
           />
         </div>
         <div className="px-4 py-3">
