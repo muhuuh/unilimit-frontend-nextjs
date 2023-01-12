@@ -18,10 +18,7 @@ const CurrencyField = (props) => {
 
   return (
     <div>
-      <div
-        onClick={onVisibleHandler}
-        className="flex flex-row gap-x-3 cursor-pointer"
-      >
+      <div className="flex flex-row gap-x-3 ">
         <div className="">
           {props.loading ? (
             <div className="text-center py-5">{fetchElement}</div>
@@ -37,8 +34,8 @@ const CurrencyField = (props) => {
           )}
         </div>
 
-        <div className="">
-          <span className="text-lg font-medium">{props.tokenName}</span>
+        <div onClick={onVisibleHandler} className="cursor-pointer">
+          <span className="text-lg font-medium">{props.ticker}</span>
           <div className="text-sm text-gray-600">
             Balance: {props.balance?.toFixed(3)}
           </div>

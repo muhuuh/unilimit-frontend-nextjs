@@ -7,6 +7,7 @@ import DumpLoader from "react-spinners";
 import CurrencyField from "./SwapComponents/CurrencyField";
 import AlphaRouterService from "./SwapComponents/AlphaRouterService";
 import useModal from "../../../hooks/use-modal";
+import { useSelector } from "react-redux";
 
 const OrderBoxSwap2 = () => {
   const { getContract0, getContract1, getPrice, runSwap } =
@@ -33,6 +34,10 @@ const OrderBoxSwap2 = () => {
     web3,
   } = useMoralis();
   const chainId = parseInt(chainIdHex).toString();
+  const swapStore = useSelector((state) => state.swap);
+  const token0 = swapStore.token0;
+  console.log("check store token0");
+  console.log(token0.ticker);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -122,7 +127,7 @@ const OrderBoxSwap2 = () => {
           <CurrencyField
             className="mb-3"
             field="input"
-            tokenName="WETH"
+            ticker={swapStore.token0.ticker}
             getSwapPrice={getSwapPrice}
             signer={signer}
             balance={amount0}
@@ -131,7 +136,7 @@ const OrderBoxSwap2 = () => {
           <CurrencyField
             className="mb-3"
             field="output"
-            tokenName="UNI"
+            ticker={swapStore.token1.ticker}
             value={outputAmount}
             signer={signer}
             balance={amount1}
@@ -141,7 +146,9 @@ const OrderBoxSwap2 = () => {
           />
         </div>
         <div className="px-4 py-3">
-          {ratio && <>{`1 UNI = ${ratio} WETH`}</>}
+          {ratio && (
+            <>{`1 ${swapStore.token1.ticker} = ${ratio} ${swapStore.token0.ticker}`}</>
+          )}
         </div>
 
         <div className="px-4 py-3">

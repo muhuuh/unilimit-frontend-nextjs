@@ -41,21 +41,25 @@ const AlphaRouterService = () => {
   const swapStore = useSelector((state) => state.swap);
 
   const token0 = swapStore.token0;
+  console.log("token0 alpha");
+  console.log(token0);
   const token1 = swapStore.token1;
+  console.log("token1");
+  console.log(token1);
 
   const token0Token = new Token(
     chainId,
     token0.token_address,
     token0.decimals,
     token0.ticker,
-    "Wrapped Ether"
+    token0.name
   );
   const token1Token = new Token(
     chainId,
     token1.token_address,
     token1.decimals,
     token1.ticker,
-    "Uniswap Token"
+    token1.name
   );
 
   //get amount of token that is in the wallet
