@@ -7,7 +7,7 @@ import {
   useWeb3Contract,
   useWeb3ExecuteFunction,
 } from "react-moralis";
-import TokenRatio4 from "../../../pages/TokenRatio4";
+import TokenRatio from "../../../pages/TokenRatio";
 import { useDispatch, useSelector } from "react-redux";
 import DropdownIcon from "../../UI/Icons/DropdownIcon";
 import { openOrdersActions } from "../../store/openOrders-slice";
@@ -16,7 +16,6 @@ import SelectPair from "../Tokens/SelectPair";
 import { limitPairActions } from "../../store/limitPair-slice";
 import { useNotification } from "web3uikit";
 import { Rocket } from "@web3uikit/icons";
-import AlphaRouterService from "./SwapComponents/AlphaRouterService";
 
 const OrderBoxLimit = () => {
   //-------Define variables-----------
@@ -454,8 +453,9 @@ const OrderBoxLimit = () => {
                 value={priceLimInput.enteredInput}
                 className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
               />
-              <div className="text-sm text-gray-600 text-left mt-2">
-                Current Ratio:
+              <div className="text-left  mt-2">
+                <span className="text-sm text-gray-600">Current Ratio:</span>
+                <TokenRatio />
               </div>
             </div>
           </div>

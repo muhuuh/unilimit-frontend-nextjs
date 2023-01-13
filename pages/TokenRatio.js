@@ -18,10 +18,6 @@ const TokenRatio = () => {
   const [tokenUni0, setTokenUni0] = useState();
   const [tokenUni1, setTokenUni1] = useState();
   const [isFetching, setIsFetching] = useState(false);
-  const onRefreshHandler = () => {
-    //TODOreset input value to ""
-    setRefresh(refresh + 1);
-  };
 
   //get the current pair of token
   //const currentPair = [limitStore.token0Ticker, limitStore.token1Ticker];
@@ -37,15 +33,16 @@ const TokenRatio = () => {
   console.log("tokens");
   console.log(tokensMainnet[currentPair[0]]);
 
+  let uniToken0, uniToken1;
   useEffect(() => {
     setIsFetching(true);
-    const uniToken0 = new Token(
+    uniToken0 = new Token(
       ChainId.MAINNET,
       totalTokens[currentPair[0]].token_address,
       totalTokens[currentPair[0]].decimals
     );
     setTokenUni0(uniToken0);
-    const uniToken1 = new Token(
+    uniToken1 = new Token(
       ChainId.MAINNET,
       totalTokens[currentPair[1]].token_address,
       totalTokens[currentPair[1]].decimals
@@ -57,7 +54,7 @@ const TokenRatio = () => {
     Fetcher.fetchPairData(uniToken0, uniToken1)
       .then((data) => setPair(data))
       .then(() => setIsFetching(false));
-  }, [refresh]);
+  }, [uniToken0, uniToken1]);
 
   /*
   if (isFetching) {
@@ -91,18 +88,10 @@ const TokenRatio = () => {
   }, [pair]);
 
   return (
-    <div className="my-6">
-      {!isFetching && (
-        <div className="my-6">{`${tokenRatio.token0} / ${tokenRatio.token1}`}</div>
-      )}
+    <span className="text-sm text-gray-600 text-left mt-2">
+      {!isFetching && <span className="">{` ${tokenRatio.token1}`}</span>}
       {isFetching && fetchElement}
-      <button
-        onClick={onRefreshHandler}
-        className="border-2 rounded-lg shadow text-sm py-1 px-4  hover:scale-110"
-      >
-        Refresh
-      </button>
-    </div>
+    </span>
   );
 };
 
