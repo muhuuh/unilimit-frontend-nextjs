@@ -62,7 +62,7 @@ const OrderBoxSwap2 = () => {
       setContract1(contract1);
     };
     onLoad();
-  }, []);
+  }, [swapStore.token0.ticker, swapStore.token1.ticker]);
 
   const getSigner = async () => {
     const signer = web3.getSigner();
