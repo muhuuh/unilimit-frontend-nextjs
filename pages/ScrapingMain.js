@@ -34,6 +34,8 @@ const ScrapingMain = () => {
   } else {
     currentAccount = "0x78fe389778e5e8be04c4010Ac407b2373B987b62";
   }
+  console.log("current account scrapping");
+  console.log(currentAccount);
   const trimmedAccount = currentAccount.slice(2);
   const accountTopic = `0x000000000000000000000000${trimmedAccount}`;
   console.log("accountTopic");

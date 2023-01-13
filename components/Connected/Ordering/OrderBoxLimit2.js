@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import useInput from "../../../hooks/use-input";
 import useModal from "../../../hooks/use-modal";
-import { contractAddresses, abi, tokens, ERC20abi } from "../../../constants";
+import { contractAddresses, abi, tokens } from "../../../constants";
 import {
   useMoralis,
   useWeb3Contract,
@@ -16,18 +16,12 @@ import SelectPair from "../Tokens/SelectPair";
 import { limitPairActions } from "../../store/limitPair-slice";
 import { useNotification } from "web3uikit";
 import { Rocket } from "@web3uikit/icons";
-import AlphaRouterService from "./SwapComponents/AlphaRouterService";
 
 const OrderBoxLimit = () => {
   //-------Define variables-----------
-  const currentPoolAddress = contractAddresses["USDC/WETH"].chain["5"][0];
-  //const { getContract0, getContract1 } = AlphaRouterService();
-  const [contract0, setContract0] = useState(undefined);
-  const [contract1, setContract1] = useState(undefined);
-  const [amount0, setamount0] = useState(undefined);
-  const [amount1, setamount1] = useState(undefined);
-  const [setSell, setSetSell] = useState(false);
 
+  const [setSell, setSetSell] = useState(false);
+  const currentPoolAddress = contractAddresses["USDC/WETH"].chain["5"][0];
   const [contractAddressPool, setContractAddressPool] =
     useState(currentPoolAddress);
   const dispatch = useDispatch();
@@ -39,7 +33,6 @@ const OrderBoxLimit = () => {
     isAuthenticated,
     authenticate,
     account,
-    web3,
   } = useMoralis();
   const contractProcessor = useWeb3ExecuteFunction();
   //Default pair is USDC/WETH. State of the pair info can be changed by the user
@@ -55,7 +48,6 @@ const OrderBoxLimit = () => {
     },
   });
   const chainId = parseInt(chainIdHex).toString();
-  useEffect(() => {}, [pairInfo]);
   const token0Address = tokens[pairInfo.token0.ticker].token_address;
   const token1Address = tokens[pairInfo.token1.ticker].token_address;
 
@@ -185,49 +177,6 @@ const OrderBoxLimit = () => {
     setSetSell(true);
     dispatch(limitPairActions.updateSide(true));
   };
-
-  //get balances of selected tokens
-
-  let tickerBalanceToken, tickerBalance;
-  if (setSell) {
-    tickerBalanceToken = pairInfo.token1.ticker;
-    tickerBalance = amount1;
-  } else {
-    tickerBalanceToken = pairInfo.token0.ticker;
-    tickerBalance = amount0;
-  }
-
-  const getContract0 = () => new ethers.Contract(token0Address, ERC20abi, web3);
-  const getContract1 = () => new ethers.Contract(token1Address, ERC20abi, web3);
-
-  useEffect(() => {
-    const onLoad = async () => {
-      const contract0 = getContract0();
-      console.log("contract0");
-      console.log(contract0);
-      setContract0(contract0);
-
-      const contract1 = getContract1();
-      setContract1(contract1);
-    };
-    onLoad();
-  }, [pairInfo.token1.ticker, pairInfo.token0.ticker]);
-
-  const getWalletAddress = () => {
-    contract0.balanceOf(account).then((res) => {
-      setamount0(Number(ethers.utils.formatEther(res)));
-    });
-    contract1.balanceOf(account).then((res) => {
-      setamount1(Number(ethers.utils.formatEther(res)));
-    });
-  };
-
-  useEffect(() => {
-    if (web3.getSigner() !== undefined && contract0 !== undefined) {
-      console.log("function signer called");
-      getWalletAddress();
-    }
-  }, [contract0, contract1]);
 
   // Approve function: change spender from user to contractaddress
   let approveTokenAddress;
@@ -385,38 +334,15 @@ const OrderBoxLimit = () => {
     <div className="">
       <form
         onSubmit={onSubmitHandler}
-        className=" mt-10 mx-16 border-2 rounded-xl shadow-md px-24 py-10"
+        className=" mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10"
       >
-        <div className="text-center font-bold text-lg mb-8">Limit Orders</div>
-        <div className="flex flex-row justify-center mb-8">
-          <div
-            onClick={onBuyHandler}
-            className={` text-white border-2 rounded-l-lg border-white ${
-              setSell == false
-                ? "bg-buyGreen font-bold scale-110"
-                : "bg-gray-600"
-            } shadow hover:font-bold hover:scale-110 w-20 py-1 px-2 `}
-          >
-            Buy
-          </div>
-          <div
-            onClick={onSellHandler}
-            className={`text-white border-2 rounded-r-lg border-white ${
-              setSell == true
-                ? "bg-darkRed font-bold scale-110 "
-                : "bg-gray-600"
-            } shadow hover:font-bold hover:scale-110 w-20 py-1 px-2 `}
-          >
-            {" "}
-            Sell
-          </div>
-        </div>
+        <div className="text-center font-bold text-lg mb-14">Limit Orders</div>
         <div className="">
           <div className="border-b-2 mb-6">
             <div className="flex flex-row justify-around mb-6">
               <button
                 onClick={onVisiblePairHandler}
-                className="flex flex-row justify-center items-center  py-1 px-4 "
+                className="flex flex-row justify-center items-center border-2 rounded-lg shadow hover:scale-110 py-1 px-4 "
               >
                 {pairInfo.selectedPair != ""
                   ? pairInfo.selectedPair
@@ -430,36 +356,56 @@ const OrderBoxLimit = () => {
                 />
               )}
             </div>
+            <div className="mb-6">
+              <div>Current Ratio on Uniswap: </div>
+              <TokenRatio4 />
+            </div>
           </div>
-          <div className="">
+          <div className="flex flex-row gap-x-6">
             <div className={`${quantityLimInputClasses} `}>
+              <label className="">Quantity</label>
               <input
-                type="number"
-                placeholder="Quantity"
+                type="text"
                 onChange={quantityLimInput.inputChangeHandler}
                 onBlur={quantityLimInput.inputBlurHandler}
                 value={quantityLimInput.enteredInput}
-                className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
+                className="border-2 rounded-lg shadow-sm h-8 w-48"
               />
-              <div className="text-sm text-gray-600 text-left mt-2">
-                {`Balance ${tickerBalanceToken}:  ${tickerBalance?.toFixed(3)}`}
-              </div>
             </div>
             <div className={`${priceLimInputClasses} `}>
+              <label className="">Price</label>
               <input
                 type="number"
-                placeholder="Target Price"
                 onChange={priceLimInput.inputChangeHandler}
                 onBlur={priceLimInput.inputBlurHandler}
                 value={priceLimInput.enteredInput}
-                className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
+                className="border-2 rounded-lg shadow-sm h-8 w-48"
               />
-              <div className="text-sm text-gray-600 text-left mt-2">
-                Current Ratio:
-              </div>
             </div>
           </div>
-
+          <div className="flex flex-row justify-center">
+            <div
+              onClick={onBuyHandler}
+              className={` text-white border-2 rounded-l-lg border-white ${
+                setSell == false
+                  ? "bg-lightGreen font-bold scale-110"
+                  : "bg-buyGreen"
+              } shadow hover:font-bold hover:scale-110 w-20 py-1 px-2 `}
+            >
+              Buy
+            </div>
+            <div
+              onClick={onSellHandler}
+              className={`text-white border-2 rounded-r-lg border-white ${
+                setSell == true
+                  ? "bg-brightRedLight font-bold scale-110 "
+                  : "bg-darkRed"
+              } shadow hover:font-bold hover:scale-110 w-20 py-1 px-2 `}
+            >
+              {" "}
+              Sell
+            </div>
+          </div>
           <div>
             <button
               type="submit"
@@ -467,7 +413,7 @@ const OrderBoxLimit = () => {
                 !formIsValid
                   ? "bg-gray-500 cursor-not-allowed"
                   : "bg-grayishBlue hover:bg-paleGrayishBlue hover:border-black hover:text-black"
-              } border-2 rounded-lg border-white py-1 px-2 mt-2`}
+              } border-2 rounded-lg border-white py-1 px-2 mt-8`}
               disabled={!formIsValid}
             >
               Create Order

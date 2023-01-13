@@ -25,13 +25,14 @@ const AlphaRouterService = () => {
     isAuthenticated,
     authenticate,
     account,
+    web3,
   } = useMoralis();
 
   const chainId = parseInt(chainIdHex);
   //const chainId = 5;
 
   const web3Provider = new ethers.providers.JsonRpcProvider(INFURA_URL_TESTNET);
-  const router = new AlphaRouter({ chainId: chainId, provider: web3Provider });
+  const router = new AlphaRouter({ chainId: chainId, provider: web3 });
 
   console.log("web3Provider");
   console.log(web3Provider);
@@ -40,29 +41,34 @@ const AlphaRouterService = () => {
   const swapStore = useSelector((state) => state.swap);
 
   const token0 = swapStore.token0;
+  console.log("token0 alpha");
+  console.log(token0);
   const token1 = swapStore.token1;
+  console.log("token1");
+  console.log(token1);
 
   const token0Token = new Token(
     chainId,
     token0.token_address,
     token0.decimals,
     token0.ticker,
-    "Wrapped Ether"
+    token0.name
   );
   const token1Token = new Token(
     chainId,
     token1.token_address,
     token1.decimals,
     token1.ticker,
-    "Uniswap Token"
+    token1.name
   );
 
   //get amount of token that is in the wallet
   //TODO Need to export these functions
   const getContract0 = () =>
-    new ethers.Contract(token0.token_address, ERC20ABI, web3Provider);
+    //new ethers.Contract(token0.token_address, ERC20ABI, web3Provider);
+    new ethers.Contract(token0.token_address, ERC20ABI, web3);
   const getContract1 = () =>
-    new ethers.Contract(token1.token_address, ERC20ABI, web3Provider);
+    new ethers.Contract(token1.token_address, ERC20ABI, web3);
 
   const getPrice = async (
     inputAmount,
@@ -71,28 +77,14 @@ const AlphaRouterService = () => {
     walletAddress
   ) => {
     const percentSlippage = new Percent(slippageAmount, 100);
-    console.log("percentSlippage");
-    console.log(percentSlippage);
     const wei = ethers.utils.parseUnits(
       inputAmount.toString(),
       token0.decimals
     );
-    console.log("wei");
-    console.log(wei);
     const currencyAmount = CurrencyAmount.fromRawAmount(
       token0Token,
       JSBI.BigInt(wei)
     );
-    console.log("currencyAmount");
-    console.log(currencyAmount);
-    console.log("walletAddress");
-    console.log(walletAddress);
-    console.log("deadline");
-    console.log(deadline);
-    console.log("TradeType.EXACT_INPUT");
-    console.log(TradeType);
-    console.log("slippageAmount");
-    console.log(slippageAmount);
 
     const route = await router.route(
       currencyAmount,
@@ -135,5 +127,4 @@ const AlphaRouterService = () => {
   return { getContract0, getContract1, getPrice, runSwap };
 };
 
-//export { getContract0, getContract1, getPrice, runSwap };
 export default AlphaRouterService;
