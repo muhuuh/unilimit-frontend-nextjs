@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import useInput from "../../../hooks/use-input";
 import useModal from "../../../hooks/use-modal";
-import { contractAddresses, abi, tokens } from "../../../constants";
+import { contractAddresses, abi, tokens, ERC20abi } from "../../../constants";
 import {
   useMoralis,
   useWeb3Contract,
@@ -16,12 +16,18 @@ import SelectPair from "../Tokens/SelectPair";
 import { limitPairActions } from "../../store/limitPair-slice";
 import { useNotification } from "web3uikit";
 import { Rocket } from "@web3uikit/icons";
+import AlphaRouterService from "./SwapComponents/AlphaRouterService";
 
 const OrderBoxLimit = () => {
   //-------Define variables-----------
-
-  const [setSell, setSetSell] = useState(false);
   const currentPoolAddress = contractAddresses["USDC/WETH"].chain["5"][0];
+  //const { getContract0, getContract1 } = AlphaRouterService();
+  const [contract0, setContract0] = useState(undefined);
+  const [contract1, setContract1] = useState(undefined);
+  const [amount0, setamount0] = useState(undefined);
+  const [amount1, setamount1] = useState(undefined);
+  const [setSell, setSetSell] = useState(false);
+
   const [contractAddressPool, setContractAddressPool] =
     useState(currentPoolAddress);
   const dispatch = useDispatch();
@@ -33,6 +39,7 @@ const OrderBoxLimit = () => {
     isAuthenticated,
     authenticate,
     account,
+    web3,
   } = useMoralis();
   const contractProcessor = useWeb3ExecuteFunction();
   //Default pair is USDC/WETH. State of the pair info can be changed by the user
@@ -179,9 +186,49 @@ const OrderBoxLimit = () => {
     dispatch(limitPairActions.updateSide(true));
   };
 
-  const tickerBalanceToken = setSell
-    ? pairInfo.token1.ticker
-    : pairInfo.token0.ticker;
+  //get balances of selected tokens
+
+  let tickerBalanceToken, tickerBalance;
+  if (setSell) {
+    tickerBalanceToken = pairInfo.token1.ticker;
+    tickerBalance = amount1;
+  } else {
+    tickerBalanceToken = pairInfo.token0.ticker;
+    tickerBalance = amount0;
+  }
+
+  const getContract0 = () => new ethers.Contract(token0Address, ERC20abi, web3);
+  const getContract1 = () => new ethers.Contract(token1Address, ERC20abi, web3);
+
+  useEffect(() => {
+    const onLoad = async () => {
+      const contract0 = getContract0();
+      console.log("contract0");
+      console.log(contract0);
+      setContract0(contract0);
+
+      const contract1 = getContract1();
+      setContract1(contract1);
+    };
+    onLoad();
+  }, [pairInfo.token1.ticker, pairInfo.token0.ticker]);
+
+  const getWalletAddress = () => {
+    contract0.balanceOf(account).then((res) => {
+      setamount0(Number(ethers.utils.formatEther(res)));
+    });
+    contract1.balanceOf(account).then((res) => {
+      setamount1(Number(ethers.utils.formatEther(res)));
+    });
+  };
+
+  useEffect(() => {
+    if (web3.getSigner() !== undefined && contract0 !== undefined) {
+      console.log("function signer called");
+      getWalletAddress();
+    }
+  }, [contract0, contract1]);
+
   // Approve function: change spender from user to contractaddress
   let approveTokenAddress;
   console.log("approve setSell");
@@ -395,7 +442,7 @@ const OrderBoxLimit = () => {
                 className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
               />
               <div className="text-sm text-gray-600 text-left mt-2">
-                {`Balance ${tickerBalanceToken}:  `}
+                {`Balance ${tickerBalanceToken}:  ${tickerBalance?.toFixed(3)}`}
               </div>
             </div>
             <div className={`${priceLimInputClasses} `}>
