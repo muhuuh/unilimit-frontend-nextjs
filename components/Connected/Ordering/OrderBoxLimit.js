@@ -412,7 +412,7 @@ const OrderBoxLimit = () => {
         </div>
         <div className="">
           <div className="border-b-2 mb-6">
-            <div className="flex flex-row justify-around mb-6">
+            <div className="flex flex-row justify-around mb-2">
               <button
                 onClick={onVisiblePairHandler}
                 className="flex flex-row justify-center items-center  py-1 px-4 "

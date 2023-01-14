@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import Tradingview2 from "../../pages/Charts/Tradingview2";
 import OpenOrders from "./OpenOrders/OpenOrders";
 import OrderBoxLimit from "./Ordering/OrderBoxLimit";
-import OrderBoxSwap from "./Ordering/OrderBoxSwap";
 import OrderBoxSwap2 from "./Ordering/OrderBoxSwap2";
-import OrderBoxSwapMessage from "./Ordering/SwapComponents/OrderBoxSwapMessage";
 
 const Connected = () => {
   const [showLimit, setShowLimit] = useState(true);

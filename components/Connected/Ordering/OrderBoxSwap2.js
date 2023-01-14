@@ -3,7 +3,6 @@ import { ethers } from "ethers";
 import { useMoralis } from "react-moralis";
 import GearIcon from "../../UI/Icons/GearIcon";
 import ConfigModal from "./SwapComponents/ConfigModal";
-import DumpLoader from "react-spinners";
 import CurrencyField from "./SwapComponents/CurrencyField";
 import AlphaRouterService from "./SwapComponents/AlphaRouterService";
 import useModal from "../../../hooks/use-modal";
@@ -140,7 +139,6 @@ const OrderBoxSwap2 = () => {
             value={outputAmount}
             signer={signer}
             balance={amount1}
-            spinner={DumpLoader}
             loading={loading}
             tokenNumber={1}
           />

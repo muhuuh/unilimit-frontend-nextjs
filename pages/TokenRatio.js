@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { limitPairActions } from "../components/store/limitPair-slice";
 import { tokensMainnet } from "../constants";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
+import { BeatLoader } from "react-spinners";
 
 //https://nextjs.org/docs/basic-features/data-fetching/client-side
 //https://nextjs.org/docs/basic-features/data-fetching/overview
@@ -19,10 +20,6 @@ const TokenRatio = () => {
   const [tokenUni1, setTokenUni1] = useState();
   const [isFetching, setIsFetching] = useState(false);
 
-  //get the current pair of token
-  //const currentPair = [limitStore.token0Ticker, limitStore.token1Ticker];
-  console.log("raaatiioooo");
-
   const currentPair = [
     limitStore.pairInfo.token0.ticker,
     limitStore.pairInfo.token1.ticker,
@@ -32,6 +29,10 @@ const TokenRatio = () => {
   const totalTokens = tokensMainnet;
   console.log("tokens");
   console.log(tokensMainnet[currentPair[0]]);
+  useEffect(() => {
+    console.log("currentPair useeffect");
+    console.log(currentPair);
+  }, [limitStore.pairInfo]);
 
   let uniToken0, uniToken1;
   useEffect(() => {
@@ -54,7 +55,7 @@ const TokenRatio = () => {
     Fetcher.fetchPairData(uniToken0, uniToken1)
       .then((data) => setPair(data))
       .then(() => setIsFetching(false));
-  }, [uniToken0, uniToken1]);
+  }, [limitStore.pairInfo, totalTokens]);
 
   /*
   if (isFetching) {
@@ -66,9 +67,9 @@ const TokenRatio = () => {
   }
   */
   const fetchElement = (
-    <div className="flex justify-center items-center my-4">
-      <LoadingSpinner />
-    </div>
+    <span className="ml-4">
+      <BeatLoader color="#36d7b7" size={8} margin={3} />
+    </span>
   );
 
   useEffect(() => {
