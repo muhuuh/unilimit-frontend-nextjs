@@ -1,36 +1,70 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
+import useInput from "../../../../hooks/use-input";
 import TokensModal from "./SelectSwapToken/TokensModal";
 
 const CurrencyField = (props) => {
   //const { isVisible, onCloseHandler, onVisibleHandler } = useModal();
   const [isVisible, setIsVisible] = useState(false);
   const [inputValue, setInputValue] = useState(0);
-  console.log;
+
+  //---------------Form validity checks ---------------
+  const checkValidity = (input) => {
+    return input.trim() !== "";
+  };
+  const quantityInput = useInput(checkValidity);
+  const quantityInputClasses = quantityInput.hasError
+    ? "form-control invalid"
+    : "form-control";
+
+  let formIsValid = false;
+  if (quantityInput.enteredInputisValid && quantityInput.enteredInput > 0) {
+    formIsValid = true;
+  }
+
+  const checkDisable = (disableStatus) => {
+    props.disabledHandler(disableStatus);
+  };
+
+  //--------------Get swap Price -----------------
   const getPrice = (value) => {
     props.getSwapPrice(value);
   };
 
+  const onChangeHandler = (event) => {
+    setInputValue(event.target.value);
+    quantityInput.inputChangeHandler(event);
+    if (formIsValid && event.target.value > 0) {
+      getPrice(event.target.value);
+      if (props.tokenNumber === 0) {
+        checkDisable(formIsValid);
+      }
+    }
+  };
+  const onCloseHandler = () => {
+    setIsVisible(false);
+
+    //if (props.tokenNumber == 0 && inputValue > 0) getPrice(inputValue);
+  };
+
+  const onBlurHandler = (event) => {
+    quantityInput.inputBlurHandler();
+    if (formIsValid && props.tokenNumber === 0) {
+      getPrice(event.target.value);
+    }
+  };
+
+  //-------------Spinn loader ----------------
   const fetchElement = (
     <div>
       <BeatLoader color="#36d7b7" size={8} margin={3} />
     </div>
   );
-  const onChangeHandler = (event) => {
-    setInputValue(event.target.value);
-    if (event.target.value > 0) {
-      getPrice(event.target.value);
-    }
-  };
-  const onCloseHandler = () => {
-    setIsVisible(false);
-    //if (props.tokenNumber == 0 && inputValue > 0) getPrice(inputValue);
-  };
 
   return (
     <div>
       <div className="flex flex-row gap-x-3 ">
-        <div className="">
+        <div className={`${quantityInputClasses} `}>
           {props.loading ? (
             <div className="text-center py-5">{fetchElement}</div>
           ) : (
@@ -39,9 +73,7 @@ const CurrencyField = (props) => {
               placeholder="0.0"
               value={props.value}
               onChange={onChangeHandler}
-              onBlur={(e) =>
-                props.field === "input" ? getPrice(e.target.value) : null
-              }
+              onBlur={onBlurHandler}
             />
           )}
         </div>
