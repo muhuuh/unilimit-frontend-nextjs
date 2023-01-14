@@ -455,7 +455,7 @@ const OrderBoxLimit = () => {
               />
               <div className="text-left  mt-2">
                 <span className="text-sm text-gray-600">Current Ratio:</span>
-                <TokenRatio />
+                <TokenRatio side={setSell} />
               </div>
             </div>
           </div>

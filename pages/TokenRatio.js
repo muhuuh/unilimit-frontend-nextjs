@@ -10,7 +10,7 @@ import { BeatLoader } from "react-spinners";
 //https://nextjs.org/docs/basic-features/data-fetching/overview
 //https://beta.nextjs.org/docs/data-fetching/fetching
 
-const TokenRatio = () => {
+const TokenRatio = (props) => {
   const dispatch = useDispatch();
   const limitStore = useSelector((state) => state.limit);
   const [tokenRatio, setTokenRatio] = useState({});
@@ -19,6 +19,8 @@ const TokenRatio = () => {
   const [tokenUni0, setTokenUni0] = useState();
   const [tokenUni1, setTokenUni1] = useState();
   const [isFetching, setIsFetching] = useState(false);
+  const [sellSide, setSellSide] = useState(false);
+  const [showRatio, setShowRatio] = useState(0);
 
   const currentPair = [
     limitStore.pairInfo.token0.ticker,
@@ -57,15 +59,23 @@ const TokenRatio = () => {
       .then(() => setIsFetching(false));
   }, [limitStore.pairInfo, totalTokens]);
 
-  /*
-  if (isFetching) {
-    return (
-      <div className="flex justify-center">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-  */
+  useEffect(() => {
+    console.log("props.side useeffect");
+    if (props.side) {
+      setSellSide(true);
+    } else {
+      setSellSide(false);
+    }
+  }, [props.side]);
+
+  useEffect(() => {
+    if (sellSide) {
+      setShowRatio(tokenRatio.token1);
+    } else {
+      setShowRatio(tokenRatio.token0);
+    }
+  }, [sellSide, tokenRatio]);
+
   const fetchElement = (
     <span className="ml-4">
       <BeatLoader color="#36d7b7" size={8} margin={3} />
@@ -84,13 +94,16 @@ const TokenRatio = () => {
       setTokenRatio(newRatio);
       console.log("newRatio");
       console.log(newRatio);
+      setShowRatio(tokenRatio.token0);
       dispatch(limitPairActions.updateRatio(newRatio));
     }
   }, [pair]);
 
+  console.log("showRatio");
+  console.log(showRatio);
   return (
     <span className="text-sm text-gray-600 text-left mt-2">
-      {!isFetching && <span className="">{` ${tokenRatio.token1}`}</span>}
+      {!isFetching && <span className="">{` ${showRatio}`}</span>}
       {isFetching && fetchElement}
     </span>
   );
