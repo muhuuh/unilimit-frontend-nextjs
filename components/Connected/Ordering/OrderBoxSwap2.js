@@ -3,7 +3,6 @@ import { ethers } from "ethers";
 import { useMoralis } from "react-moralis";
 import GearIcon from "../../UI/Icons/GearIcon";
 import ConfigModal from "./SwapComponents/ConfigModal";
-import DumpLoader from "react-spinners";
 import CurrencyField from "./SwapComponents/CurrencyField";
 import AlphaRouterService from "./SwapComponents/AlphaRouterService";
 import useModal from "../../../hooks/use-modal";
@@ -24,6 +23,7 @@ const OrderBoxSwap2 = () => {
   const [contract1, setContract1] = useState(undefined);
   const [amount0, setamount0] = useState(undefined);
   const [amount1, setamount1] = useState(undefined);
+  const [disabled, setDisabled] = useState(true);
   const {
     chainId: chainIdHex,
     isWeb3Enabled,
@@ -78,9 +78,6 @@ const OrderBoxSwap2 = () => {
     });
   };
 
-  console.log("signer balance");
-  console.log(signer);
-
   useEffect(() => {
     if (web3.getSigner() !== undefined && contract0 !== undefined) {
       console.log("function signer called");
@@ -105,11 +102,17 @@ const OrderBoxSwap2 = () => {
     });
   };
 
+  const disabledHandler = (disableStatus) => {
+    setDisabled(!disableStatus);
+  };
+
   return (
-    <div className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10 ">
-      <div className="mx-auto max-w-sm p-6 bg-white rounded-lg ">
+    <div className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10 bg-DarkModeGray">
+      <div className="mx-auto max-w-sm p-6  rounded-lg bg-DarkModeGray">
         <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-xl font-bold text-center">Swap</span>
+          <span className="text-xl font-bold text-center text-gray-100">
+            Swap
+          </span>
           <span className="cursor-pointer" onClick={onVisibleHandler}>
             <GearIcon />
           </span>
@@ -132,6 +135,7 @@ const OrderBoxSwap2 = () => {
             signer={signer}
             balance={amount0}
             tokenNumber={0}
+            disabledHandler={disabledHandler}
           />
           <CurrencyField
             className="mb-3"
@@ -140,12 +144,11 @@ const OrderBoxSwap2 = () => {
             value={outputAmount}
             signer={signer}
             balance={amount1}
-            spinner={DumpLoader}
             loading={loading}
             tokenNumber={1}
           />
         </div>
-        <div className="px-4 py-3">
+        <div className="px-4 py-3 text-gray-400">
           {ratio && (
             <>{`1 ${swapStore.token1.ticker} = ${ratio} ${swapStore.token0.ticker}`}</>
           )}
@@ -154,14 +157,22 @@ const OrderBoxSwap2 = () => {
         <div className="px-4 py-3">
           {isConnected() ? (
             <button
-              className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg"
+              className={`text-white ${
+                disabled
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-indigo-500 hover:bg-indigo-600"
+              } py-2 px-4 rounded-lg`}
               onClick={() => runSwap(transaction, signer)}
             >
               Swap
             </button>
           ) : (
             <button
-              className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg"
+              className={`text-white ${
+                disabled
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-indigo-500 hover:bg-indigo-600"
+              } py-2 px-4 rounded-lg`}
               onClick={() => getSigner(web3)}
             >
               Connect Wallet

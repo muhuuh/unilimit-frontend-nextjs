@@ -7,7 +7,7 @@ import {
   useWeb3Contract,
   useWeb3ExecuteFunction,
 } from "react-moralis";
-import TokenRatio4 from "../../../pages/TokenRatio4";
+import TokenRatio from "../../../pages/TokenRatio";
 import { useDispatch, useSelector } from "react-redux";
 import DropdownIcon from "../../UI/Icons/DropdownIcon";
 import { openOrdersActions } from "../../store/openOrders-slice";
@@ -16,7 +16,6 @@ import SelectPair from "../Tokens/SelectPair";
 import { limitPairActions } from "../../store/limitPair-slice";
 import { useNotification } from "web3uikit";
 import { Rocket } from "@web3uikit/icons";
-import AlphaRouterService from "./SwapComponents/AlphaRouterService";
 
 const OrderBoxLimit = () => {
   //-------Define variables-----------
@@ -382,29 +381,29 @@ const OrderBoxLimit = () => {
   };
 
   return (
-    <div className="">
+    <div className="text-gray-100">
       <form
         onSubmit={onSubmitHandler}
-        className=" mt-10 mx-16 border-2 rounded-xl shadow-md px-24 py-10"
+        className=" mt-10 mx-16 border-2 rounded-xl shadow-md px-24 py-10 bg-DarkModeGray"
       >
         <div className="text-center font-bold text-lg mb-8">Limit Orders</div>
         <div className="flex flex-row justify-center mb-8">
           <div
             onClick={onBuyHandler}
-            className={` text-white border-2 rounded-l-lg border-white ${
+            className={` text-white  rounded-l-lg border-white ${
               setSell == false
                 ? "bg-buyGreen font-bold scale-110"
-                : "bg-gray-600"
+                : "bg-gray-500"
             } shadow hover:font-bold hover:scale-110 w-20 py-1 px-2 `}
           >
             Buy
           </div>
           <div
             onClick={onSellHandler}
-            className={`text-white border-2 rounded-r-lg border-white ${
+            className={`text-white rounded-r-lg border-white ${
               setSell == true
                 ? "bg-darkRed font-bold scale-110 "
-                : "bg-gray-600"
+                : "bg-gray-500"
             } shadow hover:font-bold hover:scale-110 w-20 py-1 px-2 `}
           >
             {" "}
@@ -413,7 +412,7 @@ const OrderBoxLimit = () => {
         </div>
         <div className="">
           <div className="border-b-2 mb-6">
-            <div className="flex flex-row justify-around mb-6">
+            <div className="flex flex-row justify-around mb-2">
               <button
                 onClick={onVisiblePairHandler}
                 className="flex flex-row justify-center items-center  py-1 px-4 "
@@ -441,7 +440,7 @@ const OrderBoxLimit = () => {
                 value={quantityLimInput.enteredInput}
                 className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
               />
-              <div className="text-sm text-gray-600 text-left mt-2">
+              <div className="text-sm text-gray-600 text-left mt-2 text-gray-400">
                 {`Balance ${tickerBalanceToken}:  ${tickerBalance?.toFixed(3)}`}
               </div>
             </div>
@@ -454,8 +453,9 @@ const OrderBoxLimit = () => {
                 value={priceLimInput.enteredInput}
                 className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
               />
-              <div className="text-sm text-gray-600 text-left mt-2">
-                Current Ratio:
+              <div className="text-left  mt-2">
+                <span className="text-sm text-gray-400">Current Ratio:</span>
+                <TokenRatio side={setSell} />
               </div>
             </div>
           </div>
@@ -467,7 +467,7 @@ const OrderBoxLimit = () => {
                 !formIsValid
                   ? "bg-gray-500 cursor-not-allowed"
                   : "bg-grayishBlue hover:bg-paleGrayishBlue hover:border-black hover:text-black"
-              } border-2 rounded-lg border-white py-1 px-2 mt-2`}
+              }  rounded-lg border-white py-1 px-2 mt-2`}
               disabled={!formIsValid}
             >
               Create Order

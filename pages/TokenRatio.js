@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { limitPairActions } from "../components/store/limitPair-slice";
 import { tokensMainnet } from "../constants";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
+import { BeatLoader } from "react-spinners";
 
 //https://nextjs.org/docs/basic-features/data-fetching/client-side
 //https://nextjs.org/docs/basic-features/data-fetching/overview
 //https://beta.nextjs.org/docs/data-fetching/fetching
 
-const TokenRatio = () => {
+const TokenRatio = (props) => {
   const dispatch = useDispatch();
   const limitStore = useSelector((state) => state.limit);
   const [tokenRatio, setTokenRatio] = useState({});
@@ -18,14 +19,8 @@ const TokenRatio = () => {
   const [tokenUni0, setTokenUni0] = useState();
   const [tokenUni1, setTokenUni1] = useState();
   const [isFetching, setIsFetching] = useState(false);
-  const onRefreshHandler = () => {
-    //TODOreset input value to ""
-    setRefresh(refresh + 1);
-  };
-
-  //get the current pair of token
-  //const currentPair = [limitStore.token0Ticker, limitStore.token1Ticker];
-  console.log("raaatiioooo");
+  const [sellSide, setSellSide] = useState(false);
+  const [showRatio, setShowRatio] = useState(0);
 
   const currentPair = [
     limitStore.pairInfo.token0.ticker,
@@ -36,16 +31,21 @@ const TokenRatio = () => {
   const totalTokens = tokensMainnet;
   console.log("tokens");
   console.log(tokensMainnet[currentPair[0]]);
+  useEffect(() => {
+    console.log("currentPair useeffect");
+    console.log(currentPair);
+  }, [limitStore.pairInfo]);
 
+  let uniToken0, uniToken1;
   useEffect(() => {
     setIsFetching(true);
-    const uniToken0 = new Token(
+    uniToken0 = new Token(
       ChainId.MAINNET,
       totalTokens[currentPair[0]].token_address,
       totalTokens[currentPair[0]].decimals
     );
     setTokenUni0(uniToken0);
-    const uniToken1 = new Token(
+    uniToken1 = new Token(
       ChainId.MAINNET,
       totalTokens[currentPair[1]].token_address,
       totalTokens[currentPair[1]].decimals
@@ -57,21 +57,29 @@ const TokenRatio = () => {
     Fetcher.fetchPairData(uniToken0, uniToken1)
       .then((data) => setPair(data))
       .then(() => setIsFetching(false));
-  }, [refresh]);
+  }, [limitStore.pairInfo, totalTokens]);
 
-  /*
-  if (isFetching) {
-    return (
-      <div className="flex justify-center">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-  */
+  useEffect(() => {
+    console.log("props.side useeffect");
+    if (props.side) {
+      setSellSide(true);
+    } else {
+      setSellSide(false);
+    }
+  }, [props.side]);
+
+  useEffect(() => {
+    if (sellSide) {
+      setShowRatio(tokenRatio.token1);
+    } else {
+      setShowRatio(tokenRatio.token0);
+    }
+  }, [sellSide, tokenRatio]);
+
   const fetchElement = (
-    <div className="flex justify-center items-center my-4">
-      <LoadingSpinner />
-    </div>
+    <span className="ml-4">
+      <BeatLoader color="#36d7b7" size={8} margin={3} />
+    </span>
   );
 
   useEffect(() => {
@@ -86,23 +94,18 @@ const TokenRatio = () => {
       setTokenRatio(newRatio);
       console.log("newRatio");
       console.log(newRatio);
+      setShowRatio(tokenRatio.token0);
       dispatch(limitPairActions.updateRatio(newRatio));
     }
   }, [pair]);
 
+  console.log("showRatio");
+  console.log(showRatio);
   return (
-    <div className="my-6 ">
-      {!isFetching && (
-        <div className="my-6 ">{`${tokenRatio.token0} / ${tokenRatio.token1}`}</div>
-      )}
+    <span className="text-sm text-gray-400 text-left mt-2">
+      {!isFetching && <span className="">{` ${showRatio}`}</span>}
       {isFetching && fetchElement}
-      <button
-        onClick={onRefreshHandler}
-        className="border-2 rounded-lg shadow text-sm py-1 px-4  hover:scale-110"
-      >
-        Refresh
-      </button>
-    </div>
+    </span>
   );
 };
 

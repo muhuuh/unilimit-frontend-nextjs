@@ -6,7 +6,7 @@ import ScrapingMain from "./ScrapingMain";
 
 export default function Home() {
   return (
-    <div className={`${styles.container}`}>
+    <div className={`${styles.container} bg-DarkModeTwitterDark`}>
       <Head>
         <title>UniLimit</title>
         <link rel="icon" href="/favicon.ico" />
