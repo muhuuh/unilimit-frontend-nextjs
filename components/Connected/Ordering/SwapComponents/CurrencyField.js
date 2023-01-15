@@ -66,7 +66,7 @@ const CurrencyField = (props) => {
       <div className="flex flex-row gap-x-3 ">
         <div className={`${quantityInputClasses} `}>
           {props.loading ? (
-            <div className="text-center py-5">{fetchElement}</div>
+            <div className="text-center py-5 ">{fetchElement}</div>
           ) : (
             <input
               className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
@@ -84,8 +84,10 @@ const CurrencyField = (props) => {
           }}
           className="cursor-pointer"
         >
-          <span className="text-lg font-medium">{props.ticker}</span>
-          <div className="text-sm text-gray-600">
+          <span className="text-lg font-medium text-gray-100">
+            {props.ticker}
+          </span>
+          <div className="text-sm text-gray-400">
             Balance: {props.balance?.toFixed(3)}
           </div>
         </div>

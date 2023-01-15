@@ -381,29 +381,29 @@ const OrderBoxLimit = () => {
   };
 
   return (
-    <div className="">
+    <div className="text-gray-100">
       <form
         onSubmit={onSubmitHandler}
-        className=" mt-10 mx-16 border-2 rounded-xl shadow-md px-24 py-10"
+        className=" mt-10 mx-16 border-2 rounded-xl shadow-md px-24 py-10 bg-DarkModeGray"
       >
         <div className="text-center font-bold text-lg mb-8">Limit Orders</div>
         <div className="flex flex-row justify-center mb-8">
           <div
             onClick={onBuyHandler}
-            className={` text-white border-2 rounded-l-lg border-white ${
+            className={` text-white  rounded-l-lg border-white ${
               setSell == false
                 ? "bg-buyGreen font-bold scale-110"
-                : "bg-gray-600"
+                : "bg-gray-500"
             } shadow hover:font-bold hover:scale-110 w-20 py-1 px-2 `}
           >
             Buy
           </div>
           <div
             onClick={onSellHandler}
-            className={`text-white border-2 rounded-r-lg border-white ${
+            className={`text-white rounded-r-lg border-white ${
               setSell == true
                 ? "bg-darkRed font-bold scale-110 "
-                : "bg-gray-600"
+                : "bg-gray-500"
             } shadow hover:font-bold hover:scale-110 w-20 py-1 px-2 `}
           >
             {" "}
@@ -440,7 +440,7 @@ const OrderBoxLimit = () => {
                 value={quantityLimInput.enteredInput}
                 className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
               />
-              <div className="text-sm text-gray-600 text-left mt-2">
+              <div className="text-sm text-gray-600 text-left mt-2 text-gray-400">
                 {`Balance ${tickerBalanceToken}:  ${tickerBalance?.toFixed(3)}`}
               </div>
             </div>
@@ -454,7 +454,7 @@ const OrderBoxLimit = () => {
                 className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
               />
               <div className="text-left  mt-2">
-                <span className="text-sm text-gray-600">Current Ratio:</span>
+                <span className="text-sm text-gray-400">Current Ratio:</span>
                 <TokenRatio side={setSell} />
               </div>
             </div>
@@ -467,7 +467,7 @@ const OrderBoxLimit = () => {
                 !formIsValid
                   ? "bg-gray-500 cursor-not-allowed"
                   : "bg-grayishBlue hover:bg-paleGrayishBlue hover:border-black hover:text-black"
-              } border-2 rounded-lg border-white py-1 px-2 mt-2`}
+              }  rounded-lg border-white py-1 px-2 mt-2`}
               disabled={!formIsValid}
             >
               Create Order

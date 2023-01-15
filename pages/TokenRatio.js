@@ -102,7 +102,7 @@ const TokenRatio = (props) => {
   console.log("showRatio");
   console.log(showRatio);
   return (
-    <span className="text-sm text-gray-600 text-left mt-2">
+    <span className="text-sm text-gray-400 text-left mt-2">
       {!isFetching && <span className="">{` ${showRatio}`}</span>}
       {isFetching && fetchElement}
     </span>

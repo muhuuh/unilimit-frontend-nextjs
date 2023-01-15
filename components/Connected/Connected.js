@@ -16,7 +16,7 @@ const Connected = () => {
           <div className="flex flex-row justify-center">
             <button
               onClick={() => setShowLimit(true)}
-              className={` border-2 px-4 py-1 rounded-l-lg border-white shadow-md w-20 ${
+              className={`  px-4 py-1 rounded-l-lg border-white shadow-md w-20 ${
                 showLimit
                   ? "bg-paleGrayishBlue border-black text-black"
                   : "bg-grayishBlue text-white border-white "
@@ -26,7 +26,7 @@ const Connected = () => {
             </button>
             <button
               onClick={() => setShowLimit(false)}
-              className={` border-2 px-4 py-1 rounded-r-lg border-white shadow-md w-20 ${
+              className={`  px-4 py-1 rounded-r-lg border-white shadow-md w-20 ${
                 !showLimit
                   ? "bg-paleGrayishBlue border-black text-black"
                   : "bg-grayishBlue text-white border-white "

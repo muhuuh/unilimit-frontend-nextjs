@@ -91,9 +91,9 @@ const TokenRatio = () => {
   }, [pair]);
 
   return (
-    <div className="my-6">
+    <div className="my-6 ">
       {!isFetching && (
-        <div className="my-6">{`${tokenRatio.token0} / ${tokenRatio.token1}`}</div>
+        <div className="my-6 ">{`${tokenRatio.token0} / ${tokenRatio.token1}`}</div>
       )}
       {isFetching && fetchElement}
       <button

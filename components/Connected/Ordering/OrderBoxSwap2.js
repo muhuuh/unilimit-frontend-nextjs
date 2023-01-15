@@ -107,10 +107,12 @@ const OrderBoxSwap2 = () => {
   };
 
   return (
-    <div className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10 ">
-      <div className="mx-auto max-w-sm p-6 bg-white rounded-lg ">
+    <div className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10 bg-DarkModeGray">
+      <div className="mx-auto max-w-sm p-6  rounded-lg bg-DarkModeGray">
         <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-xl font-bold text-center">Swap</span>
+          <span className="text-xl font-bold text-center text-gray-100">
+            Swap
+          </span>
           <span className="cursor-pointer" onClick={onVisibleHandler}>
             <GearIcon />
           </span>
@@ -146,7 +148,7 @@ const OrderBoxSwap2 = () => {
             tokenNumber={1}
           />
         </div>
-        <div className="px-4 py-3">
+        <div className="px-4 py-3 text-gray-400">
           {ratio && (
             <>{`1 ${swapStore.token1.ticker} = ${ratio} ${swapStore.token0.ticker}`}</>
           )}

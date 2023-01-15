@@ -73,7 +73,7 @@ const OpenOrdersTable = (props) => {
                 setChangeQuantityCellInfo(cellValues);
                 setIsVisible(true);
               }}
-              className="bg-grayishBlue text-white border-2 rounded-lg px-2 py-1 hover:bg-paleGrayishBlue hover:border-black hover:text-black"
+              className="bg-grayishBlue text-white  rounded-lg px-2 py-1 hover:bg-paleGrayishBlue hover:border-black hover:text-black"
             >
               Modify
             </button>
@@ -106,7 +106,7 @@ const OpenOrdersTable = (props) => {
               };
               await changeCloseCellValue();
             }}
-            className="bg-grayishBlue text-white border-2 rounded-lg px-2 py-1 hover:bg-paleGrayishBlue hover:border-black hover:text-black"
+            className="bg-grayishBlue text-white  rounded-lg px-2 py-1 hover:bg-paleGrayishBlue hover:border-black hover:text-black"
           >
             Close
           </button>
