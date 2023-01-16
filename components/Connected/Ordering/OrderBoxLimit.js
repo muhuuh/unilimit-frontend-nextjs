@@ -440,7 +440,7 @@ const OrderBoxLimit = () => {
                 value={quantityLimInput.enteredInput}
                 className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
               />
-              <div className="text-sm text-gray-600 text-left mt-2 text-gray-400">
+              <div className="text-sm text-left mt-2 text-gray-400">
                 {`Balance ${tickerBalanceToken}:  ${tickerBalance?.toFixed(3)}`}
               </div>
             </div>

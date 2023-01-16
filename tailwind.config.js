@@ -39,6 +39,7 @@ module.exports = {
         DarkModeTwitterDark: "RGB(25,39,52)",
         DarkModeDark2: "RGB(24,24,24)",
         DarkModeDark: "RGB(51,48,49)",
+        DarkModeTradingView: "RGB(22,26,37)",
         DarkModeLightGray: "RGB(133,133,133)",
         DarkModeVeryLightGray: "RGB(179,179,179)",
         DarkModeGray: "RGB(64,64,64)",
