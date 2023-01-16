@@ -25,6 +25,8 @@ module.exports = {
         darkGrayishBlue: "hsl(227, 12%, 61%)",
         paleGrayishBlue: "RGB(183, 193, 254)",
         veryDarkBlue: "hsl(233, 12%, 13%)",
+        zigzagBlue: "RGB(19,52,80)",
+        zigzagBlueDark: "RGB(22,36,54)",
         veryPaleRed: "hsl(13, 100%, 96%)",
         veryLightGray: "hsl(0, 0%, 98%)",
         goldGray: "RGB(75, 75, 75)",
