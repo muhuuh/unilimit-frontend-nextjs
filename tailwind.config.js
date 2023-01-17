@@ -46,6 +46,9 @@ module.exports = {
         DarkModeVeryLightGray: "RGB(179,179,179)",
         DarkModeGray: "RGB(64,64,64)",
       },
+      height: {
+        610: "38rem",
+      },
     },
   },
   plugins: [],
