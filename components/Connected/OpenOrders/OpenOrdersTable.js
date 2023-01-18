@@ -177,6 +177,7 @@ const OpenOrdersTable = (props) => {
       <DataGrid
         rows={rows2}
         columns={columns}
+        style={{ color: "#f7fafc" }}
         pageSize={5}
         rowsPerPageOptions={[5]}
         checkboxSelection

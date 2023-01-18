@@ -63,33 +63,35 @@ const CurrencyField = (props) => {
 
   return (
     <div>
-      <div className="flex flex-row gap-x-3 ">
-        <div className={`${quantityInputClasses} `}>
-          {props.loading ? (
-            <div className="text-center py-5 ">{fetchElement}</div>
-          ) : (
-            <input
-              className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
-              placeholder="0.0"
-              value={props.value}
-              onChange={onChangeHandler}
-              onBlur={onBlurHandler}
-            />
-          )}
+      <div className="flex flex-row gap-x-3">
+        <div className="">
+          <div className={`${quantityInputClasses} `}>
+            {props.loading ? (
+              <div className="text-center py-5 ">{fetchElement}</div>
+            ) : (
+              <input
+                className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
+                placeholder="0.0"
+                value={props.value}
+                onChange={onChangeHandler}
+                onBlur={onBlurHandler}
+              />
+            )}
+          </div>
+          <div className="text-sm text-left text-gray-400 -mt-6">
+            Balance: {props.balance?.toFixed(3)}
+          </div>
         </div>
 
         <div
           onClick={() => {
             setIsVisible(true);
           }}
-          className="cursor-pointer"
+          className="cursor-pointer pt-2"
         >
           <span className="text-lg font-medium text-gray-100">
             {props.ticker}
           </span>
-          <div className="text-sm text-gray-400">
-            Balance: {props.balance?.toFixed(3)}
-          </div>
         </div>
       </div>
       {isVisible && (

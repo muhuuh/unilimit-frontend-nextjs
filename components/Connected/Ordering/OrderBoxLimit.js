@@ -381,10 +381,10 @@ const OrderBoxLimit = () => {
   };
 
   return (
-    <div className="text-gray-100 ">
+    <div className="text-gray-100">
       <form
         onSubmit={onSubmitHandler}
-        className="h-[38rem] mt-10 mx-16 border rounded-xl shadow-md px-24 py-14 bg-zigzagBlueDark"
+        className="h-[38rem] w-96 mt-10 mx-16 border rounded-xl shadow-md px-24 py-14 bg-zigzagBlueDark"
       >
         <div className="text-center font-bold text-lg mb-8">Limit Orders</div>
         <div className="flex flex-row justify-center mb-8">
