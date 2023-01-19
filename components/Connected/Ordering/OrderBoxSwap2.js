@@ -107,8 +107,8 @@ const OrderBoxSwap2 = () => {
   };
 
   return (
-    <div className="mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10 bg-DarkModeGray">
-      <div className="mx-auto max-w-sm p-6  rounded-lg bg-DarkModeGray">
+    <div className="h-[38rem] justify-center mt-10 mx-24 border rounded-xl shadow-md px-14 py-10 bg-zigzagBlueDark">
+      <div className="mx-auto max-w-sm rounded-lg bg-zigzagBlueDark">
         <div className="flex items-center justify-between px-4 py-3">
           <span className="text-xl font-bold text-center text-gray-100">
             Swap
@@ -126,7 +126,8 @@ const OrderBoxSwap2 = () => {
             />
           )}
         </div>
-        <div className="flex flex-col gap-y-4 px-4 py-3">
+        <div className="flex flex-col gap-y-4 px-4 pt-10">
+          <p className="text-left text-gray-400">From</p>
           <CurrencyField
             className="mb-3"
             field="input"
@@ -137,6 +138,7 @@ const OrderBoxSwap2 = () => {
             tokenNumber={0}
             disabledHandler={disabledHandler}
           />
+          <p className="text-left text-gray-400">To </p>
           <CurrencyField
             className="mb-3"
             field="output"

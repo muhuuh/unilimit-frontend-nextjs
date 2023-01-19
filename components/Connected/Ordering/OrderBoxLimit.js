@@ -381,10 +381,10 @@ const OrderBoxLimit = () => {
   };
 
   return (
-    <div className="text-gray-100">
+    <div className="text-gray-100 ">
       <form
         onSubmit={onSubmitHandler}
-        className=" mt-10 mx-16 border-2 rounded-xl shadow-md px-24 py-10 bg-DarkModeGray"
+        className="h-[38rem] mt-10 mx-16 border rounded-xl shadow-md px-24 py-14 bg-zigzagBlueDark"
       >
         <div className="text-center font-bold text-lg mb-8">Limit Orders</div>
         <div className="flex flex-row justify-center mb-8">
@@ -440,7 +440,7 @@ const OrderBoxLimit = () => {
                 value={quantityLimInput.enteredInput}
                 className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
               />
-              <div className="text-sm text-gray-600 text-left mt-2 text-gray-400">
+              <div className="text-sm text-left mt-2 text-gray-400">
                 {`Balance ${tickerBalanceToken}:  ${tickerBalance?.toFixed(3)}`}
               </div>
             </div>

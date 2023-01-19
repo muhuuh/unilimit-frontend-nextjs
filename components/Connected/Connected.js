@@ -7,7 +7,7 @@ import OrderBoxSwap2 from "./Ordering/OrderBoxSwap2";
 const Connected = () => {
   const [showLimit, setShowLimit] = useState(true);
   return (
-    <div>
+    <div className="h-full">
       <div className="flex flex-row justify-center">
         <div>
           <Tradingview2 />
@@ -35,7 +35,7 @@ const Connected = () => {
               Swap
             </button>
           </div>
-          <div className="flex justify-center mb-16">
+          <div className="flex justify-center">
             {showLimit ? <OrderBoxLimit /> : <OrderBoxSwap2 />}
           </div>
         </div>
