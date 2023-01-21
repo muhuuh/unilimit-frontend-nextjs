@@ -45,6 +45,7 @@ module.exports = {
         DarkModeLightGray: "RGB(133,133,133)",
         DarkModeVeryLightGray: "RGB(179,179,179)",
         DarkModeGray: "RGB(64,64,64)",
+        //teal: RGB(51,153,153)
       },
       height: {
         610: "38rem",

@@ -107,7 +107,7 @@ const OrderBoxSwap2 = () => {
   };
 
   return (
-    <div className="h-[38rem] justify-center mt-10 mx-24 border rounded-xl shadow-md px-14 py-10 bg-zigzagBlueDark">
+    <div className="h-[38rem] justify-center mt-10 mx-24 border rounded-xl shadow-md px-14 py-14 bg-zigzagBlueDark">
       <div className="flex items-center justify-between px-4 py-3">
         <span className="text-xl font-bold text-center text-gray-100">
           Swap
