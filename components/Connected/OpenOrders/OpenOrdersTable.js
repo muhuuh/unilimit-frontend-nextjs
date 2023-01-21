@@ -173,13 +173,16 @@ const OpenOrdersTable = (props) => {
   });
 
   return (
-    <Box sx={{ height: 400, width: "75%" }}>
+    <Box sx={{ height: 400, width: 1170 }}>
       <DataGrid
         rows={rows2}
         columns={columns}
         style={{ color: "#f7fafc" }}
-        pageSize={5}
+        getRowHeight={() => "auto"}
+        autoHeight
+        autoWidth
         rowsPerPageOptions={[5]}
+        pageSize={5}
         checkboxSelection
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
