@@ -7,6 +7,7 @@ import CurrencyField from "./SwapComponents/CurrencyField";
 import AlphaRouterService from "./SwapComponents/AlphaRouterService";
 import useModal from "../../../hooks/use-modal";
 import { useSelector } from "react-redux";
+import BalanceBar from "../../UI/BalanceBar";
 
 const OrderBoxSwap2 = () => {
   const { getContract0, getContract1, getPrice, runSwap } =
@@ -180,6 +181,7 @@ const OrderBoxSwap2 = () => {
           </button>
         )}
       </div>
+      <BalanceBar width={200} />
     </div>
   );
 };
