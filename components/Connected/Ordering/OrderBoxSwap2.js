@@ -138,6 +138,9 @@ const OrderBoxSwap2 = () => {
           tokenNumber={0}
           disabledHandler={disabledHandler}
         />
+        <div className="flex justify-center">
+          <BalanceBar width={200} />
+        </div>
         <p className="text-left text-gray-400">To </p>
         <CurrencyField
           className="mb-3"
@@ -181,7 +184,6 @@ const OrderBoxSwap2 = () => {
           </button>
         )}
       </div>
-      <BalanceBar width={200} />
     </div>
   );
 };
