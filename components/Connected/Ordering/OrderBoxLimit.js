@@ -16,6 +16,7 @@ import SelectPair from "../Tokens/SelectPair";
 import { limitPairActions } from "../../store/limitPair-slice";
 import { useNotification } from "web3uikit";
 import { Rocket } from "@web3uikit/icons";
+import BalanceBar from "../../UI/BalanceBar";
 
 const OrderBoxLimit = () => {
   //-------Define variables-----------
@@ -409,7 +410,7 @@ const OrderBoxLimit = () => {
           </div>
         </div>
 
-        <div className="flex flex-row justify-center mb-12 mt-4">
+        <div className="flex flex-row justify-center mb-12">
           <div
             onClick={onBuyHandler}
             className={` text-white  rounded-l-lg border-white ${
@@ -433,7 +434,7 @@ const OrderBoxLimit = () => {
           </div>
         </div>
         <div className="">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center ">
             <div className={`${quantityLimInputClasses} `}>
               <input
                 type="number"
@@ -446,6 +447,9 @@ const OrderBoxLimit = () => {
               <div className="text-sm text-left mt-2 text-gray-400">
                 {`Balance ${tickerBalanceToken}:  ${tickerBalance?.toFixed(3)}`}
               </div>
+            </div>
+            <div className="flex justify-center mb-8">
+              <BalanceBar width={200} />
             </div>
             <div className={`${priceLimInputClasses} `}>
               <input
