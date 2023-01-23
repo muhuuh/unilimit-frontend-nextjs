@@ -70,7 +70,7 @@ const OrderBoxSwap2 = () => {
     const signer = web3.getSigner();
     setSigner(signer);
   };
-  const isConnected = () => web3.getSigner() !== undefined;
+  const isConnected = () => signer !== undefined;
   const getWalletAddress = () => {
     contract0.balanceOf(account).then((res) => {
       setamount0(Number(ethers.utils.formatEther(res)));
@@ -105,8 +105,6 @@ const OrderBoxSwap2 = () => {
   };
 
   const disabledHandler = (disableStatus) => {
-    console.log("disable status chanhe");
-    console.log(disableStatus);
     setDisabled(!disableStatus);
   };
 

@@ -56,8 +56,6 @@ const CurrencyField = (props) => {
 
   const onBlurHandler = (event) => {
     quantityInput.inputBlurHandler();
-    console.log("formIsValid blur");
-    console.log(formIsValid);
     if (formIsValid && props.tokenNumber === 0) {
       getPrice(event.target.value);
     }
