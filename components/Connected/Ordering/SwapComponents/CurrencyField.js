@@ -8,6 +8,7 @@ const CurrencyField = (props) => {
   const [isVisible, setIsVisible] = useState(false);
   const [inputValue, setInputValue] = useState(0);
   const [formIsValid, setFormIsValid] = useState(false);
+  const [currentAmount, setCurrentAmount] = useState(0);
 
   //---------------Form validity checks ---------------
   const checkValidity = (input) => {
@@ -28,6 +29,13 @@ const CurrencyField = (props) => {
   };
 
   useEffect(() => {
+    setCurrentAmount(props.balancePercentage);
+  }, [props.balancePercentage]);
+  useEffect(() => {
+    setCurrentAmount(inputValue);
+  }, [inputValue]);
+
+  useEffect(() => {
     if (quantityInput.enteredInputisValid && quantityInput.enteredInput > 0) {
       setFormIsValid(true);
     } else {
@@ -37,18 +45,27 @@ const CurrencyField = (props) => {
   }, [inputValue]);
 
   useEffect(() => {
+    if (props.balancePercentage > 0) {
+      setFormIsValid(true);
+    } else {
+      setFormIsValid(false);
+    }
+  }, [props.balancePercentage]);
+
+  useEffect(() => {
     if (formIsValid && quantityInput.enteredInput > 0) {
-      getPrice(quantityInput.enteredInput);
+      getPrice(currentAmount);
       if (props.tokenNumber === 0) {
         checkDisable(formIsValid);
       }
     }
-  }, [formIsValid]);
+  }, [formIsValid, currentAmount]);
 
   const onChangeHandler = (event) => {
     setInputValue(event.target.value);
     quantityInput.inputChangeHandler(event);
   };
+
   const onCloseHandler = () => {
     setIsVisible(false);
     //if (props.tokenNumber == 0 && inputValue > 0) getPrice(inputValue);

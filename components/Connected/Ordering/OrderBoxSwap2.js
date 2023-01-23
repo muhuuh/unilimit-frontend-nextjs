@@ -25,6 +25,7 @@ const OrderBoxSwap2 = () => {
   const [amount0, setamount0] = useState(undefined);
   const [amount1, setamount1] = useState(undefined);
   const [disabled, setDisabled] = useState(true);
+  const [balancePercentage, setBalancePercentage] = useState(undefined);
   const {
     chainId: chainIdHex,
     isWeb3Enabled,
@@ -108,7 +109,12 @@ const OrderBoxSwap2 = () => {
     setDisabled(!disableStatus);
   };
 
-  const balanceBarHandler = () => {};
+  const balanceBarHandler = (percentage) => {
+    const balanceFromPercentage = percentage * amount0;
+    console.log("balanceFromPercentage");
+    console.log(balanceFromPercentage);
+    setBalancePercentage(balanceFromPercentage);
+  };
 
   console.log("web3 swap");
   console.log(web3);
@@ -143,11 +149,12 @@ const OrderBoxSwap2 = () => {
           getSwapPrice={getSwapPrice}
           signer={signer}
           balance={amount0}
+          balancePercentage={balancePercentage}
           tokenNumber={0}
           disabledHandler={disabledHandler}
         />
         <div className="flex justify-center mt-2">
-          <BalanceBar width={200} />
+          <BalanceBar width={200} balanceBarHandler={balanceBarHandler} />
         </div>
         <p className="text-left text-gray-400">To </p>
         <CurrencyField

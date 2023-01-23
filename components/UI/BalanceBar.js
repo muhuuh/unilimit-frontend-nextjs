@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const BalanceBar = (props) => {
-  const [selectedPercentage, setSelectedPercentage] = useState(0.1);
+  const [selectedPercentage, setSelectedPercentage] = useState(0);
 
   const handleClick = (event) => {
     event.persist();
@@ -19,6 +19,12 @@ const BalanceBar = (props) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (props.balanceBarHandler) {
+      props.balanceBarHandler(selectedPercentage);
+    }
+  }, [selectedPercentage]);
 
   return (
     <div onClick={handleClick} className="h-5 flex items-center">
