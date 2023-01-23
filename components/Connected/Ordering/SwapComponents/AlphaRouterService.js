@@ -117,10 +117,17 @@ const AlphaRouterService = () => {
   const runSwap = async (transaction, signer) => {
     const approvalAmount = ethers.utils.parseUnits("10", 18).toString();
     const contract0 = getContract0();
-    await contract0
-      .connect(signer)
-      .approve(V3_SWAP_ROUTER_ADDRESS, approvalAmount);
-
+    const allowance = await contract0.allowance(
+      account,
+      V3_SWAP_ROUTER_ADDRESS
+    );
+    console.log("allowance check");
+    console.log(allowance);
+    if (allowance < 1) {
+      await contract0
+        .connect(signer)
+        .approve(V3_SWAP_ROUTER_ADDRESS, approvalAmount);
+    }
     signer.sendTransaction(transaction);
   };
 
