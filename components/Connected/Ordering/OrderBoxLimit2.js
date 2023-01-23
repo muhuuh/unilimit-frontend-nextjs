@@ -336,26 +336,31 @@ const OrderBoxLimit = () => {
         onSubmit={onSubmitHandler}
         className=" mt-10 mx-24 border-2 rounded-xl shadow-md px-14 py-10"
       >
-        <div className="text-center font-bold text-lg mb-14">Limit Orders</div>
+        <div>
+          <div className="text-center font-bold text-lg mb-14">
+            Limit Orders
+          </div>
+          <div className="flex flex-row justify-around mb-6">
+            <button
+              onClick={onVisiblePairHandler}
+              className="flex flex-row justify-center items-center border-2 rounded-lg shadow hover:scale-110 py-1 px-4 "
+            >
+              {pairInfo.selectedPair != ""
+                ? pairInfo.selectedPair
+                : "Select Pair"}
+              <DropdownIcon />
+            </button>
+            {isVisiblePair && (
+              <SelectPair
+                onClose={onClosePairHandler}
+                onSelect={onSelectTradingPairHandler}
+              />
+            )}
+          </div>
+        </div>
+
         <div className="">
           <div className="border-b-2 mb-6">
-            <div className="flex flex-row justify-around mb-6">
-              <button
-                onClick={onVisiblePairHandler}
-                className="flex flex-row justify-center items-center border-2 rounded-lg shadow hover:scale-110 py-1 px-4 "
-              >
-                {pairInfo.selectedPair != ""
-                  ? pairInfo.selectedPair
-                  : "Select Pair"}
-                <DropdownIcon />
-              </button>
-              {isVisiblePair && (
-                <SelectPair
-                  onClose={onClosePairHandler}
-                  onSelect={onSelectTradingPairHandler}
-                />
-              )}
-            </div>
             <div className="mb-6">
               <div>Current Ratio on Uniswap: </div>
               <TokenRatio4 />

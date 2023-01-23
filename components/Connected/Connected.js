@@ -7,9 +7,9 @@ import OrderBoxSwap2 from "./Ordering/OrderBoxSwap2";
 const Connected = () => {
   const [showLimit, setShowLimit] = useState(true);
   return (
-    <div className="h-full">
-      <div className="flex flex-row justify-center">
-        <div>
+    <div className="min-h-screen flex flex-col pb-24">
+      <div className=" flex flex-row justify-center">
+        <div className="relative">
           <Tradingview2 />
         </div>
         <div>

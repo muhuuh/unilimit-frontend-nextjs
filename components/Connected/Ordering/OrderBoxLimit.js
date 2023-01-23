@@ -16,6 +16,7 @@ import SelectPair from "../Tokens/SelectPair";
 import { limitPairActions } from "../../store/limitPair-slice";
 import { useNotification } from "web3uikit";
 import { Rocket } from "@web3uikit/icons";
+import BalanceBar from "../../UI/BalanceBar";
 
 const OrderBoxLimit = () => {
   //-------Define variables-----------
@@ -381,13 +382,35 @@ const OrderBoxLimit = () => {
   };
 
   return (
-    <div className="text-gray-100 ">
+    <div className="text-gray-100">
       <form
         onSubmit={onSubmitHandler}
-        className="h-[38rem] mt-10 mx-16 border rounded-xl shadow-md px-24 py-14 bg-zigzagBlueDark"
+        className="h-[38rem]  mt-10 mx-24 border rounded-xl shadow-md px-16 py-14 bg-zigzagBlueDark"
       >
-        <div className="text-center font-bold text-lg mb-8">Limit Orders</div>
-        <div className="flex flex-row justify-center mb-8">
+        <div className="flex flex-row flex-between w-full">
+          <div className="text-left font-bold text-xl mb-8  w-32">Limit</div>
+          <div className="">
+            <div className="flex flex-row justify-around mb-2">
+              <button
+                onClick={onVisiblePairHandler}
+                className="flex flex-row justify-center items-center  py-1 px-4 "
+              >
+                {pairInfo.selectedPair != ""
+                  ? pairInfo.selectedPair
+                  : "Select Pair"}
+                <DropdownIcon />
+              </button>
+              {isVisiblePair && (
+                <SelectPair
+                  onClose={onClosePairHandler}
+                  onSelect={onSelectTradingPairHandler}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-row justify-center mb-12">
           <div
             onClick={onBuyHandler}
             className={` text-white  rounded-l-lg border-white ${
@@ -411,26 +434,7 @@ const OrderBoxLimit = () => {
           </div>
         </div>
         <div className="">
-          <div className="border-b-2 mb-6">
-            <div className="flex flex-row justify-around mb-2">
-              <button
-                onClick={onVisiblePairHandler}
-                className="flex flex-row justify-center items-center  py-1 px-4 "
-              >
-                {pairInfo.selectedPair != ""
-                  ? pairInfo.selectedPair
-                  : "Select Pair"}
-                <DropdownIcon />
-              </button>
-              {isVisiblePair && (
-                <SelectPair
-                  onClose={onClosePairHandler}
-                  onSelect={onSelectTradingPairHandler}
-                />
-              )}
-            </div>
-          </div>
-          <div className="">
+          <div className="flex flex-col items-center ">
             <div className={`${quantityLimInputClasses} `}>
               <input
                 type="number"
@@ -438,11 +442,14 @@ const OrderBoxLimit = () => {
                 onChange={quantityLimInput.inputChangeHandler}
                 onBlur={quantityLimInput.inputBlurHandler}
                 value={quantityLimInput.enteredInput}
-                className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
+                className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800 w-64"
               />
               <div className="text-sm text-left mt-2 text-gray-400">
                 {`Balance ${tickerBalanceToken}:  ${tickerBalance?.toFixed(3)}`}
               </div>
+            </div>
+            <div className="flex justify-center mb-8">
+              <BalanceBar width={200} />
             </div>
             <div className={`${priceLimInputClasses} `}>
               <input
@@ -451,7 +458,7 @@ const OrderBoxLimit = () => {
                 onChange={priceLimInput.inputChangeHandler}
                 onBlur={priceLimInput.inputBlurHandler}
                 value={priceLimInput.enteredInput}
-                className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
+                className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800 w-64"
               />
               <div className="text-left  mt-2">
                 <span className="text-sm text-gray-400">Current Ratio:</span>

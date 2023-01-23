@@ -7,6 +7,7 @@ import CurrencyField from "./SwapComponents/CurrencyField";
 import AlphaRouterService from "./SwapComponents/AlphaRouterService";
 import useModal from "../../../hooks/use-modal";
 import { useSelector } from "react-redux";
+import BalanceBar from "../../UI/BalanceBar";
 
 const OrderBoxSwap2 = () => {
   const { getContract0, getContract1, getPrice, runSwap } =
@@ -107,80 +108,81 @@ const OrderBoxSwap2 = () => {
   };
 
   return (
-    <div className="h-[38rem] justify-center mt-10 mx-24 border rounded-xl shadow-md px-14 py-10 bg-zigzagBlueDark">
-      <div className="mx-auto max-w-sm rounded-lg bg-zigzagBlueDark">
-        <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-xl font-bold text-center text-gray-100">
-            Swap
-          </span>
-          <span className="cursor-pointer" onClick={onVisibleHandler}>
-            <GearIcon />
-          </span>
-          {isVisible && (
-            <ConfigModal
-              onClose={onCloseHandler}
-              setDeadlineMinutes={setDeadlineMinutes}
-              deadlineMinutes={deadlineMinutes}
-              setSlippageAmount={setSlippageAmount}
-              slippageAmount={slippageAmount}
-            />
-          )}
-        </div>
-        <div className="flex flex-col gap-y-4 px-4 pt-10">
-          <p className="text-left text-gray-400">From</p>
-          <CurrencyField
-            className="mb-3"
-            field="input"
-            ticker={swapStore.token0.ticker}
-            getSwapPrice={getSwapPrice}
-            signer={signer}
-            balance={amount0}
-            tokenNumber={0}
-            disabledHandler={disabledHandler}
+    <div className="h-[38rem] justify-center mt-10 mx-24 border rounded-xl shadow-md px-14 py-14 bg-zigzagBlueDark">
+      <div className="flex items-center justify-between px-4 py-3">
+        <span className="text-xl font-bold text-center text-gray-100">
+          Swap
+        </span>
+        <span className="cursor-pointer" onClick={onVisibleHandler}>
+          <GearIcon />
+        </span>
+        {isVisible && (
+          <ConfigModal
+            onClose={onCloseHandler}
+            setDeadlineMinutes={setDeadlineMinutes}
+            deadlineMinutes={deadlineMinutes}
+            setSlippageAmount={setSlippageAmount}
+            slippageAmount={slippageAmount}
           />
-          <p className="text-left text-gray-400">To </p>
-          <CurrencyField
-            className="mb-3"
-            field="output"
-            ticker={swapStore.token1.ticker}
-            value={outputAmount}
-            signer={signer}
-            balance={amount1}
-            loading={loading}
-            tokenNumber={1}
-          />
+        )}
+      </div>
+      <div className="flex flex-col gap-y-4 px-4 pt-10">
+        <p className="text-left text-gray-400">From</p>
+        <CurrencyField
+          className="mb-3"
+          field="input"
+          ticker={swapStore.token0.ticker}
+          getSwapPrice={getSwapPrice}
+          signer={signer}
+          balance={amount0}
+          tokenNumber={0}
+          disabledHandler={disabledHandler}
+        />
+        <div className="flex justify-center mt-2">
+          <BalanceBar width={200} />
         </div>
-        <div className="px-4 py-3 text-gray-400">
-          {ratio && (
-            <>{`1 ${swapStore.token1.ticker} = ${ratio} ${swapStore.token0.ticker}`}</>
-          )}
-        </div>
+        <p className="text-left text-gray-400">To </p>
+        <CurrencyField
+          className="mb-3"
+          field="output"
+          ticker={swapStore.token1.ticker}
+          value={outputAmount}
+          signer={signer}
+          balance={amount1}
+          loading={loading}
+          tokenNumber={1}
+        />
+      </div>
+      <div className="px-4 py-3 text-gray-400">
+        {ratio && (
+          <>{`1 ${swapStore.token1.ticker} = ${ratio} ${swapStore.token0.ticker}`}</>
+        )}
+      </div>
 
-        <div className="px-4 py-3">
-          {isConnected() ? (
-            <button
-              className={`text-white ${
-                disabled
-                  ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-indigo-500 hover:bg-indigo-600"
-              } py-2 px-4 rounded-lg`}
-              onClick={() => runSwap(transaction, signer)}
-            >
-              Swap
-            </button>
-          ) : (
-            <button
-              className={`text-white ${
-                disabled
-                  ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-indigo-500 hover:bg-indigo-600"
-              } py-2 px-4 rounded-lg`}
-              onClick={() => getSigner(web3)}
-            >
-              Connect Wallet
-            </button>
-          )}
-        </div>
+      <div className="px-4 py-3">
+        {isConnected() ? (
+          <button
+            className={`text-white ${
+              disabled
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-indigo-500 hover:bg-indigo-600"
+            } py-2 px-4 rounded-lg`}
+            onClick={() => runSwap(transaction, signer)}
+          >
+            Swap
+          </button>
+        ) : (
+          <button
+            className={`text-white ${
+              disabled
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-indigo-500 hover:bg-indigo-600"
+            } py-2 px-4 rounded-lg`}
+            onClick={() => getSigner(web3)}
+          >
+            Connect Wallet
+          </button>
+        )}
       </div>
     </div>
   );

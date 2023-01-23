@@ -88,8 +88,8 @@ const TokenRatio = (props) => {
     } else {
       const route = new Route([pair], tokenUni0);
 
-      const ratio0 = route.midPrice.toSignificant(6);
-      const ratio1 = route.midPrice.invert().toSignificant(6);
+      const ratio0 = route.midPrice.toSignificant(5);
+      const ratio1 = route.midPrice.invert().toSignificant(5);
       const newRatio = { token0: ratio0, token1: ratio1 };
       setTokenRatio(newRatio);
       console.log("newRatio");
