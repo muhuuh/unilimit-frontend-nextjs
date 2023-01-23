@@ -9,6 +9,7 @@ const CurrencyField = (props) => {
   const [inputValue, setInputValue] = useState(0);
   const [formIsValid, setFormIsValid] = useState(false);
   const [currentAmount, setCurrentAmount] = useState(0);
+  let showValue;
 
   //---------------Form validity checks ---------------
   const checkValidity = (input) => {
@@ -53,7 +54,7 @@ const CurrencyField = (props) => {
   }, [props.balancePercentage]);
 
   useEffect(() => {
-    if (formIsValid && quantityInput.enteredInput > 0) {
+    if (formIsValid) {
       getPrice(currentAmount);
       if (props.tokenNumber === 0) {
         checkDisable(formIsValid);
@@ -85,6 +86,13 @@ const CurrencyField = (props) => {
     </div>
   );
 
+  if (currentAmount > 0 && props.tokenNumber === 0) {
+    showValue = currentAmount;
+    //showValue = props.tokenNumber === 0 ? currentAmount : props.value;
+  } else {
+    showValue = props.value;
+  }
+
   return (
     <div>
       <div className="flex flex-row gap-x-3">
@@ -96,7 +104,7 @@ const CurrencyField = (props) => {
               <input
                 className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
                 placeholder="0.0"
-                value={props.value}
+                value={showValue}
                 onChange={onChangeHandler}
                 onBlur={onBlurHandler}
               />
