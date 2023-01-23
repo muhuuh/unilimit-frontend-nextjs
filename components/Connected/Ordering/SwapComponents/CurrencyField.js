@@ -7,6 +7,7 @@ const CurrencyField = (props) => {
   //const { isVisible, onCloseHandler, onVisibleHandler } = useModal();
   const [isVisible, setIsVisible] = useState(false);
   const [inputValue, setInputValue] = useState(0);
+  const [formIsValid, setFormIsValid] = useState(false);
 
   //---------------Form validity checks ---------------
   const checkValidity = (input) => {
@@ -17,11 +18,6 @@ const CurrencyField = (props) => {
     ? "form-control invalid"
     : "form-control";
 
-  let formIsValid = false;
-  if (quantityInput.enteredInputisValid && quantityInput.enteredInput > 0) {
-    formIsValid = true;
-  }
-
   const checkDisable = (disableStatus) => {
     props.disabledHandler(disableStatus);
   };
@@ -31,24 +27,37 @@ const CurrencyField = (props) => {
     props.getSwapPrice(value);
   };
 
-  const onChangeHandler = (event) => {
-    setInputValue(event.target.value);
-    quantityInput.inputChangeHandler(event);
-    if (formIsValid && event.target.value > 0) {
-      getPrice(event.target.value);
+  useEffect(() => {
+    if (quantityInput.enteredInputisValid && quantityInput.enteredInput > 0) {
+      setFormIsValid(true);
+    } else {
+      setFormIsValid(false);
+    }
+    console.log();
+  }, [inputValue]);
+
+  useEffect(() => {
+    if (formIsValid && quantityInput.enteredInput > 0) {
+      getPrice(quantityInput.enteredInput);
       if (props.tokenNumber === 0) {
         checkDisable(formIsValid);
       }
     }
+  }, [formIsValid]);
+
+  const onChangeHandler = (event) => {
+    setInputValue(event.target.value);
+    quantityInput.inputChangeHandler(event);
   };
   const onCloseHandler = () => {
     setIsVisible(false);
-
     //if (props.tokenNumber == 0 && inputValue > 0) getPrice(inputValue);
   };
 
   const onBlurHandler = (event) => {
     quantityInput.inputBlurHandler();
+    console.log("formIsValid blur");
+    console.log(formIsValid);
     if (formIsValid && props.tokenNumber === 0) {
       getPrice(event.target.value);
     }

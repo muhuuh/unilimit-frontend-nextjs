@@ -66,6 +66,7 @@ const OrderBoxSwap2 = () => {
   }, [swapStore.token0.ticker, swapStore.token1.ticker]);
 
   const getSigner = async () => {
+    console.log("getSigner called");
     const signer = web3.getSigner();
     setSigner(signer);
   };
@@ -104,8 +105,17 @@ const OrderBoxSwap2 = () => {
   };
 
   const disabledHandler = (disableStatus) => {
+    console.log("disable status chanhe");
+    console.log(disableStatus);
     setDisabled(!disableStatus);
   };
+
+  const balanceBarHandler = () => {};
+
+  console.log("web3 swap");
+  console.log(web3);
+  console.log(web3.getSigner());
+  console.log(signer);
 
   return (
     <div className="h-[38rem] justify-center mt-10 mx-24 border rounded-xl shadow-md px-14 py-14 bg-zigzagBlueDark">

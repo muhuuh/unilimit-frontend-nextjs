@@ -117,9 +117,6 @@ const BalanceBar = (props) => {
             transform: "translate(-50%, -50%)",
           }}
           onClick={() => {
-            setMarkClicked(true);
-            console.log("maaaark clicked");
-            console.log(markClicked);
             setSelectedPercentage(1);
           }}
         ></div>
