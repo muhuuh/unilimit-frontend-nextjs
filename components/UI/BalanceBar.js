@@ -21,6 +21,8 @@ const BalanceBar = (props) => {
   };
 
   useEffect(() => {
+    console.log("selectedPercentage");
+    console.log(selectedPercentage);
     if (props.balanceBarHandler) {
       props.balanceBarHandler(selectedPercentage);
     }

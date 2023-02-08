@@ -87,7 +87,7 @@ const CurrencyField = (props) => {
   );
 
   if (currentAmount > 0 && props.tokenNumber === 0) {
-    showValue = currentAmount;
+    showValue = currentAmount.toFixed(5);
     //showValue = props.tokenNumber === 0 ? currentAmount : props.value;
   } else {
     showValue = props.value;
