@@ -7,6 +7,9 @@ const CurrencyField = (props) => {
   //const { isVisible, onCloseHandler, onVisibleHandler } = useModal();
   const [isVisible, setIsVisible] = useState(false);
   const [inputValue, setInputValue] = useState(0);
+  const [formIsValid, setFormIsValid] = useState(false);
+  const [currentAmount, setCurrentAmount] = useState(0);
+  let showValue;
 
   //---------------Form validity checks ---------------
   const checkValidity = (input) => {
@@ -17,11 +20,6 @@ const CurrencyField = (props) => {
     ? "form-control invalid"
     : "form-control";
 
-  let formIsValid = false;
-  if (quantityInput.enteredInputisValid && quantityInput.enteredInput > 0) {
-    formIsValid = true;
-  }
-
   const checkDisable = (disableStatus) => {
     props.disabledHandler(disableStatus);
   };
@@ -31,19 +29,46 @@ const CurrencyField = (props) => {
     props.getSwapPrice(value);
   };
 
-  const onChangeHandler = (event) => {
-    setInputValue(event.target.value);
-    quantityInput.inputChangeHandler(event);
-    if (formIsValid && event.target.value > 0) {
-      getPrice(event.target.value);
+  useEffect(() => {
+    setCurrentAmount(props.balancePercentage);
+  }, [props.balancePercentage]);
+  useEffect(() => {
+    setCurrentAmount(inputValue);
+  }, [inputValue]);
+
+  useEffect(() => {
+    if (quantityInput.enteredInputisValid && quantityInput.enteredInput > 0) {
+      setFormIsValid(true);
+    } else {
+      setFormIsValid(false);
+    }
+    console.log();
+  }, [inputValue]);
+
+  useEffect(() => {
+    if (props.balancePercentage > 0) {
+      setFormIsValid(true);
+    } else {
+      setFormIsValid(false);
+    }
+  }, [props.balancePercentage]);
+
+  useEffect(() => {
+    if (formIsValid) {
+      getPrice(currentAmount);
       if (props.tokenNumber === 0) {
         checkDisable(formIsValid);
       }
     }
+  }, [formIsValid, currentAmount]);
+
+  const onChangeHandler = (event) => {
+    setInputValue(event.target.value);
+    quantityInput.inputChangeHandler(event);
   };
+
   const onCloseHandler = () => {
     setIsVisible(false);
-
     //if (props.tokenNumber == 0 && inputValue > 0) getPrice(inputValue);
   };
 
@@ -61,6 +86,13 @@ const CurrencyField = (props) => {
     </div>
   );
 
+  if (currentAmount > 0 && props.tokenNumber === 0) {
+    showValue = currentAmount.toFixed(5);
+    //showValue = props.tokenNumber === 0 ? currentAmount : props.value;
+  } else {
+    showValue = props.value;
+  }
+
   return (
     <div>
       <div className="flex flex-row gap-x-3">
@@ -72,7 +104,7 @@ const CurrencyField = (props) => {
               <input
                 className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800"
                 placeholder="0.0"
-                value={props.value}
+                value={showValue}
                 onChange={onChangeHandler}
                 onBlur={onBlurHandler}
               />

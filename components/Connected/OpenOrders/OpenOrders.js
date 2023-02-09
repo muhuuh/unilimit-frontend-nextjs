@@ -87,7 +87,7 @@ const OpenOrders = () => {
   }
 
   return (
-    <div className="pb-20 mt-10">
+    <div className="mt-10">
       <div className="text-xl font-bold mb-10 items-center text-gray-100">
         Open Orders Overview
       </div>

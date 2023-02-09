@@ -6,7 +6,7 @@ import ScrapingMain from "./ScrapingMain";
 
 export default function Home() {
   return (
-    <div className={`${styles.container} bg-DarkModeTradingView `}>
+    <div className={`${styles.container} bg-gradient `}>
       <Head>
         <title>UniLimit</title>
         <link rel="icon" href="/favicon.ico" />

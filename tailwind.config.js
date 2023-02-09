@@ -50,6 +50,22 @@ module.exports = {
       height: {
         610: "38rem",
       },
+      animation: {
+        typing: "typing 5s infinite steps(34)",
+      },
+      keyframes: {
+        typing: {
+          "0%": {
+            width: "0",
+          },
+          "80%": {
+            width: "37ch",
+          },
+          "100%": {
+            width: "37ch",
+          },
+        },
+      },
     },
   },
   plugins: [],

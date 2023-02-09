@@ -57,6 +57,20 @@ a {
   color: #b40e0e;
 }
 
+.bg-gradient {
+  background: linear-gradient(
+    to bottom right,
+    rgba(22, 26, 37, 1),
+    rgba(22, 26, 37, 0.95),
+    rgba(22, 26, 37, 0.9),
+    rgba(22, 26, 37, 0.85)
+  );
+}
+
+.border-0-1 {
+  border-width: 0.1px;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

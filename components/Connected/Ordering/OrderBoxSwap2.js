@@ -25,6 +25,7 @@ const OrderBoxSwap2 = () => {
   const [amount0, setamount0] = useState(undefined);
   const [amount1, setamount1] = useState(undefined);
   const [disabled, setDisabled] = useState(true);
+  const [balancePercentage, setBalancePercentage] = useState(undefined);
   const {
     chainId: chainIdHex,
     isWeb3Enabled,
@@ -66,10 +67,11 @@ const OrderBoxSwap2 = () => {
   }, [swapStore.token0.ticker, swapStore.token1.ticker]);
 
   const getSigner = async () => {
+    console.log("getSigner called");
     const signer = web3.getSigner();
     setSigner(signer);
   };
-  const isConnected = () => web3.getSigner() !== undefined;
+  const isConnected = () => signer !== undefined;
   const getWalletAddress = () => {
     contract0.balanceOf(account).then((res) => {
       setamount0(Number(ethers.utils.formatEther(res)));
@@ -107,8 +109,20 @@ const OrderBoxSwap2 = () => {
     setDisabled(!disableStatus);
   };
 
+  const balanceBarHandler = (percentage) => {
+    const balanceFromPercentage = percentage * amount0;
+    console.log("balanceFromPercentage");
+    console.log(balanceFromPercentage);
+    setBalancePercentage(balanceFromPercentage);
+  };
+
+  console.log("web3 swap");
+  console.log(web3);
+  console.log(web3.getSigner());
+  console.log(signer);
+
   return (
-    <div className="h-[38rem] justify-center mt-10 mx-24 border rounded-xl shadow-md px-14 py-14 bg-zigzagBlueDark">
+    <div className="h-[38rem] justify-center mt-10 mx-24 border border-gray-500 rounded-xl shadow-md px-14 py-14 bg-zigzagBlueDark">
       <div className="flex items-center justify-between px-4 py-3">
         <span className="text-xl font-bold text-center text-gray-100">
           Swap
@@ -135,11 +149,12 @@ const OrderBoxSwap2 = () => {
           getSwapPrice={getSwapPrice}
           signer={signer}
           balance={amount0}
+          balancePercentage={balancePercentage}
           tokenNumber={0}
           disabledHandler={disabledHandler}
         />
         <div className="flex justify-center mt-2">
-          <BalanceBar width={200} />
+          <BalanceBar width={200} balanceBarHandler={balanceBarHandler} />
         </div>
         <p className="text-left text-gray-400">To </p>
         <CurrencyField

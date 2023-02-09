@@ -177,7 +177,15 @@ const OpenOrdersTable = (props) => {
       <DataGrid
         rows={rows2}
         columns={columns}
-        style={{ color: "#f7fafc", backgroundColor: "#172437" }}
+        style={{
+          color: "#f7fafc",
+          //fontFamily: '"font-mono"',
+          backgroundColor: "#172437",
+          borderColor: "rgb(107 114 128)",
+          borderWidth: "1px",
+          borderStyle: "solid",
+        }}
+        className="my-datagrid"
         getRowHeight={() => "auto"}
         autoHeight
         autoWidth

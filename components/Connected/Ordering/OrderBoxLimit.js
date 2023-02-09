@@ -27,6 +27,8 @@ const OrderBoxLimit = () => {
   const [amount0, setamount0] = useState(undefined);
   const [amount1, setamount1] = useState(undefined);
   const [setSell, setSetSell] = useState(false);
+  const [balancePercentage, setBalancePercentage] = useState(undefined);
+  const [selectedQuantity, setSelectedQuantity] = useState(undefined);
 
   const [contractAddressPool, setContractAddressPool] =
     useState(currentPoolAddress);
@@ -381,11 +383,30 @@ const OrderBoxLimit = () => {
     priceLimInput.resetInput();
   };
 
+  const balanceBarHandler = (percentage) => {
+    const balanceFromPercentage = percentage * amount0;
+    console.log("balanceFromPercentage limit");
+    console.log(balanceFromPercentage);
+    console.log(amount0);
+    setBalancePercentage(balanceFromPercentage);
+  };
+
+  useEffect(() => {
+    let selectedQuantity;
+    if (balancePercentage) {
+      selectedQuantity = balancePercentage.toFixed(5);
+    }
+    setSelectedQuantity(selectedQuantity);
+  }, [balancePercentage]);
+  useEffect(() => {
+    setSelectedQuantity(quantityLimInput.enteredInput);
+  }, [quantityLimInput.enteredInput]);
+
   return (
     <div className="text-gray-100">
       <form
         onSubmit={onSubmitHandler}
-        className="h-[38rem]  mt-10 mx-24 border rounded-xl shadow-md px-16 py-14 bg-zigzagBlueDark"
+        className="h-[38rem]  mt-10 mx-24 border-2 border-gray-500 rounded-xl shadow-md px-16 py-14 bg-zigzagBlueDark"
       >
         <div className="flex flex-row flex-between w-full">
           <div className="text-left font-bold text-xl mb-8  w-32">Limit</div>
@@ -441,7 +462,7 @@ const OrderBoxLimit = () => {
                 placeholder="Quantity"
                 onChange={quantityLimInput.inputChangeHandler}
                 onBlur={quantityLimInput.inputBlurHandler}
-                value={quantityLimInput.enteredInput}
+                value={selectedQuantity}
                 className="bg-gray-100 h-14 rounded-lg py-2 px-3 text-gray-800 w-64"
               />
               <div className="text-sm text-left mt-2 text-gray-400">
@@ -449,7 +470,7 @@ const OrderBoxLimit = () => {
               </div>
             </div>
             <div className="flex justify-center mb-8">
-              <BalanceBar width={200} />
+              <BalanceBar width={200} balanceBarHandler={balanceBarHandler} />
             </div>
             <div className={`${priceLimInputClasses} `}>
               <input
