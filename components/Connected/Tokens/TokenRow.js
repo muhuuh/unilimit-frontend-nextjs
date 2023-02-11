@@ -8,12 +8,9 @@ const TokenRow = (props) => {
   return (
     <div
       onClick={onSelectHandler}
-      className="flex flex-row justify-around cursor-pointer border-b-2 rounded-lg "
+      className="flex flex-row justify-around cursor-pointer border-b-2 rounded-lg w-56 items-center py-2"
     >
-      <div>Image</div>
-      <div className="text-center">
-        <div className="text-lg">{props.ticker}</div>
-      </div>
+      <div className="text-lg">{props.ticker}</div>
     </div>
   );
 };
